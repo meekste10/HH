@@ -30,8 +30,6 @@
   .pill { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; background:#fafafa; color:#374151; }
   .muted { color:var(--muted); }
   .footer { color:var(--muted); font-size:12px; margin-top:8px; }
-  .ok { color:#14532d; font-weight:600; }
-  .warn { color:#a16207; font-weight:600; }
 
   /* Scrollable frames */
   .scroll-card { 
@@ -216,7 +214,6 @@
   const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
   const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const dayISO   = d => dayStart(d).toISOString().slice(0,10);
-  const num = x => { const n=parseFloat(String(x??'').replace(/,/g,'')); return isNaN(n)?0:n; };
   const L = s => String(s||'').toLowerCase().trim();
 
   function parseDate(d){
@@ -224,6 +221,25 @@
     if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d)){ const [m,dd,y]=d.split('/').map(s=>parseInt(s,10)); return new Date(y,m-1,dd); }
     const t=new Date(d); return isNaN(t)?null:t;
   }
+
+  // Robust header + value helpers
+  const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+  function pick(row, candidates){
+    const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
+    for (const wanted of candidates){
+      const k = map.get(cleanKey(wanted));
+      if (k !== undefined) return row[k];
+    }
+    return undefined;
+  }
+  function normName(s){
+    const t = String(s||'').trim();
+    if (!t) return '';
+    const m = /^([^,]+),\s*(.+)$/.exec(t);
+    if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
+    return t.replace(/\s+/g,' ').trim();
+  }
+
   function overlapDays(r, rs, re){
     const s=r.s, e=r.e; if(!s||!e) return 0;
     const a=dayStart(s), b=dayStart(e), R1=dayStart(rs), R2=dayStart(re);
@@ -236,6 +252,30 @@
     return Math.max(0, days);
   }
 
+  // Tenure + age helpers
+  function parseTenureMonths(s){
+    if(!s) return null;
+    const txt=String(s);
+    const ym = /(\d+)\s*years?,?\s*(\d+)\s*months?/i.exec(txt);
+    if(ym) return (+ym[1])*12 + (+ym[2]);
+    const yOnly = /(\d+(?:\.\d+)?)\s*years?/i.exec(txt);
+    if(yOnly) return Math.round(parseFloat(yOnly[1])*12);
+    const mOnly = /(\d+)\s*months?/i.exec(txt);
+    if(mOnly) return +mOnly[1];
+    const n = parseFloat(txt); return isFinite(n) ? Math.round(n*12) : null;
+  }
+  function tenureBand(months){
+    if(months==null) return '';
+    if(months<12) return '<1y';
+    if(months<24) return '1-2y';
+    if(months<60) return '2-5y';
+    return '5y+';
+  }
+  function ageBand(a){
+    const n=Number(a); if(!isFinite(n)) return '';
+    if(n<25) return '<25'; if(n<35) return '25-34'; if(n<45) return '35-44'; if(n<55) return '45-54'; return '55+';
+  }
+
   async function loadCSV(url){
     const res = await fetch(url+'?v='+todayISO(), {cache:'no-store'});
     if(!res.ok) throw new Error('fetch failed '+url);
@@ -245,7 +285,7 @@
 
   // ===== STATE =====
   let REQ_RAW=[], ROST_RAW=[];
-  let REQ=[], ROSTER=new Map(); // name -> meta (only crucial fields)
+  let REQ=[], ROSTER=new Map();
   let chart;
 
   // ===== DOM =====
@@ -289,44 +329,34 @@
 
   const balTableBody=document.querySelector('#balTable tbody');
 
-  // ===== ROSTER (crucial fields) =====
-  function parseTenureMonths(s){
-    if(!s) return null;
-    const txt=String(s);
-    const yrs = /(\d+(?:\.\d+)?)\s*years?/i.exec(txt);
-    if(yrs) return Math.round(parseFloat(yrs[1])*12);
-    const parts = /(\d+)\s*years?,?\s*(\d+)\s*months?/i.exec(txt);
-    if(parts) return (+parts[1])*12 + (+parts[2]);
-    return null;
-  }
-  function tenureBand(months){
-    if(months==null) return '';
-    if(months<12) return '<1y';
-    if(months<24) return '1-2y';
-    if(months<60) return '2-5y';
-    return '5y+';
-  }
-  function ageBand(a){
-    const n=Number(a); if(!isFinite(n)) return '';
-    if(n<25) return '<25'; if(n<35) return '25-34'; if(n<45) return '35-44'; if(n<55) return '45-54'; return '55+';
-  }
-
+  // ===== ROSTER =====
   function buildRoster(){
     ROSTER.clear();
     ROST_RAW.forEach(r=>{
-      // Provided headers (choose crucial ones)
-      const name   = String(r['NAME']||r['Employee Name 2']||r['Employee']||'').trim();
+      const nameRaw = pick(r, ['NAME','Employee Name 2','Employee Name','Employee']) || '';
+      const name = normName(nameRaw);
       if(!name) return;
+
+      const dept   = (pick(r, ['Department','Team']) || 'Unknown').toString().trim();
+      const mgr    = (pick(r, ['Direct Report','Manager']) || '').toString().trim();
+      const status = (pick(r, ['Employee Status','Status']) || '').toString().trim();
+      const gender = (pick(r, ['Gender']) || '').toString().trim();
+      const ageVal = pick(r, ['Age']);
+      const tenureTxt = pick(r, ['Tenure (in years)','Tenure']) || '';
+      const vacAvail = pick(r, ['Vacation Available','Vacation Avail (days)']);
+      const daysSince = pick(r, ['Days Since Last PTO']);
+      const risk = pick(r, ['Risk Score (Burnout)','Risk Score']);
+
       ROSTER.set(name, {
-        dept:   String(r['Department']||'').trim() || 'Unknown',
-        mgr:    String(r['Direct Report']||'').trim(),
-        status: String(r['Employee Status']||'').trim(),
-        gender: String(r['Gender']||'').trim(),
-        age:     r['Age'],
-        tenureM: parseTenureMonths(r['Tenure (in years)']||r['Tenure']||''),
-        vacAvail: r['Vacation Available']!=null ? String(r['Vacation Available']).trim() : '',
-        daysSince: r['Days Since Last PTO']!=null ? Number(r['Days Since Last PTO']) : null,
-        risk:   r['Risk Score (Burnout)']!=null ? String(r['Risk Score (Burnout)']).trim() : ''
+        dept,
+        mgr,
+        status,
+        gender,
+        age: ageVal,
+        tenureM: parseTenureMonths(tenureTxt),
+        vacAvail: vacAvail!=null ? String(vacAvail).trim() : '',
+        daysSince: daysSince!=null && daysSince!=='' ? Number(daysSince) : null,
+        risk: risk!=null ? String(risk).trim() : ''
       });
     });
   }
@@ -334,24 +364,23 @@
   // ===== REQUESTS =====
   function normalizeRequests(){
     REQ = REQ_RAW.map(r=>{
-      const emp  = String(r['Employee Name']||r['Employee']||'').trim();
-      const type = String(r['PTO Request Type']||r['Type']||'').trim();
-      const s    = parseDate(r['PTO Request Start Date']||r['Start']);
-      const e    = parseDate(r['PTO Request End Date']||r['End']);
-      const sh   = r['Start AM/PM']||'';
-      const eh   = r['End AM/PM']||'';
+      const emp  = normName(pick(r, ['Employee Name','Employee']));
+      const type = (pick(r, ['PTO Request Type','Type']) || '').toString().trim();
+      const s    = parseDate(pick(r, ['PTO Request Start Date','Start']));
+      const e    = parseDate(pick(r, ['PTO Request End Date','End']));
+      const sh   = pick(r, ['Start AM/PM']) || '';
+      const eh   = pick(r, ['End AM/PM'])   || '';
 
-      // canonical mapping from roster where possible
-      const meta = ROSTER.get(emp) || {};
-      const dept   = meta.dept || String(r['Department']||'Unknown').trim();
-      const mgr    = meta.mgr  || String(r['Direct Report']||'').trim();
-      const status = meta.status|| String(r['Employment Status']||'').trim();
-      const gender = meta.gender|| String(r['Gender']||'').trim();
-      const age    = meta.age ?? r['Age'] ?? '';
+      const meta = emp ? (ROSTER.get(emp) || {}) : {};
+      const dept   = (meta.dept || pick(r, ['Department','Team']) || 'Unknown').toString().trim();
+      const mgr    = (meta.mgr  || pick(r, ['Direct Report','Manager']) || '').toString().trim();
+      const status = (meta.status|| pick(r, ['Employment Status','Status']) || '').toString().trim();
+      const gender = (meta.gender|| pick(r, ['Gender']) || '').toString().trim();
+      const age    = meta.age ?? pick(r, ['Age']) ?? '';
       const tenureM= meta.tenureM;
 
       return { emp, type, s, e, sh, eh, dept, mgr, status, gender, age, tenureM, raw:r };
-    });
+    }).filter(x=> x.emp);
   }
 
   // ===== FILTERS =====
@@ -381,8 +410,12 @@
       const opts=[...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))].sort();
       el.innerHTML='<option value="">All</option>'+opts.map(v=>`<option>${v}</option>`).join('');
     }
-    setOptions(fDept, REQ.map(r=>r.dept));
-    setOptions(fMgr,  REQ.map(r=>r.mgr));
+    // Build from roster (authoritative) plus any values from requests just in case
+    const depts = new Set(); const mgrs = new Set();
+    ROSTER.forEach(m=>{ if(m.dept) depts.add(m.dept); if(m.mgr) mgrs.add(m.mgr); });
+    REQ.forEach(r=>{ if(r.dept) depts.add(r.dept); if(r.mgr) mgrs.add(r.mgr); });
+    setOptions(fDept, [...depts]);
+    setOptions(fMgr,  [...mgrs]);
   }
 
   // ===== RENDER =====
@@ -456,13 +489,15 @@
       // coverage %: 1 - (unique people out / active headcount) by dept
       const active = [...ROSTER.entries()].filter(([n,m])=> L(m.status)==='active');
       const headcountByDept={}; active.forEach(([n,m])=>{ headcountByDept[m.dept]=(headcountByDept[m.dept]||0)+1; });
-      const outByDept={}; const seen=new Map();
-      rows.forEach(r=>{ (seen.get(r.dept) ?? seen.set(r.dept,new Set()).get(r.dept)).add(r.emp); });
-      for(const [d,set] of seen.entries()) outByDept[d]=set.size;
+      const byDeptPeople=new Map();
+      rows.forEach(r=>{
+        const set = byDeptPeople.get(r.dept) || new Set();
+        set.add(r.emp); byDeptPeople.set(r.dept,set);
+      });
 
       const labels=Object.keys(headcountByDept).sort();
       const data=labels.map(d=>{
-        const tot=headcountByDept[d]||0, outs=outByDept[d]||0;
+        const tot=headcountByDept[d]||0, outs=(byDeptPeople.get(d)||new Set()).size;
         return tot>0 ? Math.round((1 - outs/tot)*100) : 100;
       });
       chart = new Chart(deptChart, {
@@ -474,7 +509,6 @@
   }
 
   function renderHeatmap(rows, rs, re){
-    // Monday-start grid
     heatmap.innerHTML=''; heatmapLegend.innerHTML='';
     const perDay=[]; let max=0;
     for(let d=new Date(rs); d<=re; d=addDays(d,1)){
@@ -493,7 +527,7 @@
       <span class="swatch" style="background:${scale(max*0.66)}"></span>
       <span class="swatch" style="background:${scale(max)}"></span>`;
 
-    const pad = (rs.getDay()+6)%7;
+    const pad = (rs.getDay()+6)%7; // Monday start
     for(let i=0;i<pad;i++){ const c=document.createElement('div'); c.className='heatcell'; c.style.visibility='hidden'; heatmap.appendChild(c); }
     perDay.forEach(({d,count})=>{
       const cell=document.createElement('div'); cell.className='heatcell';
@@ -501,7 +535,7 @@
       cell.innerHTML = `<div class="d">${d.getDate()}</div><div class="muted" style="font-size:12px;">${count||0}</div>`;
       heatmap.appendChild(cell);
     });
-    heatmapNote.textContent = `Mon-start • ${dayISO(rs)} → ${dayISO(re)} • Max daily load: ${max}`;
+    heatmapNote.textContent = `${dayISO(rs)} → ${dayISO(re)} • Max daily load: ${max}`;
   }
 
   function renderGantt(rows, rs, re){
