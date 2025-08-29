@@ -1,130 +1,455 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Holland Homes — Contact Dashboard</title>
-  <style>
-    :root { --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#22d3ee; --card:#0b1022; --chip:#1f2937; }
-    html,body{margin:0;background:linear-gradient(180deg,#0b1022,#0f172a 35%,#0b1022);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
-    .wrap{max-width:1200px;margin:0 auto;padding:20px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    h1{font-size:clamp(20px,3vw,28px);margin:0;letter-spacing:.3px}
-    .panel{background:var(--panel);border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 30px rgba(0,0,0,.35);border-radius:16px;padding:16px}
-    .controls{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
-    @media (max-width:900px){.controls{grid-template-columns:1fr 1fr}}
-    @media (max-width:560px){.controls{grid-template-columns:1fr}}
-    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
-    input[type="text"],select{width:100%;padding:10px 12px;border-radius:10px;outline:none;border:1px solid rgba(255,255,255,.08);background:#0c1428;color:var(--text)}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#0c1428;color:var(--text);cursor:pointer}
-    .btn:hover{border-color:var(--accent)}
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .chip{background:var(--chip);color:var(--text);border:1px solid rgba(255,255,255,.08);padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer;user-select:none}
-    .summary{display:flex;gap:12px;flex-wrap:wrap}
-    .pill{background:#0c1428;border:1px solid rgba(255,255,255,.08);padding:8px 10px;border-radius:12px;font-size:12px;color:var(--muted)}
-    .pill strong{color:var(--text)}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    @media (max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:640px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;display:flex;gap:12px;align-items:flex-start}
-    .avatar{width:48px;height:48px;border-radius:12px;background:linear-gradient(180deg,#1f2937,#0b1022);display:grid;place-items:center;color:#cbd5e1;font-weight:700}
-    .card h3{margin:0 0 4px 0;font-size:16px}
-    .meta{color:var(--muted);font-size:12px}
-    .meta span{display:inline-block;margin-right:10px}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
-    .tag{background:#0c1428;color:var(--text);border:1px solid rgba(255,255,255,.08);padding:4px 8px;border-radius:999px;font-size:11px}
-    .contact a{color:var(--accent);text-decoration:none}
-    .muted{color:var(--muted)}
-    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .footer{text-align:center;color:var(--muted);font-size:12px;padding:18px 0}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holland Homes • PTO Dashboard</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<style>
+  :root { --brand:#184A30; --ink:#1c1c1c; --muted:#6b7280; --bg:#f7f7f7; --card:#ffffff; }
+  * { box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; }
+  body { margin:0; background:var(--bg); color:var(--ink); }
+  header { background:var(--brand); color:#fff; padding:16px 20px; }
+  header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+  .wrap { max-width:1200px; margin:0 auto; padding:16px; }
+  .row { display:grid; gap:12px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:12px; }
+  .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .toolbar input, .toolbar select, .toolbar button, .toolbar label { font-size:14px; }
+  .toolbar input, .toolbar select, .toolbar button { border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
+  .kpi { display:flex; align-items:baseline; gap:8px; }
+  .kpi .big { font-size:26px; font-weight:700; }
+  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+  .list { margin: 8px 0 0; padding:0; list-style:none; }
+  .list li { padding:8px 0; border-bottom:1px dashed #eee; font-size:14px; display:flex; justify-content:space-between; gap:10px; }
+  .pill { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; background:#fafafa; color:#374151; }
+  .muted { color:var(--muted); }
+  .footer { color:var(--muted); font-size:12px; margin-top:8px; }
+  .ok { color:#14532d; font-weight:600; }
+  .warn { color:#a16207; font-weight:600; }
+
+  /* Scrollable frames */
+  .scroll-card { 
+    max-height: calc(var(--vh, 1vh) * 35);
+    overflow:auto; border-radius:12px; -webkit-overflow-scrolling:touch;
+    background: linear-gradient(#ffffff, #ffffff) padding-box,
+                linear-gradient(180deg, rgba(0,0,0,0.04), transparent 24px) border-box;
+  }
+  .scroll-card h3 { position: sticky; top: 0; background: var(--card); padding-bottom:6px; margin-top:0; }
+
+  canvas { width:100%; height:260px; }
+
+  /* Table: pan + sticky headers */
+  .table-wrap { overflow:auto; max-height: calc(var(--vh, 1vh) * 40); -webkit-overflow-scrolling:touch; border:1px solid #e5e7eb; border-radius:12px; }
+  table { width:100%; border-collapse: collapse; font-size:14px; min-width: 720px; }
+  th, td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
+  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; position: sticky; top: 0; background: #fff; z-index: 1; }
+
+  @media (pointer: coarse) { .toolbar input, .toolbar select, .toolbar button { padding:12px 14px; font-size:16px; } }
+  @media (max-width: 960px){ .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; } canvas { height: 200px; } .scroll-card { max-height: calc(var(--vh, 1vh) * 32); } }
+  /* Card view for balances on narrow phones */
+  @media (max-width: 720px){
+    table { min-width: 0; }
+    table thead { display: none; }
+    table, tbody, tr, td { display:block; width: 100%; }
+    tr { border-bottom: 1px solid #eee; margin: 6px 0; padding: 8px 6px; border-radius: 8px; background: #fff; }
+    td { border-bottom: none; padding: 6px 0; }
+    td::before { content: attr(data-label); display:block; font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
+  }
+
+  .btn { cursor:pointer; }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Holland Homes — Contact Dashboard</h1>
-      <div class="toolbar"><button id="exportBtn" class="btn">Export CSV</button></div>
-    </header>
-    <section class="panel" style="margin-top:14px;">
-      <div class="controls">
-        <div>
-          <label for="q">Search (name, email, dept, region, address…)</label>
-          <input id="q" type="text" placeholder="Type to search…" />
-        </div>
-        <div>
-          <label for="dept">Filter — Department</label>
-          <select id="dept" multiple size="4"></select>
-        </div>
-        <div>
-          <label for="region">Filter — Region</label>
-          <select id="region" multiple size="4"></select>
-        </div>
-        <div>
-          <label for="sort">Sort</label>
-          <select id="sort">
-            <option value="last">Last Name (A→Z)</option>
-            <option value="first">First Name (A→Z)</option>
-            <option value="dept">Department</option>
-            <option value="region">Region</option>
-          </select>
-        </div>
-      </div>
-      <div class="chips" id="quickChips"></div>
-      <div class="summary" id="summary" style="margin-top:12px;"></div>
-    </section>
-    <section class="panel" style="margin-top:14px;">
-      <div id="results" class="grid"></div>
-      <div id="empty" class="muted" style="display:none; padding: 20px; text-align:center;">No contacts match your filters.</div>
-    </section>
-    <div class="footer">Data source: HH_Contacts_2025.csv</div>
+<header><h1>Holland Homes — PTO Dashboard</h1></header>
+
+<div class="wrap">
+
+  <!-- Controls -->
+  <div class="toolbar card" style="justify-content:space-between;">
+    <div class="toolbar">
+      <label>From: <input id="dateFrom" type="date" /></label>
+      <label>To: <input id="dateTo" type="date" /></label>
+
+      <!-- Quick ranges -->
+      <button class="btn" id="rngToday">Today</button>
+      <button class="btn" id="rng7">Next 7 Days</button>
+      <button class="btn" id="rng30">Next 30 Days</button>
+
+      <label>Department:
+        <select id="deptFilter"><option value="">All</option></select>
+      </label>
+      <label>Manager:
+        <select id="mgrFilter"><option value="">All</option></select>
+      </label>
+      <label>Type:
+        <select id="typeFilter">
+          <option value="">All</option>
+          <option>Vacation</option><option>Sick</option><option>Unpaid</option>
+        </select>
+      </label>
+      <label>Search: <input id="searchInput" type="search" placeholder="Name, dept, manager…" /></label>
+    </div>
+    <div class="toolbar">
+      <button id="refreshBtn" class="btn" type="button">Reload Data</button>
+      <span class="footer">From CSV • <span id="asOf"></span></span>
+    </div>
   </div>
 
-  <script>
-    // CHANGE THIS LINE to match where you upload the CSV in SharePoint
-    const CSV_URL = "/sites/PeopleTeam/Shared%20Documents/HH_Contacts_2025.csv";
-    function parseCSV(text) {
-      const rows = []; let i = 0, cur = [], val = '', inQuotes = false;
-      function pushVal(){ cur.push(val); val=''; }
-      function pushRow(){ rows.push(cur); cur=[]; }
-      while (i < text.length) {
-        const c = text[i];
-        if (inQuotes) {
-          if (c === '"') { if (text[i+1] === '"') { val += '"'; i++; } else { inQuotes = false; } }
-          else { val += c; }
-        } else {
-          if (c === '"') { inQuotes = true; }
-          else if (c === ',') { pushVal(); }
-          else if (c === '\n' || c === '\r') { if (val!=='' || cur.length>0) { pushVal(); pushRow(); } while (text[i+1]==='\r' || text[i+1]==='\n') i++; }
-          else { val += c; }
-        }
-        i++;
-      }
-      if (val!=='' || cur.length>0) { pushVal(); pushRow(); }
-      if (rows.length === 0) return [];
-      const headers = rows.shift().map(h=>h.trim());
-      return rows.filter(r=>r.some(cell=>String(cell).trim()!==''))
-                 .map(r => Object.fromEntries(headers.map((h,idx)=>[h, (r[idx]??'').toString().trim()])));
+  <!-- KPIs -->
+  <div class="row grid-4">
+    <div class="card kpi"><span class="big" id="kpiRequests">0</span><span class="label">Requests</span></div>
+    <div class="card kpi"><span class="big" id="kpiPeople">0</span><span class="label">Unique Employees</span></div>
+    <div class="card kpi"><span class="big" id="kpiDepts">0</span><span class="label">Departments</span></div>
+    <div class="card kpi"><span class="big" id="kpiDays">0</span><span class="label">Total Person‑Days</span></div>
+  </div>
+
+  <!-- Lists + Chart -->
+  <div class="row grid-3" style="margin-top:12px;">
+    <div class="card scroll-card">
+      <h3>Requests</h3>
+      <ul class="list" id="reqList"></ul>
+    </div>
+    <div class="card scroll-card">
+      <h3>By Employee</h3>
+      <ul class="list" id="empList"></ul>
+    </div>
+    <div class="card scroll-card">
+      <h3>By Team</h3>
+      <canvas id="deptChart" aria-label="Requests by team"></canvas>
+    </div>
+  </div>
+
+  <!-- Burnout Radar + Balances -->
+  <div class="row grid-2" style="margin-top:12px;">
+    <div class="card scroll-card">
+      <h3>Burnout Radar (±60 days)</h3>
+      <div class="muted" style="margin:4px 0 8px;">People with no PTO in the last 60 days and none scheduled in the next 60 days.</div>
+      <ul class="list" id="burnoutList"></ul>
+      <div class="footer"><span id="burnoutCount">0</span> employee(s) flagged</div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 6px;">Balances (Reference)</h3>
+      <div class="table-wrap">
+        <table id="balTable">
+          <thead>
+            <tr>
+              <th>Employee</th><th>Team/Dept</th><th>Manager</th><th>PTO Balance (hrs)</th><th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="toolbar" style="margin-top:8px;">
+        <a href="./pto_requests_2025.csv" download>⬇️ Download pto_requests_2025.csv</a>
+        <a href="./pto_balances.csv" download>⬇️ Download pto_balances.csv</a>
+      </div>
+      <div class="footer">Balances are informational; approvals follow the normal process.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Correct mobile viewport units (iOS Safari)
+  function setVH(){ const vh=window.innerHeight*0.01; document.documentElement.style.setProperty('--vh', vh+'px'); }
+  window.addEventListener('resize', setVH); window.addEventListener('orientationchange', setVH); setVH();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  // ===== CONFIG =====
+  const REQUESTS_CSV = './pto_requests_2025.csv';
+  const BALANCES_CSV = './pto_balances.csv'; // optional
+
+  // ===== UTIL =====
+  const MS_DAY = 24*60*60*1000;
+  const todayISO = () => new Date().toISOString().slice(0,10);
+  const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+
+  function parseDate(d){
+    if(!d) return null;
+    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d)){ const [m,dd,y]=d.split('/').map(s=>parseInt(s,10)); return new Date(y,m-1,dd); }
+    const t=new Date(d); return isNaN(t)?null:t;
+  }
+  function dayStart(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function dayISO(d){ return dayStart(d).toISOString().slice(0,10); }
+  const num = (x)=>{ const n=parseFloat(String(x??'').replace(/,/g,'')); return isNaN(n)?0:n; };
+  const isHalf = (ampm)=> (String(ampm||'').toUpperCase()==='AM' || String(ampm||'').toUpperCase()==='PM');
+
+  function overlapDaysInRange(r, rs, re){
+    // overlap between [s..e] and [rs..re], inclusive, with half-day edges
+    const s=r.s, e=r.e; if(!s||!e) return 0;
+    const a=dayStart(s), b=dayStart(e), R1=dayStart(rs), R2=dayStart(re);
+    if(b < R1 || a > R2) return 0;
+    const start = a < R1 ? R1 : a;
+    const end   = b > R2 ? R2 : b;
+    let days = Math.floor((end - start)/MS_DAY) + 1;
+    if(dayISO(start)===dayISO(a) && isHalf(r.sh)) days -= 0.5;
+    if(dayISO(end)  ===dayISO(b) && isHalf(r.eh)) days -= 0.5;
+    return Math.max(0, days);
+  }
+
+  async function loadCSV(url){
+    const res = await fetch(url+'?v='+todayISO(), {cache:'no-store'});
+    if(!res.ok) throw new Error('fetch failed '+url);
+    const text = await res.text();
+    return new Promise(resolve => Papa.parse(text, {header:true, skipEmptyLines:true, complete: out=>resolve(out.data)}));
+  }
+
+  // ===== STATE =====
+  let REQ=[], BAL=[];
+  let deptChart;
+
+  // ===== DOM =====
+  const dateFrom = document.getElementById('dateFrom');
+  const dateTo   = document.getElementById('dateTo');
+  const rngToday = document.getElementById('rngToday');
+  const rng7     = document.getElementById('rng7');
+  const rng30    = document.getElementById('rng30');
+
+  const deptFilter = document.getElementById('deptFilter');
+  const mgrFilter  = document.getElementById('mgrFilter');
+  const typeFilter = document.getElementById('typeFilter');
+  const searchInput= document.getElementById('searchInput');
+  const asOf       = document.getElementById('asOf');
+
+  const kpiRequests = document.getElementById('kpiRequests');
+  const kpiPeople   = document.getElementById('kpiPeople');
+  const kpiDepts    = document.getElementById('kpiDepts');
+  const kpiDays     = document.getElementById('kpiDays');
+
+  const reqList = document.getElementById('reqList');
+  const empList = document.getElementById('empList');
+  const balTableBody = document.querySelector('#balTable tbody');
+
+  const burnoutList = document.getElementById('burnoutList');
+  const burnoutCount = document.getElementById('burnoutCount');
+
+  function normalizeRow(r){
+    return {
+      emp: (r['Employee Name']||'').trim(),
+      dept: (r['Department']||'Unknown').trim(),
+      mgr: (r['Direct Report']||'').trim(),
+      type: (r['PTO Request Type']||'').trim(),
+      s: parseDate(r['PTO Request Start Date']),
+      e: parseDate(r['PTO Request End Date']),
+      sh: r['Start AM/PM']||'',
+      eh: r['End AM/PM']||'',
+      totalDays: num(r['PTO Request Total Days']) || null,
+      raw: r
+    };
+  }
+
+  function passesFilters(r){
+    const d=(deptFilter.value||'').toLowerCase();
+    const m=(mgrFilter.value||'').toLowerCase();
+    const t=(typeFilter.value||'').toLowerCase();
+    const q=(searchInput.value||'').toLowerCase();
+    if(d && r.dept.toLowerCase()!==d) return false;
+    if(m && r.mgr.toLowerCase()!==m) return false;
+    if(t && r.type.toLowerCase()!==t) return false;
+    if(q){
+      const blob=[r.emp,r.dept,r.mgr,r.type, r.raw['PTO Request Start Date'], r.raw['PTO Request End Date']]
+        .map(x=>String(x||'').toLowerCase()).join('|');
+      if(!blob.includes(q)) return false;
     }
-    function safe(v){ return (v===undefined||v===null)?'':String(v).trim(); }
-    function formatPhone(s){ s=safe(s).replace(/[^0-9]/g,''); if(!s)return''; if(s.length===11&&s.startsWith('1'))s=s.slice(1); if(s.length===10)return '('+s.slice(0,3)+') '+s.slice(3,6)+'-'+s.slice(6); return s; }
-    function initials(f,l){ f=safe(f).charAt(0).toUpperCase(); l=safe(l).charAt(0).toUpperCase(); return (f||'?')+(l||''); }
-    function toCSV(rows){ if(!rows.length)return''; const headers=Object.keys(rows[0]); const esc=v => '"'+String(v).replace(/"/g,'""')+'"'; return [headers.join(','),...rows.map(r=>headers.map(h=>esc(r[h]??'')).join(','))].join('\n'); }
+    return true;
+  }
 
-    const COLS = { first:['First Name','First','FName'], last:['Last Name','Last','LName'], email:['Email Address','Email','E-mail'], work:['Work Number','Work Phone','Phone Work'], personal:['Personal Number','Mobile','Cell','Personal Phone'], dept:['Department','Dept'], address:['Address','Location'], region:['Region','Office'], mh1:['Model Home'], mh1p:['Model Home Phone'], mh2:['Model Home 2'], mh2p:['Model Home 2 Phone'] };
-    function pick(obj, keys){ for (const k of keys){ for (const key in obj){ if (key.toLowerCase() === k.toLowerCase()) return obj[key]; } } return ''; }
-    function transform(raw){ return raw.map(r=>({ first:safe(pick(r,COLS.first)), last:safe(pick(r,COLS.last)), email:safe(pick(r,COLS.email)), work:formatPhone(pick(r,COLS.work)), personal:formatPhone(pick(r,COLS.personal)), dept:safe(pick(r,COLS.dept))||'—', address:safe(pick(r,COLS.address)), region:safe(pick(r,COLS.region))||'—', mh1:safe(pick(r,COLS.mh1)), mh1p:formatPhone(pick(r,COLS.mh1p)), mh2:safe(pick(r,COLS.mh2)), mh2p:formatPhone(pick(r,COLS.mh2p)) })); }
+  async function init(){
+    // default range: Today -> Next 7 days
+    const t = new Date();
+    dateFrom.value = todayISO();
+    dateTo.value   = addDays(t,7).toISOString().slice(0,10);
 
-    function setOptions(sel, values){ sel.innerHTML=''; const uniq=[...new Set(values.filter(Boolean))].sort((a,b)=>a.localeCompare(b)); for (const v of uniq){ const opt=document.createElement('option'); opt.value=v; opt.textContent=v; sel.appendChild(opt);} }
-    function selectedValues(sel){ return Array.from(sel.selectedOptions).map(o=>o.value); }
-    function makeChip(label, fn){ const el=document.createElement('div'); el.className='chip'; el.textContent=label; el.onclick=fn; return el; }
+    try{ REQ=(await loadCSV(REQUESTS_CSV)).map(normalizeRow); }catch(e){ REQ=[]; console.error(e); }
+    try{ BAL=await loadCSV(BALANCES_CSV); }catch(e){ BAL=[]; }
+    asOf.textContent = new Date().toLocaleString();
 
-    function renderSummary(rows){ const wrap=document.getElementById('summary'); wrap.innerHTML=''; const total=document.createElement('div'); total.className='pill'; total.innerHTML = '<strong>'+rows.length+'</strong> contacts'; wrap.appendChild(total); const byDept={}; for (const r of rows) byDept[r.dept]=(byDept[r.dept]||0)+1; for (const k in byDept){ const pill=document.createElement('div'); pill.className='pill'; pill.innerHTML = '<strong>'+byDept[k]+'</strong> in '+k; wrap.appendChild(pill);} }
-    function renderGrid(rows){ const grid=document.getElementById('results'); const empty=document.getElementById('empty'); grid.innerHTML=''; if (!rows.length){ empty.style.display='block'; return; } else { empty.style.display='none'; } for (const r of rows){ const card=document.createElement('div'); card.className='card'; const avatar=document.createElement('div'); avatar.className='avatar'; avatar.textContent=initials(r.first,r.last); const body=document.createElement('div'); const h3=document.createElement('h3'); h3.textContent=(r.first+' '+r.last).trim(); const meta=document.createElement('div'); meta.className='meta'; meta.innerHTML='<span>'+r.dept+'</span><span>•</span><span>'+r.region+'</span>'; const row1=document.createElement('div'); row1.className='row contact'; const email=r.email?'<a href="mailto:'+r.email+'">'+r.email+'</a>':'<span class="muted">No email</span>'; const work=r.work?'<a href="tel:'+r.work.replace(/\\D/g,'')+'">Work '+r.work+'</a>':''; const personal=r.personal?'<a href="tel:'+r.personal.replace(/\\D/g,'')+'">Mobile '+r.personal+'</a>':''; row1.innerHTML=[email,work,personal].filter(Boolean).join(' &nbsp;•&nbsp; '); const row2=document.createElement('div'); row2.className='row'; if(r.address){ const t=document.createElement('div'); t.className='tag'; t.textContent=r.address; row2.appendChild(t);} if(r.mh1){ const t=document.createElement('div'); t.className='tag'; t.textContent='Model Home: '+r.mh1+(r.mh1p?' ('+r.mh1p+')':''); row2.appendChild(t);} if(r.mh2){ const t=document.createElement('div'); t.className='tag'; t.textContent='Model Home 2: '+r.mh2+(r.mh2p?' ('+r.mh2p+')':''); row2.appendChild(t);} body.appendChild(h3); body.appendChild(meta); body.appendChild(row1); body.appendChild(row2); card.appendChild(avatar); card.appendChild(body); grid.appendChild(card);} }
-    function buildQuickChips(departments, regions, apply){ const host=document.getElementById('quickChips'); host.innerHTML=''; const all=makeChip('All',()=>{document.getElementById('dept').selectedIndex=-1; document.getElementById('region').selectedIndex=-1; apply();}); host.appendChild(all); [...new Set(departments)].sort((a,b)=>a.localeCompare(b)).forEach(d=>host.appendChild(makeChip(d,()=>{ const sel=document.getElementById('dept'); [...sel.options].forEach(o=>o.selected=(o.value===d)); apply(); }))); [...new Set(regions)].sort((a,b)=>a.localeCompare(b)).forEach(r=>host.appendChild(makeChip(r,()=>{ const sel=document.getElementById('region'); [...sel.options].forEach(o=>o.selected=(o.value===r)); apply(); }))); }
-    function attachExport(filtered){ document.getElementById('exportBtn').onclick=()=>{ const csv=toCSV(filtered.map(x=>({'First Name':x.first,'Last Name':x.last,'Email Address':x.email,'Work Number':x.work,'Personal Number':x.personal,'Department':x.dept,'Address':x.address,'Region':x.region,'Model Home':x.mh1,'Model Home Phone':x.mh1p,'Model Home 2':x.mh2,'Model Home 2 Phone':x.mh2p}))); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url;a.download='contacts_filtered.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }; }
-    function setup(raw){ const data=transform(raw); const q=document.getElementById('q'); const deptSel=document.getElementById('dept'); const regionSel=document.getElementById('region'); const sortSel=document.getElementById('sort'); setOptions(deptSel,data.map(d=>d.dept)); setOptions(regionSel,data.map(d=>d.region)); buildQuickChips(data.map(d=>d.dept),data.map(d=>d.region),apply); function apply(){ const term=q.value.trim().toLowerCase(); const depts=new Set(selectedValues(deptSel)); const regions=new Set(selectedValues(regionSel)); let rows=data.filter(r=>{ const hay=(r.first+' '+r.last+' '+r.email+' '+r.dept+' '+r.region+' '+r.address+' '+r.mh1+' '+r.mh2).toLowerCase(); const passTerm=term===''||hay.includes(term); const passDept=depts.size===0||depts.has(r.dept); const passRegion=regions.size===0||regions.has(r.region); return passTerm&&passDept&&passRegion; }); const sorter=sortSel.value; rows.sort((a,b)=>({ last:a.last.localeCompare(b.last), first:a.first.localeCompare(b.first), dept:a.dept.localeCompare(b.dept), region:a.region.localeCompare(b.region) }[sorter])); renderSummary(rows); renderGrid(rows); attachExport(rows);} q.addEventListener('input',apply); deptSel.addEventListener('change',apply); regionSel.addEventListener('change',apply); sortSel.addEventListener('change',apply); apply(); }
-    async function load(){ try{ const res=await fetch(CSV_URL,{cache:'no-cache'}); if(!res.ok) throw new Error('Fetch failed'); const csvText=await res.text(); const raw=parseCSV(csvText); setup(raw); } catch(err){ console.error('CSV load/parse error:',err); document.getElementById('results').innerHTML='<div class="muted">Unable to load CSV. Check CSV_URL.</div>'; } }
-    load();
-  </script>
+    // Build dropdowns (de‑duped)
+    const depts=[...new Set(REQ.map(r=>r.dept).filter(Boolean))].sort();
+    const mgrs =[...new Set(REQ.map(r=>r.mgr ).filter(Boolean))].sort();
+    deptFilter.innerHTML = '<option value="">All</option>' + depts.map(d=>`<option>${d}</option>`).join('');
+    mgrFilter.innerHTML  = '<option value="">All</option>' + mgrs.map(m=>`<option>${m}</option>`).join('');
+
+    renderAll();
+    renderBurnoutRadar(); // compute once on load (based on "today")
+  }
+
+  function renderAll(){
+    const rs = parseDate(dateFrom.value) || new Date();
+    const re = parseDate(dateTo.value)   || rs;
+    if(re < rs) { dateTo.value = dateFrom.value; return; }
+
+    // Filter rows and compute overlap days within selected range
+    const rows = REQ
+      .filter(r => passesFilters(r))
+      .map(r => ({...r, overlapDays: overlapDaysInRange(r, rs, re)}))
+      .filter(r => r.overlapDays > 0);
+
+    // KPIs
+    kpiRequests.textContent = rows.length;
+    kpiPeople.textContent   = new Set(rows.map(r=>r.emp)).size;
+    kpiDepts.textContent    = new Set(rows.map(r=>r.dept)).size;
+    const totalPersonDays   = rows.reduce((a,r)=>a + r.overlapDays, 0);
+    kpiDays.textContent     = totalPersonDays;
+
+    // Requests list
+    reqList.innerHTML = '';
+    rows
+      .sort((a,b)=> (a.s-b.s) || a.emp.localeCompare(b.emp))
+      .forEach(r=>{
+        const li=document.createElement('li');
+        li.innerHTML = `<div>${r.emp} • ${r.type}</div>
+                        <div><span class="pill">${r.dept}</span> <span class="muted">${dayISO(r.s)} → ${dayISO(r.e)} • ${r.overlapDays}d</span></div>`;
+        reqList.appendChild(li);
+      });
+
+    // By-employee totals in range
+    const byEmp = {};
+    rows.forEach(r=>{ byEmp[r.emp] = (byEmp[r.emp]||0) + r.overlapDays; });
+    const empItems = Object.entries(byEmp).sort((a,b)=>b[1]-a[1]);
+    empList.innerHTML='';
+    empItems.forEach(([name,days])=>{
+      const li=document.createElement('li');
+      li.innerHTML = `<div>${name}</div><div class="muted">${days} day(s)</div>`;
+      empList.appendChild(li);
+    });
+
+    // Chart: person-days by department
+    const byDept = {};
+    rows.forEach(r=>{ byDept[r.dept] = (byDept[r.dept]||0) + r.overlapDays; });
+    const labels = Object.keys(byDept).sort();
+    const data   = labels.map(l=>byDept[l]);
+
+    const ctx = document.getElementById('deptChart');
+    if(window._deptChart) window._deptChart.destroy();
+    window._deptChart = new Chart(ctx, {
+      type:'bar',
+      data:{ labels, datasets:[{ label:'Person‑Days', data }] },
+      options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
+    });
+
+    // Balances (optional)
+    balTableBody.innerHTML = '';
+    (BAL||[]).forEach(b=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML = `
+        <td data-label="Employee">${b.Employee||''}</td>
+        <td data-label="Team/Dept">${b.Team||b.Department||''}</td>
+        <td data-label="Manager">${b.Manager||''}</td>
+        <td data-label="PTO Balance (hrs)">${b.PTO_Balance_Hours||''}</td>
+        <td data-label="Last Updated" class="muted">${b.LastUpdated||''}</td>
+      `;
+      balTableBody.appendChild(tr);
+    });
+  }
+
+  // ===== Burnout Radar (±60 days around TODAY) =====
+  function renderBurnoutRadar(){
+    const today = dayStart(new Date());
+    const winStart = addDays(today, -60);
+    const winEnd   = addDays(today,  60);
+
+    // Build headcount from balances if available; fallback to names seen in requests
+    const roster = new Map(); // name -> {dept, mgr}
+    if(BAL.length){
+      BAL.forEach(b=>{
+        const name = String(b.Employee||'').trim();
+        if(!name) return;
+        roster.set(name, {
+          dept: String(b.Team||b.Department||'Unknown').trim(),
+          mgr:  String(b.Manager||'').trim()
+        });
+      });
+    } else {
+      REQ.forEach(r=>{ roster.set(r.emp, {dept:r.dept, mgr:r.mgr}); });
+    }
+
+    // Index requests by employee
+    const byEmp = {};
+    REQ.forEach(r=>{
+      if(!byEmp[r.emp]) byEmp[r.emp]=[];
+      byEmp[r.emp].push(r);
+    });
+
+    // A person is "OK" if any request overlaps [today-60, today+60]
+    function hasPTOinWindow(emp){
+      const list = byEmp[emp]||[];
+      for(const r of list){
+        const overlap = overlapDaysInRange(r, winStart, winEnd);
+        if(overlap > 0) return true;
+      }
+      return false;
+    }
+
+    // For display: last past PTO end date + next future start date
+    function pastFuture(emp){
+      const list = (byEmp[emp]||[]).filter(r=>r.s && r.e);
+      let lastPast=null, nextFuture=null;
+      list.forEach(r=>{
+        if(r.e <= today){ if(!lastPast || r.e > lastPast) lastPast = r.e; }
+        if(r.s >= today){ if(!nextFuture || r.s < nextFuture) nextFuture = r.s; }
+      });
+      return { lastPast, nextFuture };
+    }
+
+    const flagged = [];
+    roster.forEach((meta, name)=>{
+      if(!hasPTOinWindow(name)){
+        const pf = pastFuture(name);
+        flagged.push({
+          name,
+          dept: meta.dept||'',
+          mgr: meta.mgr||'',
+          last: pf.lastPast,
+          next: pf.nextFuture,
+          daysSince: pf.lastPast ? Math.floor((today - dayStart(pf.lastPast))/MS_DAY) : null
+        });
+      }
+    });
+
+    flagged.sort((a,b)=>{
+      // Prioritize longest since last PTO, then by name
+      const da = (a.daysSince ?? -1), db = (b.daysSince ?? -1);
+      if(db !== da) return db - da;
+      return a.name.localeCompare(b.name);
+    });
+
+    burnoutList.innerHTML='';
+    flagged.forEach(x=>{
+      const li=document.createElement('li');
+      const left = `${x.name} ${x.dept?`• ${x.dept}`:''}`;
+      const right = `<span class="muted">Last: ${x.last?x.last.toLocaleDateString():'—'} • Next: ${x.next?x.next.toLocaleDateString():'—'}${x.daysSince!=null?` • ${x.daysSince}d since`:''}</span>`;
+      li.innerHTML = `<div>${left}</div><div>${right}</div>`;
+      burnoutList.appendChild(li);
+    });
+    burnoutCount.textContent = flagged.length;
+  }
+
+  // ===== Events =====
+  document.getElementById('refreshBtn').addEventListener('click', ()=>{ init(); });
+  dateFrom.addEventListener('change', renderAll);
+  dateTo.addEventListener('change', renderAll);
+  deptFilter.addEventListener('change', renderAll);
+  mgrFilter.addEventListener('change', renderAll);
+  typeFilter.addEventListener('change', renderAll);
+  searchInput.addEventListener('input', renderAll);
+
+  // Quick range buttons
+  function setRange(start, end){ dateFrom.value = start.toISOString().slice(0,10); dateTo.value = end.toISOString().slice(0,10); renderAll(); }
+  rngToday.addEventListener('click', ()=> { const t=new Date(); setRange(t,t); });
+  rng7.addEventListener('click',    ()=> { const t=new Date(); setRange(t, addDays(t,7)); });
+  rng30.addEventListener('click',   ()=> { const t=new Date(); setRange(t, addDays(t,30)); });
+
+  // Start
+  init();
+</script>
 </body>
 </html>
