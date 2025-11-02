@@ -14,6 +14,7 @@
   header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
   .wrap { max-width:1200px; margin:0 auto; padding:16px; }
   .row { display:grid; gap:12px; }
+  .grid-6 { grid-template-columns: repeat(6, 1fr); }
   .grid-4 { grid-template-columns: repeat(4, 1fr); }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
   .grid-2 { grid-template-columns: repeat(2, 1fr); }
@@ -65,7 +66,7 @@
 
   @media (pointer: coarse) { .toolbar input, .toolbar select, .toolbar button { padding:12px 14px; font-size:16px; } }
   @media (max-width: 1200px){ canvas { height:200px; } }
-  @media (max-width: 960px){ .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; } .scroll-card { max-height: calc(var(--vh, 1vh) * 32); } }
+  @media (max-width: 960px){ .grid-6, .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; } .scroll-card { max-height: calc(var(--vh, 1vh) * 32); } }
   @media (max-width: 720px){
     table { min-width: 0; }
     table thead { display: none; }
@@ -116,11 +117,13 @@
   </div>
 
   <!-- KPIs -->
-  <div class="row grid-4">
+  <div class="row grid-6">
     <div class="card kpi"><span class="big" id="kpiRequests">0</span><span class="label">Requests</span></div>
     <div class="card kpi"><span class="big" id="kpiPeople">0</span><span class="label">Unique Employees</span></div>
     <div class="card kpi"><span class="big" id="kpiDepts">0</span><span class="label">Departments</span></div>
     <div class="card kpi"><span class="big" id="kpiDays">0</span><span class="label">Total Person-Days</span></div>
+    <div class="card kpi"><span class="big" id="kpiSickAvail">0</span><span class="label">Sick Avail (days)</span></div>
+    <div class="card kpi"><span class="big" id="kpiUnpaidAvail">0</span><span class="label">Unpaid Avail (days)</span></div>
   </div>
 
   <!-- Lists + Chart -->
@@ -189,7 +192,7 @@
     </div>
     <div class="toolbar" style="margin-top:8px;">
       <a href="./pto_requests_2025.csv" download>⬇️ Download pto_requests_2025.csv</a>
-      <a href="./pto_employee_2025.csv" download>⬇️ Download pto_employee_2025.csv</a>
+      <a href="./pto_employee_2025_plus.csv" download>⬇️ Download pto_employee_2025_plus.csv</a>
     </div>
     <div class="footer">Roster is authoritative for department/manager mapping.</div>
   </div>
@@ -206,7 +209,7 @@
 <script>
   // ===== CONFIG =====
   const REQUESTS_CSV = './pto_requests_2025.csv';
-  const ROSTER_CSV   = './pto_employee_2025.csv';
+  const ROSTER_CSV   = './pto_employee_2025_plus.csv';
   const MS_DAY=86400000;
 
   // ===== UTIL =====
@@ -215,6 +218,7 @@
   const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const dayISO   = d => dayStart(d).toISOString().slice(0,10);
   const L = s => String(s||'').toLowerCase().trim();
+  const num = v => { const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
 
   function parseDate(d){
     if(!d) return null;
@@ -311,6 +315,8 @@
   const kpiPeople=document.getElementById('kpiPeople');
   const kpiDepts=document.getElementById('kpiDepts');
   const kpiDays=document.getElementById('kpiDays');
+  const kpiSickAvail=document.getElementById('kpiSickAvail');
+  const kpiUnpaidAvail=document.getElementById('kpiUnpaidAvail');
 
   const reqList=document.getElementById('reqList');
   const empList=document.getElementById('empList');
@@ -344,10 +350,13 @@
       const ageVal = pick(r, ['Age']);
       const tenureTxt = pick(r, ['Tenure (in years)','Tenure']) || '';
       const vacAvail = pick(r, ['Vacation Available','Vacation Avail (days)']);
+      const sickAvail = pick(r, ['Sick Available']);
+      const unpaidAvail = pick(r, ['Unpaid Available']);
       const daysSince = pick(r, ['Days Since Last PTO']);
       const risk = pick(r, ['Risk Score (Burnout)','Risk Score']);
 
       ROSTER.set(name, {
+        name,
         dept,
         mgr,
         status,
@@ -355,6 +364,8 @@
         age: ageVal,
         tenureM: parseTenureMonths(tenureTxt),
         vacAvail: vacAvail!=null ? String(vacAvail).trim() : '',
+        sickAvail: sickAvail!=null ? String(sickAvail).trim() : '',
+        unpaidAvail: unpaidAvail!=null ? String(unpaidAvail).trim() : '',
         daysSince: daysSince!=null && daysSince!=='' ? Number(daysSince) : null,
         risk: risk!=null ? String(risk).trim() : ''
       });
@@ -410,7 +421,6 @@
       const opts=[...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))].sort();
       el.innerHTML='<option value="">All</option>'+opts.map(v=>`<option>${v}</option>`).join('');
     }
-    // Build from roster (authoritative) plus any values from requests just in case
     const depts = new Set(); const mgrs = new Set();
     ROSTER.forEach(m=>{ if(m.dept) depts.add(m.dept); if(m.mgr) mgrs.add(m.mgr); });
     REQ.forEach(r=>{ if(r.dept) depts.add(r.dept); if(r.mgr) mgrs.add(r.mgr); });
@@ -419,6 +429,14 @@
   }
 
   // ===== RENDER =====
+  function sumAvail(field){
+    let s=0;
+    ROSTER.forEach(m=>{
+      if(L(m.status)==='active') s += num(m[field]);
+    });
+    return Math.round((s + Number.EPSILON)*10)/10;
+  }
+
   function renderAll(){
     const rs=parseDate(dateFrom.value)||new Date();
     const re=parseDate(dateTo.value)||rs;
@@ -434,6 +452,10 @@
     kpiPeople.textContent   = new Set(rows.map(r=>r.emp)).size;
     kpiDepts.textContent    = new Set(rows.map(r=>r.dept)).size;
     kpiDays.textContent     = rows.reduce((a,r)=>a+r.overlapDays,0);
+
+    // Expose Sick/Unpaid availability (Active employees)
+    kpiSickAvail.textContent   = sumAvail('sickAvail');
+    kpiUnpaidAvail.textContent = sumAvail('unpaidAvail');
 
     // Requests list
     reqList.innerHTML='';
