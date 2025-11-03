@@ -3,887 +3,369 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Holland Homes • PTO Dashboard</title>
-
+<title>Holland Homes • Employee Dashboard</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-
-<!-- Chart.js & PapaParse -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
 <style>
-  :root { --brand:#184A30; --ink:#1c1c1c; --muted:#6b7280; --bg:#f7f7f7; --card:#ffffff; --line:#e5e7eb; --ok:#10b981; --warn:#f59e0b; --bad:#ef4444; }
-  * { box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; }
-  body { margin:0; background:var(--bg); color:var(--ink); }
-  header { background:var(--brand); color:#fff; padding:16px 20px; }
-  header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
-  .wrap { max-width:1200px; margin:0 auto; padding:16px; }
-  .row { display:grid; gap:12px; }
-  .grid-6 { grid-template-columns: repeat(6, 1fr); }
-  .grid-3 { grid-template-columns: repeat(3, 1fr); }
-  .grid-2 { grid-template-columns: repeat(2, 1fr); }
-  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
-  .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .toolbar input, .toolbar select, .toolbar button, .toolbar label { font-size:14px; }
-  .toolbar input, .toolbar select, .toolbar button { border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
-  .btn { cursor:pointer; }
-  .kpi { display:flex; align-items:baseline; gap:8px; }
-  .kpi .big { font-size:26px; font-weight:700; }
-  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px; }
-  .list { margin:8px 0 0; padding:0; list-style:none; }
-  .list li { padding:8px 0; border-bottom:1px dashed #eee; font-size:14px; display:flex; justify-content:space-between; gap:10px; }
-  .pill { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; background:#fafafa; color:#374151; }
-  .muted { color:var(--muted); }
-  .footer { color:var(--muted); font-size:12px; margin-top:8px; }
-  .status.ok{border-color:var(--ok); color:#065f46}
-  .status.warn{border-color:var(--warn); color:#7c2d12}
-  .status.bad{border-color:var(--bad); color:#7f1d1d}
-
-  /* Scrollable frames */
-  .scroll-card { max-height: 420px; overflow:auto; border-radius:12px; -webkit-overflow-scrolling:touch; }
-  .scroll-card h3 { position: sticky; top: 0; background: var(--card); padding-bottom:6px; margin-top:0; }
-
-  canvas { width:100%; height:260px; }
-
-  /* Table */
-  .table-wrap { overflow:auto; max-height: 460px; -webkit-overflow-scrolling:touch; border:1px solid #e5e7eb; border-radius:12px; }
-  table { width:100%; border-collapse: collapse; font-size:14px; min-width: 820px; }
-  th, td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
-  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; position: sticky; top: 0; background: #fff; z-index: 1; }
-
-  /* Heatmap (calendar style Sun→Sat) */
-  .heatmap { display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; }
-  .heatcell { border-radius:6px; padding:8px; text-align:center; border:1px solid #eee; background:#fafafa; position:relative; }
-  .heatcell .d { font-weight:600; }
-  .week-badge { position:absolute; top:4px; left:4px; font-size:10px; color:#64748b; }
-  .month-badge { position:absolute; top:4px; right:6px; font-size:10px; font-weight:600; color:#475569; }
-  .month-start { border-top: 2px solid #cbd5e1; }
-
-  details summary{cursor:pointer}
-  code{font-family:ui-monospace,Menlo,Consolas,monospace}
-  .badrow{font-family:ui-monospace; font-size:12px; white-space:pre-wrap; background:#fff7ed; border:1px dashed #f59e0b; padding:8px; border-radius:8px; margin:6px 0;}
-  .err { display:none; background:#fee2e2; color:#7f1d1d; border:1px solid #fecaca; padding:10px 12px; border-radius:10px; margin:12px 0; }
-  @media (max-width: 1024px){ .grid-6, .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+:root{--brand:#184A30;--ink:#111827;--muted:#6b7280;--bg:#f7f7f7;--card:#fff;--line:#e5e7eb;--ok:#10b981;--warn:#f59e0b;--bad:#ef4444}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+body{margin:0;background:var(--bg);color:var(--ink)}
+header{background:var(--brand);color:#fff;padding:14px 18px}
+header h1{margin:0;font-size:18px}
+.wrap{max-width:1100px;margin:0 auto;padding:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.kpi{display:flex;gap:10px;align-items:center}
+.kpi .big{font-size:26px;font-weight:700}
+.kpi .tag{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.badge{display:inline-block;font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;background:#fafafa;color:#374151}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+select,input,button{font-size:14px;border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;background:#fff}
+.btn{cursor:pointer}
+.table-wrap{overflow:auto;border:1px solid #e5e7eb;border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+th{font-size:12px;color:#6b7280;text-transform:uppercase}
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cell{border:1px solid #e5e7eb;border-radius:8px;padding:10px 6px;text-align:center;background:#fafafa}
+.cell .d{font-weight:600}
+.cell .wk{position:absolute;top:4px;left:6px;font-size:10px;color:#64748b}
+.cell{position:relative}
+.note{font-size:12px;color:var(--muted);margin-top:6px}
+.err{display:none;background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca;padding:10px 12px;border-radius:10px;margin:12px 0}
+@media(max-width:900px){.g2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h1>Holland Homes — PTO Dashboard</h1></header>
+<header><h1>Holland Homes — Employee Dashboard</h1></header>
 
 <div class="wrap">
-
-  <!-- Error banner -->
   <div id="err" class="err"></div>
 
-  <!-- Controls -->
-  <div class="toolbar card" style="justify-content:space-between;">
-    <div class="toolbar">
-      <label>From: <input id="dateFrom" type="date" /></label>
-      <label>To: <input id="dateTo" type="date" /></label>
-
-      <!-- Quick ranges -->
-      <button class="btn" id="rngToday" type="button">Today</button>
-      <button class="btn" id="rng7" type="button">Next 7</button>
-      <button class="btn" id="rng14" type="button">Next 14</button>
-      <button class="btn" id="rng30" type="button">Next 30</button>
-      <button class="btn" id="rngMonth" type="button">This Month</button>
-
-      <!-- Filters -->
-      <label>Department:<select id="fDept"><option value="">All</option></select></label>
-      <label>Manager:<select id="fMgr"><option value="">All</option></select></label>
-      <label>Type:
-        <select id="fType">
-          <option value="">All</option>
-          <option>Vacation</option><option>Sick</option><option>Unpaid</option>
-        </select>
-      </label>
-      <label>Employment:
-        <select id="fStatus">
-          <option value="">All</option>
-          <option>Active</option>
-          <option>Inactive</option>
-        </select>
-      </label>
-      <label>Search: <input id="fSearch" type="search" placeholder="Name, dept, manager…" /></label>
-    </div>
-    <div class="toolbar">
-      <button id="refreshBtn" class="btn" type="button">Reload Data</button>
-      <span class="footer">From CSV • <span id="asOf"></span></span>
+  <div class="card">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label>Employee:
+          <select id="empSelect"><option value="">Loading…</option></select>
+        </label>
+        <span class="small muted">Tip: you can link directly with <code>?emp=email@company.com</code> or <code>?emp=Full%20Name</code></span>
+      </div>
+      <div>
+        <label>Range:
+          <input id="from" type="date">–
+          <input id="to" type="date">
+        </label>
+        <button class="btn" id="rng7" type="button">Next 7</button>
+        <button class="btn" id="rng30" type="button">Next 30</button>
+        <button class="btn" id="rngYTD" type="button">YTD</button>
+      </div>
     </div>
   </div>
 
-  <!-- KPIs -->
-  <div class="row grid-6">
-    <div class="card kpi"><span class="big" id="kpiRequests">0</span><span class="label">Requests</span></div>
-    <div class="card kpi"><span class="big" id="kpiPeople">0</span><span class="label">Unique Employees</span></div>
-    <div class="card kpi"><span class="big" id="kpiDepts">0</span><span class="label">Departments</span></div>
-    <div class="card kpi"><span class="big" id="kpiDays">0</span><span class="label">Total Person-Days</span></div>
-    <div class="card kpi"><span class="big" id="kpiSick14">0</span><span class="label">Sick events (14d)</span></div>
-    <div class="card kpi"><span class="big" id="kpiVac14">0</span><span class="label">Vac/Personal (14d)</span></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin:0 0 6px">Profile</h3>
+      <div id="profile"></div>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 6px">Balances & Usage</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Available</th><th>Used (range)</th></tr></thead>
+          <tbody id="balRows"></tbody>
+        </table>
+      </div>
+      <div class="note" id="sinceNote"></div>
+    </div>
   </div>
 
-  <!-- Lists + Chart -->
-  <div class="row grid-3" style="margin-top:12px;">
-    <div class="card scroll-card">
-      <h3>Requests</h3>
-      <ul class="list" id="reqList"></ul>
-    </div>
-
-    <!-- By Employee (expanded columns) -->
-    <div class="card scroll-card">
-      <h3>By Employee</h3>
-      <div class="table-wrap" style="max-height:360px">
-        <table id="empTable">
-          <thead>
-            <tr>
-              <th>Employee</th><th>Dept</th>
-              <th>Vac Used</th><th>Vac Avail</th>
-              <th>Sick Used</th><th>Sick Avail</th>
-              <th>Unpaid Used</th><th>Unpaid Avail</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin:0 0 6px">Upcoming PTO</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dates</th><th>Type</th><th>Days</th></tr></thead>
+          <tbody id="upcoming"></tbody>
         </table>
       </div>
     </div>
-
-    <div class="card scroll-card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">By Team</h3>
-        <label class="muted">Metric:
-          <select id="chartMode">
-            <option value="days">Person-Days</option>
-            <option value="coverage">Coverage %</option>
-          </select>
-        </label>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">Personal Heatmap</h3>
+        <span class="small muted" id="hmRange"></span>
       </div>
-      <canvas id="deptChart" aria-label="Team metric"></canvas>
+      <div id="heat" class="heat"></div>
     </div>
   </div>
 
-  <!-- Heatmap + Burnout -->
-  <div class="row grid-2" style="margin-top:12px;">
-    <div class="card scroll-card">
-      <h3>Calendar Heatmap</h3>
-      <div id="heatmapLegend" class="legend" style="margin:6px 0 8px;"></div>
-      <div id="heatmap" class="heatmap"></div>
-      <div class="footer" id="heatmapNote"></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="margin:0">This Year by Type</h3>
+      <span class="small muted" id="barNote"></span>
     </div>
-    <div class="card scroll-card">
-      <h3>Burnout Radar</h3>
-      <div class="muted" style="margin:4px 0 8px;">Sick counts as rest for “days since any time-off”; vacation/personal tracked separately.</div>
-      <ul class="list" id="burnoutList"></ul>
-      <div class="footer"><span id="burnoutCount">0</span> employee(s) flagged</div>
-    </div>
-  </div>
-
-  <!-- Timeline/Gantt -->
-  <div class="card" style="margin-top:12px;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="margin:0;">Timeline</h3>
-      <div class="muted" id="ganttRange"></div>
-    </div>
-    <div class="gantt"><div class="gantt-grid" id="ganttGrid" style="position:relative; min-width:900px;"></div></div>
-    <div class="footer">Showing requests overlapping the selected range (max 150 rows).</div>
-  </div>
-
-  <!-- Roster snapshot -->
-  <div class="card" style="margin-top:12px;">
-    <h3 style="margin:0 0 6px;">Roster Snapshot</h3>
-    <div class="table-wrap">
-      <table id="balTable">
-        <thead>
-          <tr>
-            <th>Employee</th><th>Department</th><th>Manager</th><th>Status</th>
-            <th>Vacation Avail (days)</th><th>Days Since Last PTO (ANY)</th><th>Risk</th>
-          </tr>
-        </thead>
-        <tbody id="balTableBody"></tbody>
-      </table>
-    </div>
-    <div class="footer">Roster derived from Employee Reference + PTO Employee Info.</div>
-  </div>
-
-  <!-- Diagnostics -->
-  <div class="card" style="margin-top:12px;">
-    <h3 style="margin:0 0 6px;">Diagnostics</h3>
-    <div class="muted" id="colInspector"></div>
-    <details style="margin-top:8px;">
-      <summary><strong>Skipped Rows (if any)</strong></summary>
-      <div id="badRows"></div>
-    </details>
+    <canvas id="bar"></canvas>
   </div>
 </div>
 
 <script>
-  // ===== CONFIG (filenames must match your repo) =====
-  const REQUESTS_CSV = './PTO Requests.csv';
-  const EMP_REF_CSV  = './Employee Reference.csv';
-  const PTO_INFO_CSV = './PTO Employee Info.csv';
+/* ======= CONFIG ======= */
+const REQUESTS_CSV = './PTO Requests.csv';
+const EMP_REF_CSV  = './Employee Reference.csv';
+const PTO_INFO_CSV = './PTO Employee Info.csv';
 
-  // ===== STATE =====
-  let REQ_RAW = [], EMP_REF_RAW = [], PTO_INFO_RAW = [];
-  let REQ = [];                   // normalized requests
-  const ROSTER = new Map();       // key -> {Name, Department, Manager, Status, VacAvail, SickAvail, UnpaidAvail, ...}
-  const badRows = [];
-  let chart = null;
+/* ======= STATE ======= */
+let REQ = [], EMP = [], INFO = [];
+const ROSTER = new Map(); // key -> record (EmpID/Email/Name)
 
-  // ===== UTIL =====
-  const MS_DAY=86400000;
-  const todayISO = () => new Date().toISOString().slice(0,10);
-  function fmt(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-  const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
-  const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const dayISO   = d => dayStart(d).toISOString().slice(0,10);
-  const L = s => String(s||'').toLowerCase().trim();
-  const num = v => { const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
-  const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').replace(/\s+/g,' ').trim().toLowerCase();
-
-  function showErr(msg){
-    const box = document.getElementById('err');
-    box.textContent = msg;
-    box.style.display = 'block';
+/* ======= UTIL ======= */
+const MS=86400000;
+const ds = d => new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const iso = d => ds(d).toISOString().slice(0,10);
+const add = (d,n)=>{const x=new Date(d); x.setDate(x.getDate()+n); return x};
+const L = s => String(s||'').toLowerCase().trim();
+const num = v => { const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
+function parse(text){ return Papa.parse(text,{header:true,dynamicTyping:true,skipEmptyLines:true}).data||[]; }
+async function loadCSV(url){
+  const res = await fetch(encodeURI(url)+'?v='+Date.now(),{cache:'no-store'});
+  if(!res.ok) throw new Error('Failed '+url);
+  return parse(await res.text());
+}
+function pick(row, names){
+  const map = new Map(Object.keys(row).map(k=>[k.replace(/\uFEFF/g,'').trim().toLowerCase(),k]));
+  for(const n of names){
+    const k = map.get(String(n).toLowerCase());
+    if(k!==undefined) return row[k];
   }
-  function hideErr(){
-    const box = document.getElementById('err');
-    box.style.display = 'none';
-  }
+}
+function normName(t){
+  t=String(t||'').trim(); if(!t) return '';
+  const m=/^([^,]+),\s*(.+)$/.exec(t); if(m) return (m[2]+' '+m[1]).replace(/\s+/g,' ').trim();
+  return t.replace(/\s+/g,' ').trim();
+}
+function tryDate(v){
+  if(v==null || v==='') return null;
+  if(typeof v==='number'){ if(v>30000 && v<60000){const base=new Date(Date.UTC(1899,11,30));const d=new Date(base.getTime()+v*MS);return ds(d);} }
+  const s=String(v).trim();
+  const ymd=s.match(/^(\d{4})(\d{2})(\d{2})$/); if(ymd) return ds(new Date(+ymd[1],+ymd[2]-1,+ymd[3]));
+  const md =s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})$/);
+  if(md){ const y=md[3].length===2?2000+ +md[3]:+md[3]; return ds(new Date(y,+md[1]-1,+md[2])); }
+  const d=new Date(s.replace(/\./g,'/')); return isNaN(d)?null:ds(d);
+}
+function parseRange(row){
+  const combo = pick(row,['PTO Request Dates','Dates','Date']);
+  if(combo){ const p=String(combo).split(/\s*-\s*/); const a=tryDate(p[0]); const b=tryDate(p[1]||p[0]); return {s:a,e:b}; }
+  const s=tryDate(pick(row,['Start','Start Date','PTO Request Start Date']));
+  const e=tryDate(pick(row,['End','End Date','PTO Request End Date']))||s;
+  return {s,e};
+}
+function typeOf(v){ const t=L(v); if(/sick/.test(t))return'Sick'; if(/vac|personal|pto/.test(t))return'Vacation'; if(/unpaid/.test(t))return'Unpaid'; return 'Other'; }
+function wk(d){ // ISO-ish week
+  const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const day=x.getUTCDay()||7;
+  x.setUTCDate(x.getUTCDate()+4-day); const y0=new Date(Date.UTC(x.getUTCFullYear(),0,1));
+  return Math.ceil((((x-y0)/MS)+1)/7);
+}
 
-  async function loadCSV(url){
-    const encoded = encodeURI(url);
-    const res = await fetch(`${encoded}?v=${Date.now()}`, {cache:'no-store'});
-    if(!res.ok){
-      showErr(`Couldn’t load "${url}". HTTP ${res.status}. Make sure the CSV files are in the SAME folder as index.html and names match exactly.`);
-      throw new Error('CSV fetch failed: '+url);
-    }
-    const text = await res.text();
-    return parseCSV(text);
-  }
-
-  function parseCSV(text){
-    const out = Papa.parse(text, {header:true, dynamicTyping:true, skipEmptyLines:true});
-    return out.data || [];
-  }
-
-  function pick(row, candidates){
-    const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
-    for (const wanted of candidates){
-      const k = map.get(cleanKey(wanted));
-      if (k !== undefined) return row[k];
-    }
-    return undefined;
-  }
-
-  function normName(s){
-    const t = String(s||'').trim();
-    if (!t) return '';
-    const m = /^([^,]+),\s*(.+)$/.exec(t);
-    if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
-    return t.replace(/\s+/g,' ').trim();
-  }
-
-  const MONTH_MAP = (() => {
-    const names = ['january','february','march','april','may','june','july','august','september','october','november','december'];
-    const m=new Map(); names.forEach((n,i)=>m.set(n,i)); return m;
-  })();
-
-  function monthToIndex(v){
-    if (v==null || v==='') return null;
-    const s=String(v).trim();
-    const n = parseInt(s,10);
-    if (!isNaN(n) && n>=1 && n<=12) return n-1;
-    const Ls=L(s);
-    for (const [name,idx] of MONTH_MAP.entries()){
-      if (name.startsWith(Ls) || Ls.startsWith(name.slice(0,3))) return idx;
-    }
-    const short = ['jan','feb','mar','apr','may','jun','jul','aug','sep','sept','oct','nov','dec'];
-    const i = short.indexOf(Ls);
-    if (i>=0) return i===8?8:i;
-    return null;
-  }
-
-  function excelSerialToDate(n){
-    const base = new Date(Date.UTC(1899,11,30));
-    const d = new Date(base.getTime() + n*MS_DAY);
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  }
-
-  function tryParseOneDate(raw){
-    if (raw == null || raw === '') return null;
-    if (typeof raw === 'number') {
-      if (raw >= 30000 && raw <= 60000) return excelSerialToDate(raw);
-      if (raw >= 19000101 && raw <= 20991231) {
-        const s = String(raw);
-        return new Date(+s.slice(0,4), +s.slice(4,6)-1, +s.slice(6,8));
-      }
-      return null;
-    }
-    let s = String(raw).trim();
-    if (/^\d{5}$/.test(s)) { const n = +s; if (n>=30000 && n<=60000) return excelSerialToDate(n); }
-    const ymd = s.match(/^(\d{4})(\d{2})(\d{2})$/);
-    if (ymd) return new Date(+ymd[1], +ymd[2]-1, +ymd[3]);
-    const md = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/);
-    if (md) { const y = md[3].length===2 ? (2000+ +md[3]) : +md[3]; return new Date(y, +md[1]-1, +md[2]); }
-    const d1 = new Date(Date.parse(s));
-    if (!isNaN(d1)) return new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
-    const d2 = new Date(s.replace(/\./g,'/'));
-    return isNaN(d2) ? null : new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
-  }
-
-  function buildDateFromPieces(row, which){
-    const Y = num(pick(row, ['Year']));
-    if (!Y) return null;
-    const mCandidates = which==='start'
-      ? ['Month of Start Date','PTO Request Month 1','Month 1','Month of Start']
-      : ['Month of End Date','PTO Request Month 2','Month 2','Month of End'];
-    const dCandidates = which==='start'
-      ? ['Start Day of Request','Request Day of Month','Day of Start Date','Start Day']
-      : ['Day of End Date','End Day of Month','Day of End','End Day'];
-
-    let M = monthToIndex(pick(row, mCandidates));
-    let D = num(pick(row, dCandidates));
-    if (!D && which==='end') D = num(pick(row, ['Day of End Date','Request Day of Month'])) || null;
-    if (M==null || !D) return null;
-    const dt = new Date(Y, M, D);
-    return isNaN(+dt) ? null : dt;
-  }
-
-  function parseDateFlexible(raw, row, which){
-    if (raw != null && String(raw).trim()!=='') {
-      if (typeof raw === 'number') { const d=tryParseOneDate(raw); return {start:d, end:d}; }
-      const s = String(raw).trim();
-      const parts = s.split(/\s*-\s*/);
-      if (parts.length === 2) {
-        const a = tryParseOneDate(parts[0]);
-        const b = tryParseOneDate(parts[1]) || a;
-        return {start:a, end:b};
-      }
-      const single = tryParseOneDate(s);
-      return {start:single, end:single};
-    }
-    const sPiece = which==='start' ? buildDateFromPieces(row,'start') : null;
-    const ePiece = which==='end'   ? buildDateFromPieces(row,'end')   : null;
-    if (sPiece || ePiece) {
-      const start = sPiece || ePiece;
-      const end   = ePiece || sPiece;
-      return {start, end};
-    }
-    return {start:null, end:null};
-  }
-
-  function normalizeType(v){
-    const t=L(v);
-    if (/sick/.test(t)) return 'Sick';
-    if (/vac|personal|pto/.test(t)) return 'Vacation';
-    if (/unpaid|unpaiid/.test(t)) return 'Unpaid';
-    return (v||'Other');
-  }
-
-  // ===== Build ROSTER (with de-duplication) =====
-  function harvestEmpRows(rows){
-    for (const r of rows){
-      const EmpID = String(pick(r,['EmpID','Emp ID','EmployeeID','Employee ID','EEID','ID'])||'').trim();
-      const Email = String(pick(r,['Email','Work Email','Email 1'])||'').trim().toLowerCase();
-      const Name  = normName(pick(r,['Employee Name','Employee','Name','Full Name'])||'');
-      const keyPrimary = EmpID ? ('ID:'+EmpID.toUpperCase())
-                       : Email ? ('EMAIL:'+Email.toUpperCase())
-                       : Name  ? ('NAME:'+Name.toUpperCase())
-                       : null;
-      if(!keyPrimary) continue;
-
-      const cur = ROSTER.get(keyPrimary) || {};
-      const row = {
-        key: keyPrimary,
-        EmpID: EmpID || cur.EmpID,
-        Email: Email || cur.Email,
-        Name:  Name  || cur.Name,
-        Department: pick(r,['Department','Team']) || cur.Department,
-        Manager:    pick(r,['Direct Report','Manager']) || cur.Manager,
-        Status:     pick(r,['Employment Status','Status']) || cur.Status,
-        VacAvail:   pick(r,['Vacation Avail (days)','Vacation Avail','Vacation Available','Vacation Balance']) ?? cur.VacAvail,
-        SickAvail:  pick(r,['Sick Avail (days)','Sick Avail','Sick Available','Sick Balance']) ?? cur.SickAvail,
-        UnpaidAvail:pick(r,['Unpaid Avail (days)','Unpaid Avail','Unpaid Available']) ?? cur.UnpaidAvail
-      };
-      ROSTER.set(keyPrimary, row);
-
-      // Secondary keys -> point to same person, so collapse duplicates
-      if (EmpID) ROSTER.set('ID:'+EmpID.toUpperCase(), row);
-      if (Email) ROSTER.set('EMAIL:'+Email.toUpperCase(), row);
-      if (Name)  ROSTER.set('NAME:'+Name.toUpperCase(), row);
-    }
-  }
-
-  // ===== Normalize requests =====
-  function normalizeRequests(){
-    REQ = [];
-    badRows.length = 0;
-
-    REQ_RAW.forEach((r, idx)=>{
-      const EmpID = String(pick(r,['EmpID','Emp ID','EmployeeID','Employee ID','EEID','ID'])||'').trim();
-      let Name    = normName(pick(r,[
-        'Employee Name','Employee','Name','Full Name',
-        'Employee Name 1','Employee Name 2','Employee Name 3'
-      ])||'');
-      const Email = String(pick(r,['Email','Work Email','Email 1'])||'').trim().toLowerCase();
-
-      let key = EmpID ? ('ID:'+EmpID.toUpperCase())
-              : Email ? ('EMAIL:'+Email.toUpperCase())
-              : Name  ? ('NAME:'+Name.toUpperCase())
-              : null;
-
-      if(!Name && key && ROSTER.has(key)) Name = ROSTER.get(key).Name || Name;
-
-      let rng = parseDateFlexible(pick(r,['PTO Request Dates','Dates','PTO Date','Date','Start']), r, 'start');
-
-      if(!rng.start){
-        const s2 = parseDateFlexible(pick(r,['PTO Request Start Date','Start Date','Start']), r, 'start').start;
-        const e2 = parseDateFlexible(pick(r,['PTO Request End Date','End Date','End']), r, 'end').end;
-        rng = {start: s2||e2||null, end: e2||s2||null};
-      }
-      if(!rng.start){
-        const s3 = buildDateFromPieces(r,'start');
-        const e3 = buildDateFromPieces(r,'end') || s3;
-        rng = {start:s3, end:e3};
-      }
-
-      let {start:Start, end:End} = rng;
-      if(End && Start && End<Start){ const t=Start; Start=End; End=t; }
-
-      const sh   = pick(r,['Start AM/PM']) || '';
-      const eh   = pick(r,['End AM/PM'])   || '';
-      const type = normalizeType(pick(r,['PTO Request Type','Type','Category']));
-
-      const meta = (key && ROSTER.get(key)) || {};
-      const dept   = (meta.Department || pick(r,['Department','Team']) || 'Unknown').toString().trim();
-      const mgr    = (meta.Manager    || pick(r,['Direct Report','Manager']) || '').toString().trim();
-      const status = (meta.Status     || pick(r,['Employment Status','Status']) || '').toString().trim();
-
-      const reasons=[];
-      if(!Name && !key) reasons.push('no EmpID/Email/Name');
-      if(!Start) reasons.push('no parsable date');
-      if(reasons.length){ badRows.push({idx, why: reasons.join(', '), raw:r}); return; }
-
-      REQ.push({
-        key: key||('NAME:'+Name.toUpperCase()),
-        emp: Name||key,
-        type, s:Start, e:End||Start, sh, eh,
-        dept, mgr, status, raw:r
-      });
-    });
-  }
-
-  // ===== Filters =====
-  function passesFilters(r){
-    const q=L(fSearch.value);
-    const dept=L(fDept.value), mgr=L(fMgr.value), type=L(fType.value), st=L(fStatus.value);
-    if(dept && L(r.dept)!==L(dept)) return false;
-    if(mgr  && L(r.mgr)!==L(mgr)) return false;
-    if(type && L(r.type)!==L(type)) return false;
-    if(st   && L(r.status)!==L(st)) return false;
-    if(q){
-      const blob=[r.emp,r.dept,r.mgr,r.type,r.status].map(x=>String(x||'').toLowerCase()).join('|');
-      if(!blob.includes(q)) return false;
-    }
-    return true;
-  }
-
-  function buildFilterOptions(){
-    function setOptions(el, arr){
-      const opts=[...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))].sort();
-      el.innerHTML='<option value="">All</option>'+opts.map(v=>`<option>${v}</option>`).join('');
-    }
-    const depts = new Set(); const mgrs = new Set();
-    ROSTER.forEach(m=>{ if(m.Department) depts.add(m.Department); if(m.Manager) mgrs.add(m.Manager); });
-    REQ.forEach(r=>{ if(r.dept) depts.add(r.dept); if(r.mgr) mgrs.add(r.mgr); });
-    setOptions(fDept, [...depts]);
-    setOptions(fMgr,  [...mgrs]);
-  }
-
-  // ===== Render =====
-  function overlapDays(r, rs, re){
-    const s = dayStart(r.s), e = dayStart(r.e);
-    const left  = Math.max(s, rs);
-    const right = Math.min(e, re);
-    if (right < left) return 0;
-    return Math.floor((right - left)/MS_DAY) + 1;
-  }
-
-  function renderAll(){
-    hideErr();
-
-    const rsRaw = dateFrom.value ? new Date(dateFrom.value) : new Date();
-    const reRaw = dateTo.value   ? new Date(dateTo.value)   : rsRaw;
-    const rs = dayStart(rsRaw), re = dayStart(reRaw);
-    if(re<rs){ dateTo.value=dateFrom.value; return; }
-
-    // Respect Active-only by default in coverage and tables
-    const activeKeys = new Set();
-    ROSTER.forEach((v,k)=>{ if(v && v.Status && L(v.Status)==='active') activeKeys.add(k); });
-
-    const rows = REQ
-      .map(r=> ({...r, overlapDays: overlapDays(r, rs, re)}))
-      .filter(r=> r.overlapDays>0 && passesFilters(r))
-      .filter(r=> {
-        // If roster has status inactive for this key, exclude (unless user explicitly filtered Status to Inactive)
-        const stFilter = L(fStatus.value);
-        if(!stFilter || stFilter==='active'){
-          const rec = ROSTER.get(r.key);
-          if(rec && L(rec.Status)==='inactive') return false;
-        }
-        return true;
-      });
-
-    // KPIs
-    kpiRequests.textContent = rows.length;
-    kpiPeople.textContent   = new Set(rows.map(r=>r.emp)).size;
-    kpiDepts.textContent    = new Set(rows.map(r=>r.dept)).size;
-    kpiDays.textContent     = rows.reduce((a,r)=>a+r.overlapDays,0);
-
-    const last14 = addDays(new Date(), -14);
-    let sick14=0, vac14=0;
-    REQ.forEach(r=>{
-      if(r.s>=last14 && r.s<=new Date()){
-        if(r.type==='Sick') sick14++; else if(r.type==='Vacation') vac14++;
-      }
-    });
-    kpiSick14.textContent = sick14;
-    kpiVac14.textContent  = vac14;
-
-    // Requests list
-    reqList.innerHTML='';
-    rows.sort((a,b)=> (a.s-b.s) || a.emp.localeCompare(b.emp)).forEach(r=>{
-      const li=document.createElement('li');
-      li.innerHTML = `<div>${r.emp} • ${r.type}</div>
-                      <div><span class="pill">${r.dept}</span> <span class="muted">${dayISO(r.s)} → ${dayISO(r.e)} • ${r.overlapDays}d</span></div>`;
-      reqList.appendChild(li);
-    });
-
-    // By Employee (Used within range + Avail from roster)
-    renderByEmployee(rows);
-
-    // Chart + Heatmap + Gantt + Roster + Burnout
-    renderChart(rows, activeKeys);
-    renderHeatmap(rows, rs, re);
-    renderGantt(rows, rs, re);
-    renderRosterTable();
-    renderBurnout();
-    renderDiagnostics();
-  }
-
-  function renderByEmployee(rows){
-    const by = new Map();
-    rows.forEach(r=>{
-      const k = r.key;
-      if(!by.has(k)) by.set(k,{name:r.emp, dept:r.dept, vacUsed:0, sickUsed:0, unpUsed:0});
-      const t = by.get(k);
-      if(r.type==='Vacation') t.vacUsed += r.overlapDays;
-      else if(r.type==='Sick') t.sickUsed += r.overlapDays;
-      else if(r.type==='Unpaid') t.unpUsed += r.overlapDays;
-    });
-
-    const tbody = document.querySelector('#empTable tbody');
-    tbody.innerHTML='';
-    [...by.entries()].sort((a,b)=> a[1].name.localeCompare(b[1].name)).forEach(([k,v])=>{
-      const rec = ROSTER.get(k)||{};
-      const tr=document.createElement('tr');
-      tr.innerHTML = `
-        <td>${v.name}</td>
-        <td>${v.dept||rec.Department||''}</td>
-        <td>${v.vacUsed||0}</td><td>${rec.VacAvail??''}</td>
-        <td>${v.sickUsed||0}</td><td>${rec.SickAvail??''}</td>
-        <td>${v.unpUsed||0}</td><td>${rec.UnpaidAvail??''}</td>`;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function renderChart(rows, activeKeys){
-    const mode = chartMode.value;
-    if(chart) chart.destroy();
-
-    if(mode==='days'){
-      const byDept={}; rows.forEach(r=>{ byDept[r.dept]=(byDept[r.dept]||0)+r.overlapDays; });
-      const labels=Object.keys(byDept).sort();
-      const data=labels.map(l=>byDept[l]);
-      chart = new Chart(deptChart, {
-        type:'bar',
-        data:{ labels, datasets:[{ label:'Person-Days', data }] },
-        options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
-      });
-    } else {
-      // coverage %: 1 - (unique people out / headcount) by dept (active only)
-      const headcountByDept={};
-      ROSTER.forEach(m=>{
-        if(m && L(m.Status)==='active'){
-          headcountByDept[m.Department]=(headcountByDept[m.Department]||0)+1;
-        }
-      });
-      const byDeptPeople=new Map();
-      rows.forEach(r=>{
-        const rec = ROSTER.get(r.key);
-        if(rec && L(rec.Status)==='active'){
-          const set = byDeptPeople.get(r.dept) || new Set();
-          set.add(r.emp); byDeptPeople.set(r.dept,set);
-        }
-      });
-
-      const labels=Object.keys(headcountByDept).sort();
-      const data=labels.map(d=>{
-        const tot=headcountByDept[d]||0, outs=(byDeptPeople.get(d)||new Set()).size;
-        return tot>0 ? Math.round((1 - outs/tot)*100) : 100;
-      });
-      chart = new Chart(deptChart, {
-        type:'bar',
-        data:{ labels, datasets:[{ label:'Coverage %', data }] },
-        options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, max:100, ticks:{ callback:v=>v+'%' } } } }
-      });
-    }
-  }
-
-  // Week number
-  function weekNumber(d){
-    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    const dayNum = date.getUTCDay() || 7;
-    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
-    return Math.ceil((((date - yearStart)/86400000) + 1)/7);
-  }
-
-  function renderHeatmap(rows, rs, re){
-    heatmap.innerHTML=''; heatmapLegend.innerHTML='';
-    const perDay=[]; let max=0;
-
-    // pad from Sunday
-    const pad = rs.getDay();
-    for(let i=0;i<pad;i++){
-      const c=document.createElement('div'); c.className='heatcell'; c.style.visibility='hidden'; heatmap.appendChild(c);
-    }
-
-    for(let d=new Date(rs); d<=re; d=addDays(d,1)){
-      const count = rows.reduce((acc,r)=> acc + ( (dayStart(r.s)<=d && dayStart(r.e)>=d) ? (r.sh||r.eh?0.5:1) : 0 ), 0);
-      perDay.push({d:new Date(d), count}); max=Math.max(max,count);
-    }
-    const scale = c => {
-      if(max<=0) return '#fafafa';
-      const t = c/max;
-      const a = Math.max(0.08, 0.15 + 0.55*t);
-      return `rgba(16,185,129,${a})`;
+/* ======= BUILD ROSTER ======= */
+function harvest(rows){
+  for(const r of rows){
+    const id=String(pick(r,['EmpID','Emp ID','Employee ID','EEID','ID'])||'').trim();
+    const email=String(pick(r,['Email','Work Email','Email 1'])||'').trim().toLowerCase();
+    const name=normName(pick(r,['Employee Name','Employee','Name','Full Name']));
+    const key = id?('ID:'+id.toUpperCase()): email?('EMAIL:'+email.toUpperCase()) : name?('NAME:'+name.toUpperCase()):null;
+    if(!key) continue;
+    const cur = ROSTER.get(key) || {};
+    const rec = {
+      key, EmpID:id||cur.EmpID, Email:email||cur.Email, Name:name||cur.Name,
+      Department: pick(r,['Department','Team']) || cur.Department,
+      Manager: pick(r,['Direct Report','Manager']) || cur.Manager,
+      Status: pick(r,['Employment Status','Status']) || cur.Status,
+      VacAvail: pick(r,['Vacation Avail (days)','Vacation Avail','Vacation Available','Vacation Balance']) ?? cur.VacAvail,
+      SickAvail: pick(r,['Sick Avail (days)','Sick Avail','Sick Available','Sick Balance']) ?? cur.SickAvail,
+      UnpaidAvail: pick(r,['Unpaid Avail (days)','Unpaid Avail','Unpaid Available']) ?? cur.UnpaidAvail
     };
-    heatmapLegend.innerHTML = `<span class="muted">Load:</span>
-      <span class="pill" style="background:#fafafa">0</span>
-      <span class="pill" style="background:${scale(max*0.33)}">~</span>
-      <span class="pill" style="background:${scale(max*0.66)}">+</span>
-      <span class="pill" style="background:${scale(max)}">max</span>`;
-
-    perDay.forEach(({d,count})=>{
-      const cell=document.createElement('div'); cell.className='heatcell';
-      const isFirst = d.getDate()===1;
-      if(isFirst) cell.classList.add('month-start');
-      const dow = d.getDay();
-      if(dow===0){ // Sunday -> show ISO week
-        const wb=document.createElement('div'); wb.className='week-badge'; wb.textContent='W'+weekNumber(d);
-        cell.appendChild(wb);
-      }
-      if(isFirst){
-        const mb=document.createElement('div'); mb.className='month-badge'; mb.textContent=d.toLocaleString('en-US',{month:'short'});
-        cell.appendChild(mb);
-      }
-      cell.style.background=scale(count);
-      cell.innerHTML += `<div class="d">${d.getDate()}</div><div class="muted" style="font-size:12px;">${count||0}</div>`;
-      heatmap.appendChild(cell);
-    });
-    heatmapNote.textContent = `${dayISO(rs)} → ${dayISO(re)} • Max daily load: ${max}`;
+    ROSTER.set(key, rec);
+    if(id) ROSTER.set('ID:'+id.toUpperCase(), rec);
+    if(email) ROSTER.set('EMAIL:'+email.toUpperCase(), rec);
+    if(name) ROSTER.set('NAME:'+name.toUpperCase(), rec);
   }
+}
 
-  function renderGantt(rows, rs, re){
-    ganttRange.textContent = `${dayISO(rs)} → ${dayISO(re)}`;
-    const MAX=150, span=Math.max(1, Math.floor((dayStart(re)-dayStart(rs))/MS_DAY)+1);
-    ganttGrid.innerHTML='';
-    rows.slice(0,MAX).sort((a,b)=> a.emp.localeCompare(b.emp) || (a.s-b.s)).forEach(r=>{
-      const row=document.createElement('div'); row.style.display='flex'; row.style.alignItems='center'; row.style.borderBottom='1px dashed #eee'; row.style.padding='6px 0'; row.style.height='28px';
-      const name=document.createElement('div'); name.style.width='180px'; name.style.flex='0 0 180px'; name.style.fontSize='13px'; name.style.whiteSpace='nowrap'; name.style.overflow='hidden'; name.style.textOverflow='ellipsis'; name.textContent=r.emp;
-      const lane=document.createElement('div'); lane.style.position='relative'; lane.style.height='8px'; lane.style.flex='1'; lane.style.background='linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px) 0 0/14px 100% no-repeat'; lane.style.borderRadius='8px';
-      const start = dayStart(r.s)<dayStart(rs) ? rs : r.s;
-      const end   = dayStart(r.e)>dayStart(re) ? re : r.e;
-      const offset = Math.max(0, Math.floor((dayStart(start)-dayStart(rs))/MS_DAY));
-      const len = Math.max(0.2, overlapDays(r, rs, re));
-      const leftPct = (offset/span)*100, widthPct=(len/span)*100;
-      const bar=document.createElement('div'); bar.style.position='absolute'; bar.style.top='-2px'; bar.style.height='12px'; bar.style.borderRadius='8px';
-      bar.style.background='#d1fae5'; bar.style.border='1px solid #10b981'; bar.style.left=leftPct+'%'; bar.style.width=widthPct+'%';
-      bar.title = `${r.emp} • ${r.type} • ${dayISO(r.s)} → ${dayISO(r.e)} (${r.overlapDays}d)`;
-      lane.appendChild(bar);
-      row.appendChild(name); row.appendChild(lane); ganttGrid.appendChild(row);
-    });
-  }
+/* ======= RENDER ======= */
+const empSelect=document.getElementById('empSelect');
+const profile=document.getElementById('profile');
+const balRows=document.getElementById('balRows');
+const upcoming=document.getElementById('upcoming');
+const from=document.getElementById('from');
+const to=document.getElementById('to');
+const heat=document.getElementById('heat');
+const hmRange=document.getElementById('hmRange');
+const bar=document.getElementById('bar');
+const barNote=document.getElementById('barNote');
+const errBox=document.getElementById('err');
+let barChart=null;
 
-  function renderRosterTable(){
-    const tbody=document.getElementById('balTableBody');
-    tbody.innerHTML='';
-    const rows=[...new Set([...ROSTER.values()])].filter(v=>v && v.Name).filter((v,i,a)=>a.indexOf(v)===i);
-    rows.sort((a,b)=> (a.Name||'').localeCompare(b.Name||''));
-    rows.forEach(r=>{
-      const tr=document.createElement('tr');
-      tr.innerHTML = `
-        <td>${r.Name||r.EmpID||r.Email||r.key}</td>
-        <td>${r.Department||''}</td>
-        <td>${r.Manager||''}</td>
-        <td>${r.Status||''}</td>
-        <td>${r.VacAvail??''}</td>
-        <td>${r.DaysSinceAny??''}</td>
-        <td>${r.Risk||''}</td>`;
-      tbody.appendChild(tr);
-    });
-  }
+function setRange(a,b){ from.value=iso(a); to.value=iso(b); render(); }
+document.getElementById('rng7').onclick = ()=>{ const t=ds(new Date()); setRange(t,add(t,7)); };
+document.getElementById('rng30').onclick= ()=>{ const t=ds(new Date()); setRange(t,add(t,30)); };
+document.getElementById('rngYTD').onclick= ()=>{ const now=new Date(); setRange(new Date(now.getFullYear(),0,1), now); };
 
-  function renderBurnout(){
-    const today = dayStart(new Date());
-    const last14 = addDays(today, -14);
+empSelect.addEventListener('change', render);
+[from,to].forEach(el=>el.addEventListener('change', render));
 
-    const byKey = new Map();
-    function ensure(key, name){
-      if(!byKey.has(key)) byKey.set(key, {name, lastAny:null, lastVac:null, sick14:0, vac14:0, status:null, dept:'', mgr:''});
-      return byKey.get(key);
-    }
-    REQ.forEach(r=>{
-      const s = ensure(r.key, r.emp);
-      const rec = ROSTER.get(r.key)||{};
-      s.status = rec.Status || r.status;
-      s.dept = rec.Department || r.dept;
-      s.mgr  = rec.Manager || r.mgr;
-
-      if(!s.lastAny || r.s > s.lastAny) s.lastAny = r.s;
-      if(r.type!=='Sick'){ if(!s.lastVac || r.s > s.lastVac) s.lastVac = r.s; }
-      if(r.s>=last14 && r.s<=today){
-        if(r.type==='Sick') s.sick14++; else s.vac14++;
-      }
-    });
-
-    // include active roster folks even without REQ
-    ROSTER.forEach((rec,k)=>{
-      if(L(rec.Status)==='active' && !byKey.has(k)){
-        byKey.set(k,{name:rec.Name, lastAny:null, lastVac:null, sick14:0, vac14:0, status:rec.Status, dept:rec.Department||'', mgr:rec.Manager||''});
-      }
-    });
-
-    const items=[];
-    byKey.forEach((s,k)=>{
-      if(L(s.status)==='inactive') return; // exclude inactive
-      const daysSinceAny = s.lastAny ? Math.floor((today - dayStart(s.lastAny))/MS_DAY) : null;
-      const daysSinceVac = s.lastVac ? Math.floor((today - dayStart(s.lastVac))/MS_DAY) : null;
-      const anyCut=12, vacCut=45;
-      let risk='OK';
-      if((daysSinceAny??999) >= anyCut || (daysSinceVac??999) >= vacCut) risk='Watch';
-      if((daysSinceAny??999) >= anyCut && (daysSinceVac??999) >= vacCut) risk='High';
-      items.push({ name: s.name, dept: s.dept, mgr: s.mgr, sick14: s.sick14, vac14: s.vac14, daysSinceAny, daysSinceVac, risk });
-    });
-
-    items.sort((a,b)=>{
-      const o={High:0,Watch:1,OK:2};
-      const d = (o[a.risk]-o[b.risk]); if(d) return d;
-      return (b.daysSinceVac??-1)-(a.daysSinceVac??-1);
-    });
-
-    burnoutList.innerHTML='';
-    items.forEach(x=>{
-      const cls = x.risk==='High'?'bad':(x.risk==='Watch'?'warn':'ok');
-      const li=document.createElement('li');
-      li.innerHTML = `<div>${x.name} • <span class="pill">${x.dept||''}</span> <span class="muted">${x.mgr||''}</span></div>
-                      <div><span class="pill">Any: ${x.daysSinceAny==null?'—':x.daysSinceAny}d</span>
-                           <span class="pill">Vac: ${x.daysSinceVac==null?'—':x.daysSinceVac}d</span>
-                           <span class="pill">Sick14: ${x.sick14}</span>
-                           <span class="pill">Vac14: ${x.vac14}</span>
-                           <span class="pill status ${cls}">${x.risk}</span></div>`;
-      burnoutList.appendChild(li);
-    });
-    burnoutCount.textContent = items.filter(i=>i.risk!=='OK').length;
-  }
-
-  function renderDiagnostics(){
-    const colsReq = Object.keys(REQ_RAW?.[0]||{}).map(c=>c.replace(/\uFEFF/g,'').trim());
-    const colsEmp = Object.keys(EMP_REF_RAW?.[0]||{}).map(c=>c.replace(/\uFEFF/g,'').trim());
-    const colsInfo= Object.keys(PTO_INFO_RAW?.[0]||{}).map(c=>c.replace(/\uFEFF/g,'').trim());
-    colInspector.textContent = `Detected columns — PTO Requests: [${colsReq.join(', ')}] • Employee Reference: [${colsEmp.join(', ')}] • PTO Employee Info: [${colsInfo.join(', ')}]`;
-    const bad = document.getElementById('badRows');
-    bad.innerHTML = badRows.length ? badRows.slice(0,150).map(b=>{
-      const sample = JSON.stringify(b.raw);
-      return `<div class="badrow">Row#${b.idx+1} • ${b.why}\n${sample}</div>`;
-    }).join('') : '<div class="muted">No skipped rows 🎉</div>';
-    if(badRows.length>150){
-      const more=document.createElement('div'); more.className='muted'; more.textContent=`+ ${badRows.length-150} more…`; bad.appendChild(more);
+function currentKey(){
+  const v = empSelect.value;
+  if(v) return v;
+  const q = new URLSearchParams(location.search).get('emp');
+  if(!q) return '';
+  const needle = L(q);
+  for(const [k,rec] of ROSTER.entries()){
+    if(k.startsWith('ID:')||k.startsWith('EMAIL:')||k.startsWith('NAME:')){
+      if(L(rec.Email)===needle || L(rec.Name)===needle) return k;
     }
   }
+  return '';
+}
 
-  // ===== EVENTS =====
-  const dateFrom = document.getElementById('dateFrom');
-  const dateTo   = document.getElementById('dateTo');
-  const fDept = document.getElementById('fDept');
-  const fMgr  = document.getElementById('fMgr');
-  const fType = document.getElementById('fType');
-  const fStatus=document.getElementById('fStatus');
-  const fSearch=document.getElementById('fSearch');
-  const kpiRequests=document.getElementById('kpiRequests');
-  const kpiPeople=document.getElementById('kpiPeople');
-  const kpiDepts=document.getElementById('kpiDepts');
-  const kpiDays=document.getElementById('kpiDays');
-  const kpiSick14=document.getElementById('kpiSick14');
-  const kpiVac14=document.getElementById('kpiVac14');
-  const reqList=document.getElementById('reqList');
-  const deptChart=document.getElementById('deptChart');
-  const chartMode=document.getElementById('chartMode');
-  const heatmap=document.getElementById('heatmap');
-  const heatmapLegend=document.getElementById('heatmapLegend');
-  const heatmapNote=document.getElementById('heatmapNote');
-  const ganttGrid=document.getElementById('ganttGrid');
-  const ganttRange=document.getElementById('ganttRange');
-  const balTableBody=document.getElementById('balTableBody');
-  const burnoutList=document.getElementById('burnoutList');
-  const burnoutCount=document.getElementById('burnoutCount');
-  const badRowsBox=document.getElementById('badRows');
-  const asOf=document.getElementById('asOf');
+function render(){
+  errBox.style.display='none';
+  const key = currentKey();
+  if(!key){ profile.innerHTML='<span class="muted">Select an employee above.</span>'; balRows.innerHTML=''; upcoming.innerHTML=''; heat.innerHTML=''; if(barChart){barChart.destroy();} return; }
+  const rec = ROSTER.get(key);
+  if(!rec){ profile.innerHTML='<span class="muted">No profile found.</span>'; return; }
 
-  function setRange(start,end){ dateFrom.value=fmt(dayStart(start)); dateTo.value=fmt(dayStart(end)); renderAll(); }
-  document.getElementById('rngToday').onclick = ()=>{ const t=dayStart(new Date()); setRange(t,t); };
-  document.getElementById('rng7').onclick     = ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,7)); };
-  document.getElementById('rng14').onclick    = ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,14)); };
-  document.getElementById('rng30').onclick    = ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,30)); };
-  document.getElementById('rngMonth').onclick = ()=>{ const t=new Date(); setRange(new Date(t.getFullYear(), t.getMonth(), 1), new Date(t.getFullYear(), t.getMonth()+1, 0)); };
+  // profile
+  const inactive = L(rec.Status)==='inactive';
+  profile.innerHTML = `
+    <div class="kpi" style="margin-bottom:8px">
+      <div class="big">${rec.Name||''}</div>
+      ${inactive?'<span class="badge" style="border-color:var(--bad);color:#7f1d1d">Inactive</span>':''}
+    </div>
+    <div class="small muted">${rec.Department||''} • ${rec.Manager||''} • ${rec.Email||''}</div>`;
 
-  document.getElementById('refreshBtn').addEventListener('click', init);
-  [dateFrom,dateTo,fDept,fMgr,fType,fStatus,chartMode].forEach(el=> el.addEventListener('change', renderAll));
-  fSearch.addEventListener('input', renderAll);
+  // range + filter their requests
+  const rs = from.value? ds(new Date(from.value)) : ds(new Date());
+  const re = to.value? ds(new Date(to.value)) : add(rs,7);
 
-  // ===== INIT =====
-  async function init(){
-    hideErr();
-    const t=new Date();
-    dateFrom.value = todayISO();
-    dateTo.value   = addDays(t,7).toISOString().slice(0,10);
-    asOf.textContent = new Date().toLocaleString();
-
-    try{
-      [REQ_RAW, EMP_REF_RAW, PTO_INFO_RAW] = await Promise.all([
-        loadCSV(REQUESTS_CSV),
-        loadCSV(EMP_REF_CSV),
-        loadCSV(PTO_INFO_CSV)
-      ]);
-    }catch(e){
-      console.error(e);
-      return;
-    }
-
-    // Build roster from both employee files (with de-dupe)
-    ROSTER.clear();
-    harvestEmpRows(EMP_REF_RAW||[]);
-    harvestEmpRows(PTO_INFO_RAW||[]);
-
-    // Requests
-    normalizeRequests();
-
-    // Filters + render
-    buildFilterOptions();
-    renderAll();
+  function isMine(r){
+    // match via any of the dedup keys
+    const rKey = r._key;
+    return rKey && (rKey===key || (rec.EmpID && rKey==='ID:'+rec.EmpID.toUpperCase()) || (rec.Email && rKey==='EMAIL:'+rec.Email.toUpperCase()) || (rec.Name && rKey==='NAME:'+rec.Name.toUpperCase()));
   }
 
-  init();
+  const mine = REQ.filter(isMine);
+  const inRange = mine.filter(r=> !(r.e<rs || r.s>re));
+  const y0 = new Date(new Date().getFullYear(),0,1);
+  const ytd = mine.filter(r=> !(r.e<y0 || r.s>new Date()));
+
+  // balances & used (range)
+  const used = {Vacation:0,Sick:0,Unpaid:0};
+  inRange.forEach(r=>{ const s=r.s<rs?rs:r.s; const e=r.e>re?re:r.e; used[r.type]=(used[r.type]||0)+ ( (e - s)/MS + 1 ); });
+  const vacA = rec.VacAvail??'', sickA = rec.SickAvail??'', unpA = rec.UnpaidAvail??'';
+  balRows.innerHTML = `
+    <tr><td>Vacation</td><td>${vacA}</td><td>${used.Vacation||0}</td></tr>
+    <tr><td>Sick</td><td>${sickA}</td><td>${used.Sick||0}</td></tr>
+    <tr><td>Unpaid</td><td>${unpA}</td><td>${used.Unpaid||0}</td></tr>`;
+
+  // days since last PTO (ANY) & last vacation
+  let lastAny=null,lastVac=null;
+  mine.forEach(r=>{ if(!lastAny || r.s>lastAny) lastAny=r.s; if(r.type!=='Sick'){ if(!lastVac || r.s>lastVac) lastVac=r.s; }});
+  const today=ds(new Date());
+  const sinceAny = lastAny? Math.floor((today-lastAny)/MS) : '—';
+  const sinceVac = lastVac? Math.floor((today-lastVac)/MS) : '—';
+  document.getElementById('sinceNote').textContent = `Days since last time-off (any): ${sinceAny} • Days since last vacation/personal: ${sinceVac}`;
+
+  // upcoming (next 90d)
+  const soon = mine.filter(r=> r.s>=today && r.s<=add(today,90)).sort((a,b)=>a.s-b.s);
+  upcoming.innerHTML = soon.length? soon.map(r=>`<tr><td>${iso(r.s)} → ${iso(r.e)}</td><td>${r.type}</td><td>${((r.e - r.s)/MS)+1}</td></tr>`).join('')
+                                  : `<tr><td class="muted" colspan="3">No upcoming PTO within 90 days.</td></tr>`;
+
+  // personal heatmap for chosen range
+  heat.innerHTML=''; hmRange.textContent = `${iso(rs)} → ${iso(re)}`;
+  const pad = rs.getDay(); for(let i=0;i<pad;i++){ const c=document.createElement('div'); c.className='cell'; c.style.visibility='hidden'; heat.appendChild(c); }
+  const counts=new Map(); let max=0;
+  for(let d=new Date(rs); d<=re; d=add(d,1)){
+    const k=iso(d);
+    const c = mine.reduce((acc,r)=> acc + ( (r.s<=d && r.e>=d) ? 1 : 0), 0);
+    counts.set(k,c); max=Math.max(max,c);
+  }
+  function shade(c){ if(max<=0) return '#f1f5f9'; const t=c/max; const a=Math.max(.08,.15+.55*t); return `rgba(16,185,129,${a})`; }
+  for(let d=new Date(rs); d<=re; d=add(d,1)){
+    const k=iso(d), c=counts.get(k)||0;
+    const cell=document.createElement('div'); cell.className='cell'; cell.style.background=shade(c);
+    if(d.getDay()===0){ const wkBadge=document.createElement('div'); wkBadge.className='wk'; wkBadge.textContent='W'+wk(d); cell.appendChild(wkBadge); }
+    if(d.getDate()===1){ const mb=document.createElement('div'); mb.style.position='absolute'; mb.style.top='4px'; mb.style.right='6px'; mb.style.fontSize='10px'; mb.style.fontWeight='600'; mb.style.color='#475569'; mb.textContent=d.toLocaleString('en-US',{month:'short'}); cell.appendChild(mb); }
+    cell.innerHTML += `<div class="d">${d.getDate()}</div><div class="small muted">${c||0}</div>`;
+    heat.appendChild(cell);
+  }
+
+  // YTD bar chart
+  const yUsed={Vacation:0,Sick:0,Unpaid:0};
+  ytd.forEach(r=>{ const s=r.s<y0?y0:r.s; const e=r.e>today?today:r.e; yUsed[r.type]=(yUsed[r.type]||0)+(((e-s)/MS)+1); });
+  barNote.textContent = `${iso(y0)} → ${iso(today)}`;
+  if(barChart) barChart.destroy();
+  barChart=new Chart(bar,{type:'bar',
+    data:{labels:['Vacation','Sick','Unpaid'],datasets:[{label:'Days Used (YTD)',data:[yUsed.Vacation||0,yUsed.Sick||0,yUsed.Unpaid||0]}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+  });
+}
+
+/* ======= INIT ======= */
+async function init(){
+  try{
+    [REQ, EMP, INFO] = await Promise.all([loadCSV(REQUESTS_CSV), loadCSV(EMP_REF_CSV), loadCSV(PTO_INFO_CSV)]);
+  }catch(e){
+    errBox.textContent = `Couldn’t load one or more CSVs. Make sure the three files are in the same folder and named exactly: "PTO Requests.csv", "Employee Reference.csv", "PTO Employee Info.csv".`;
+    errBox.style.display='block';
+    console.error(e);
+    return;
+  }
+
+  // roster
+  harvest(EMP); harvest(INFO);
+
+  // normalize requests
+  REQ = REQ.map(r=>{
+    const id=String(pick(r,['EmpID','Emp ID','Employee ID','EEID','ID'])||'').trim();
+    const email=String(pick(r,['Email','Work Email','Email 1'])||'').trim().toLowerCase();
+    const name=normName(pick(r,['Employee Name','Employee','Name','Full Name']));
+    const key = id?('ID:'+id.toUpperCase()): email?('EMAIL:'+email.toUpperCase()) : name?('NAME:'+name.toUpperCase()):'';
+    const rng = parseRange(r);
+    return {_key:key, name:name||key, type:typeOf(pick(r,['PTO Request Type','Type','Category'])), s:rng.s, e:rng.e};
+  }).filter(x=>x.s && x.e);
+
+  // populate selector (Active first)
+  const people = [...new Set([...ROSTER.values()])].filter(Boolean);
+  people.sort((a,b)=>{
+    const ra = L(a.Status)==='active'?0:1;
+    const rb = L(b.Status)==='active'?0:1;
+    if(ra!==rb) return ra-rb;
+    return (a.Name||'').localeCompare(b.Name||'');
+  });
+  empSelect.innerHTML = '<option value="">Select…</option>' +
+    people.map(p=>`<option value="${p.key}">${p.Name}${L(p.Status)==='inactive'?' (Inactive)':''}</option>`).join('');
+
+  // preselect via ?emp=
+  const q = new URLSearchParams(location.search).get('emp');
+  if(q){
+    const needle = L(q);
+    let chosen='';
+    for(const [k,rec] of ROSTER.entries()){
+      if(L(rec.Email)===needle || L(rec.Name)===needle){ chosen=k; break; }
+    }
+    if(chosen){ empSelect.value=chosen; }
+  }
+
+  // default range
+  const t=new Date(); from.value=iso(t); to.value=iso(add(t,7));
+
+  render();
+}
+
+init();
 </script>
 </body>
 </html>
