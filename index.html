@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Holland Homes • PTO Dashboard</title>
+<title>Holland Homes • PTO Dashboard (Single Workbook)</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 <style>
   :root { --brand:#184A30; --ink:#1c1c1c; --muted:#6b7280; --bg:#f7f7f7; --card:#ffffff; --line:#e5e7eb; }
   * { box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; }
@@ -78,7 +77,7 @@
 </style>
 </head>
 <body>
-<header><h1>Holland Homes — PTO Dashboard</h1></header>
+<header><h1>Holland Homes — PTO Dashboard (Single Workbook)</h1></header>
 
 <div class="wrap">
 
@@ -112,7 +111,7 @@
     </div>
     <div class="toolbar">
       <button id="refreshBtn" class="btn" type="button">Reload Data</button>
-      <span class="footer">From CSV • <span id="asOf"></span></span>
+      <span class="footer">From Excel workbook • <span id="asOf"></span></span>
     </div>
   </div>
 
@@ -190,10 +189,6 @@
         <tbody></tbody>
       </table>
     </div>
-    <div class="toolbar" style="margin-top:8px;">
-      <a href="./pto_requests_2025.csv" download>⬇️ Download pto_requests_2025.csv</a>
-      <a href="./pto_employee_2025_plus.csv" download>⬇️ Download pto_employee_2025_plus.csv</a>
-    </div>
     <div class="footer">Roster is authoritative for department/manager mapping.</div>
   </div>
 </div>
@@ -204,12 +199,15 @@
   window.addEventListener('resize', setVH); window.addEventListener('orientationchange', setVH); setVH();
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   // ===== CONFIG =====
-  const REQUESTS_CSV = './pto_requests_2025.csv';
-  const ROSTER_CSV   = './pto_employee_2025_plus.csv';
+  // Place this file in the same folder as index.html (name includes spaces is fine)
+  const WORKBOOK_XLSX = './Employee Information Spreadsheet.xlsx';
+  const SHEET_REQ  = 'PTO Requests';
+  const SHEET_REF  = 'Employee Reference';
+  const SHEET_INFO = 'PTO Employee Info';
   const MS_DAY=86400000;
 
   // ===== UTIL =====
@@ -222,7 +220,11 @@
 
   function parseDate(d){
     if(!d) return null;
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d)){ const [m,dd,y]=d.split('/').map(s=>parseInt(s,10)); return new Date(y,m-1,dd); }
+    if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(d)){
+      const bits=d.split('/').map(x=>parseInt(x,10));
+      const y = bits[2] < 100 ? 2000+bits[2] : bits[2];
+      return new Date(y,bits[0]-1,bits[1]);
+    }
     const t=new Date(d); return isNaN(t)?null:t;
   }
 
@@ -256,7 +258,6 @@
     return Math.max(0, days);
   }
 
-  // Tenure + age helpers
   function parseTenureMonths(s){
     if(!s) return null;
     const txt=String(s);
@@ -280,16 +281,9 @@
     if(n<25) return '<25'; if(n<35) return '25-34'; if(n<45) return '35-44'; if(n<55) return '45-54'; return '55+';
   }
 
-  async function loadCSV(url){
-    const res = await fetch(url+'?v='+todayISO(), {cache:'no-store'});
-    if(!res.ok) throw new Error('fetch failed '+url);
-    const text = await res.text();
-    return new Promise(resolve => Papa.parse(text, {header:true, skipEmptyLines:true, complete: out=>resolve(out.data)}));
-  }
-
   // ===== STATE =====
-  let REQ_RAW=[], ROST_RAW=[];
-  let REQ=[], ROSTER=new Map();
+  let REQ_RAW=[], REF_RAW=[], INFO_RAW=[];
+  let REQ=[], ROST_RAW=[], ROSTER=new Map();
   let chart;
 
   // ===== DOM =====
@@ -335,11 +329,55 @@
 
   const balTableBody=document.querySelector('#balTable tbody');
 
-  // ===== ROSTER =====
+  // ===== LOAD WORKBOOK (XLSX with multiple sheets) =====
+  async function loadWorkbook(){
+    const res = await fetch(WORKBOOK_XLSX + '?v=' + Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('fetch failed '+WORKBOOK_XLSX);
+    const buf = await res.arrayBuffer();
+    const wb = XLSX.read(buf, {type:'array'});
+
+    function readSheet(name){
+      const ws = wb.Sheets[name];
+      if(!ws) return [];
+      return XLSX.utils.sheet_to_json(ws, {defval:''});
+    }
+
+    REQ_RAW  = readSheet(SHEET_REQ);
+    REF_RAW  = readSheet(SHEET_REF);
+    INFO_RAW = readSheet(SHEET_INFO);
+
+    // Merge REF + INFO into a single roster-like raw array (joined on NAME)
+    const byName = new Map();
+    REF_RAW.forEach(r=>{
+      const nm = normName(pick(r, ['Name','NAME','Employee Name','Employee']));
+      if(!nm) return;
+      byName.set(nm, Object.assign({NAME:nm}, r));
+    });
+    INFO_RAW.forEach(r=>{
+      const nm = normName(pick(r, ['NAME','Name','Employee']));
+      if(!nm) return;
+      const base = byName.get(nm) || {NAME:nm};
+      byName.set(nm, Object.assign(base, r));
+    });
+    ROST_RAW = [...byName.values()];
+  }
+
+  // ===== ROSTER BUILD =====
   function buildRoster(){
     ROSTER.clear();
+    // Compute "Days Since Last PTO" per employee from requests
+    const lastByEmp = new Map();
+    REQ_RAW.forEach(r=>{
+      const emp  = normName(pick(r, ['Employee Name','Employee']));
+      const endD = parseDate(pick(r, ['PTO Request End Date','End']));
+      if(!emp || !endD) return;
+      const prev = lastByEmp.get(emp);
+      if(!prev || endD>prev) lastByEmp.set(emp, endD);
+    });
+    const today = dayStart(new Date());
+
     ROST_RAW.forEach(r=>{
-      const nameRaw = pick(r, ['NAME','Employee Name 2','Employee Name','Employee']) || '';
+      const nameRaw = pick(r, ['NAME','Name','Employee']);
       const name = normName(nameRaw);
       if(!name) return;
 
@@ -352,8 +390,10 @@
       const vacAvail = pick(r, ['Vacation Available','Vacation Avail (days)']);
       const sickAvail = pick(r, ['Sick Available']);
       const unpaidAvail = pick(r, ['Unpaid Available']);
-      const daysSince = pick(r, ['Days Since Last PTO']);
       const risk = pick(r, ['Risk Score (Burnout)','Risk Score']);
+
+      const last = lastByEmp.get(name);
+      const daysSince = last ? Math.floor((today - dayStart(last))/MS_DAY) : '';
 
       ROSTER.set(name, {
         name,
@@ -366,13 +406,13 @@
         vacAvail: vacAvail!=null ? String(vacAvail).trim() : '',
         sickAvail: sickAvail!=null ? String(sickAvail).trim() : '',
         unpaidAvail: unpaidAvail!=null ? String(unpaidAvail).trim() : '',
-        daysSince: daysSince!=null && daysSince!=='' ? Number(daysSince) : null,
+        daysSince: daysSince===''? null : daysSince,
         risk: risk!=null ? String(risk).trim() : ''
       });
     });
   }
 
-  // ===== REQUESTS =====
+  // ===== REQUESTS NORMALIZE =====
   function normalizeRequests(){
     REQ = REQ_RAW.map(r=>{
       const emp  = normName(pick(r, ['Employee Name','Employee']));
@@ -391,7 +431,7 @@
       const tenureM= meta.tenureM;
 
       return { emp, type, s, e, sh, eh, dept, mgr, status, gender, age, tenureM, raw:r };
-    }).filter(x=> x.emp);
+    }).filter(x=> x.emp && x.s && x.e);
   }
 
   // ===== FILTERS =====
@@ -452,8 +492,6 @@
     kpiPeople.textContent   = new Set(rows.map(r=>r.emp)).size;
     kpiDepts.textContent    = new Set(rows.map(r=>r.dept)).size;
     kpiDays.textContent     = rows.reduce((a,r)=>a+r.overlapDays,0);
-
-    // Expose Sick/Unpaid availability (Active employees)
     kpiSickAvail.textContent   = sumAvail('sickAvail');
     kpiUnpaidAvail.textContent = sumAvail('unpaidAvail');
 
@@ -659,8 +697,14 @@
     dateFrom.value = todayISO();
     dateTo.value   = addDays(t,7).toISOString().slice(0,10);
 
-    try{ REQ_RAW = await loadCSV(REQUESTS_CSV); }catch(e){ REQ_RAW=[]; console.error(e); }
-    try{ ROST_RAW = await loadCSV(ROSTER_CSV); }catch(e){ ROST_RAW=[]; console.error(e); }
+    try{
+      await loadWorkbook();
+    }catch(e){
+      console.error(e);
+      alert('Could not load the Excel workbook. Ensure "Employee Information Spreadsheet.xlsx" is in the same folder as this page and published on GitHub Pages.');
+      return;
+    }
+
     asOf.textContent = new Date().toLocaleString();
 
     buildRoster();
