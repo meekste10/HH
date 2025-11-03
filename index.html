@@ -216,36 +216,68 @@
     return t.replace(/\s+/g,' ').trim();
   }
 
-  const excelSerialToDate = (num)=>{
-    const base = new Date(Date.UTC(1899, 11, 30)); // Excel epoch
-    const ms = (num * 24 * 60 * 60 * 1000);
-    const d = new Date(base.getTime() + ms);
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  };
-  const tryParseOneDate = (raw) => {
-    if (raw == null || raw === '') return null;
-    if (typeof raw === 'number') return raw>59 ? excelSerialToDate(raw) : null;
-    let s = (''+raw).trim();
-    if (!s) return null;
-    let d = new Date(s.replace(/\./g,'/')); if (!isNaN(d)) return dayStart(d);
-    d = new Date(Date.parse(s));            if (!isNaN(d)) return dayStart(d);
-    const ts = s.match(/^(\d{1,2}\/\d{1,2}\/\d{2,4})\s+\d{1,2}:\d{2}/);
-    if (ts){ const dd=new Date(ts[1]); if(!isNaN(dd)) return dayStart(dd); }
-    return null;
-  };
-  // Accept single date OR "start - end"
-  const parseDateFlexible = (raw) => {
-    if (raw == null || raw === '') return {start:null, end:null};
-    if (typeof raw === 'number') { const d=excelSerialToDate(raw); return {start:d,end:d}; }
-    const s = (''+raw).trim();
-    const parts = s.split(/\s*-\s*/);
-    if (parts.length === 2){
-      const a=tryParseOneDate(parts[0]), b=tryParseOneDate(parts[1]);
-      return {start:a, end:b||a};
+const excelSerialToDate = (num) => {
+  // Excel epoch (Windows): 1899-12-30 (Excel's 1900 leap bug baked in)
+  const base = new Date(Date.UTC(1899,11,30));
+  const ms = num * 86400000;
+  const d = new Date(base.getTime() + ms);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+};
+
+const tryParseOneDate = (raw) => {
+  if (raw == null || raw === '') return null;
+
+  // Numbers
+  if (typeof raw === 'number') {
+    // Heuristic:
+    //  - 30000–60000 → Excel serials (~1982–2064)
+    //  - 8-digit YYYYMMDD (e.g., 20250312)
+    if (raw >= 30000 && raw <= 60000) return excelSerialToDate(raw);
+    if (raw >= 19000101 && raw <= 20991231) {
+      const s = String(raw);
+      const y = +s.slice(0,4), m = +s.slice(4,6), d = +s.slice(6,8);
+      return new Date(y, m-1, d);
     }
-    const single = tryParseOneDate(s);
-    return {start:single, end:single};
-  };
+    return null;
+  }
+
+  // Strings
+  let s = String(raw).trim();
+
+  // 1) "YYYYMMDD"
+  const ymd = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (ymd) return new Date(+ymd[1], +ymd[2]-1, +ymd[3]);
+
+  // 2) "M/D/YY" or "MM/DD/YYYY" (with optional time)
+  const md = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})(?:\s+\d{1,2}:\d{2}(:\d{2})?\s*[AP]M?)?$/i);
+  if (md) {
+    const y = md[3].length===2 ? (2000+ +md[3]) : +md[3];
+    return new Date(y, +md[1]-1, +md[2]);
+  }
+
+  // 3) "14-Oct-2025" or "Oct 14, 2025"
+  const d1 = new Date(Date.parse(s));
+  if (!isNaN(d1)) return new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+
+  // 4) Last chance
+  const d2 = new Date(s.replace(/\./g,'/'));
+  return isNaN(d2) ? null : new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+};
+
+// Accept single date OR "start - end" (e.g., "10/14/2025 - 10/16/2025")
+const parseDateFlexible = (raw) => {
+  if (raw == null || raw === '') return {start:null, end:null};
+  if (typeof raw === 'number') { const d = tryParseOneDate(raw); return {start:d, end:d}; }
+  const s = String(raw).trim();
+  const parts = s.split(/\s*-\s*/);
+  if (parts.length === 2) {
+    const a = tryParseOneDate(parts[0]);
+    const b = tryParseOneDate(parts[1]);
+    return {start:a, end:b || a};
+  }
+  const single = tryParseOneDate(s);
+  return {start:single, end:single};
+};
 
   function overlapDays(r, rs, re){
     const s=r.s, e=r.e; if(!s||!e) return 0;
