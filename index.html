@@ -1,698 +1,518 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Holland Homes • PTO Dashboard</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<title>PTO Dashboard — Requests • Burnout Radar • Calendar Heatmap</title>
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+
 <style>
-  :root { --brand:#184A30; --ink:#1c1c1c; --muted:#6b7280; --bg:#f7f7f7; --card:#ffffff; --line:#e5e7eb; }
-  * { box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; }
-  body { margin:0; background:var(--bg); color:var(--ink); }
-  header { background:var(--brand); color:#fff; padding:16px 20px; }
-  header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
-  .wrap { max-width:1200px; margin:0 auto; padding:16px; }
-  .row { display:grid; gap:12px; }
-  .grid-6 { grid-template-columns: repeat(6, 1fr); }
-  .grid-4 { grid-template-columns: repeat(4, 1fr); }
-  .grid-3 { grid-template-columns: repeat(3, 1fr); }
-  .grid-2 { grid-template-columns: repeat(2, 1fr); }
-  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
-  .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .toolbar input, .toolbar select, .toolbar button, .toolbar label { font-size:14px; }
-  .toolbar input, .toolbar select, .toolbar button { border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
-  .btn { cursor:pointer; }
-  .kpi { display:flex; align-items:baseline; gap:8px; }
-  .kpi .big { font-size:26px; font-weight:700; }
-  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px; }
-  .list { margin:8px 0 0; padding:0; list-style:none; }
-  .list li { padding:8px 0; border-bottom:1px dashed #eee; font-size:14px; display:flex; justify-content:space-between; gap:10px; }
-  .pill { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; background:#fafafa; color:#374151; }
-  .muted { color:var(--muted); }
-  .footer { color:var(--muted); font-size:12px; margin-top:8px; }
-
-  .scroll-card { 
-    max-height: calc(var(--vh, 1vh) * 35);
-    overflow:auto; border-radius:12px; -webkit-overflow-scrolling:touch;
-    background: linear-gradient(#ffffff, #ffffff) padding-box,
-                linear-gradient(180deg, rgba(0,0,0,0.04), transparent 24px) border-box;
+  :root{
+    --bg:#0f1115; --panel:#151922; --ink:#e7e9ee; --muted:#98a1b2; --accent:#6ea8fe;
+    --ok:#3fb950; --warn:#f2cc60; --bad:#f85149; --chip:#232838; --line:#242938;
   }
-  .scroll-card h3 { position: sticky; top: 0; background: var(--card); padding-bottom:6px; margin-top:0; }
-
-  canvas { width:100%; height:260px; }
-
-  .table-wrap { overflow:auto; max-height: calc(var(--vh, 1vh) * 40); -webkit-overflow-scrolling:touch; border:1px solid #e5e7eb; border-radius:12px; }
-  table { width:100%; border-collapse: collapse; font-size:14px; min-width: 820px; }
-  th, td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
-  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; position: sticky; top: 0; background: #fff; z-index: 1; }
-
-  .heatmap { display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; }
-  .heatcell { border-radius:6px; padding:8px; text-align:center; border:1px solid #eee; background:#fafafa; }
-  .heatcell .d { font-weight:600; }
-  .legend { display:flex; align-items:center; gap:6px; }
-  .swatch { width:18px; height:12px; border-radius:3px; border:1px solid #e5e7eb; }
-
-  .gantt { overflow:auto; border:1px solid #e5e7eb; border-radius:12px; padding:8px; }
-  .gantt-grid { position:relative; min-width:900px; }
-  .gantt-row { display:flex; align-items:center; border-bottom:1px dashed #eee; padding:6px 0; position:relative; height:28px; }
-  .gantt-name { width:180px; flex:0 0 180px; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .gantt-lane { position:relative; height:8px; flex:1; background:linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px) 0 0/14px 100% no-repeat; border-radius:8px; }
-  .bar { position:absolute; top:-2px; height:12px; border-radius:8px; background:#d1fae5; border:1px solid #10b981; }
-
-  @media (pointer: coarse) { .toolbar input, .toolbar select, .toolbar button { padding:12px 14px; font-size:16px; } }
-  @media (max-width: 1200px){ canvas { height:200px; } }
-  @media (max-width: 960px){ .grid-6, .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; } .scroll-card { max-height: calc(var(--vh, 1vh) * 32); } }
-  @media (max-width: 720px){
-    table { min-width: 0; }
-    table thead { display: none; }
-    table, tbody, tr, td { display:block; width: 100%; }
-    tr { border-bottom: 1px solid #eee; margin: 6px 0; padding: 8px 6px; border-radius: 8px; background: #fff; }
-    td { border-bottom: none; padding: 6px 0; }
-    td::before { content: attr(data-label); display:block; font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
-  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif}
+  h1,h2,h3{margin:0 0 .5rem 0}
+  a{color:var(--accent)}
+  .wrap{max-width:1200px;margin:0 auto;padding:20px;}
+  .grid{display:grid;gap:16px}
+  .g-2{grid-template-columns:1fr 1fr}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .muted{color:var(--muted)}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--chip);border-radius:999px;padding:6px 10px;font-size:.9rem}
+  .pill.ok{border:1px solid var(--ok)} .pill.warn{border:1px solid var(--warn)} .pill.bad{border:1px solid var(--bad)}
+  .tag{font-size:.75rem;opacity:.85}
+  .table{width:100%;border-collapse:collapse}
+  .table th,.table td{padding:8px 10px;border-bottom:1px solid var(--line);font-size:.95rem;text-align:left}
+  .table th{color:var(--muted);font-weight:600}
+  .legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .swatch{width:14px;height:14px;border-radius:3px;border:1px solid var(--line);display:inline-block}
+  .controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .slider-wrap{display:flex;align-items:center;gap:8px}
+  input[type="range"]{accent-color:var(--accent)}
+  details{background:var(--chip);border-radius:10px;padding:10px}
+  summary{cursor:pointer}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b0d12;border:1px solid var(--line);padding:2px 6px;border-radius:6px}
+  .badrow{font-family:ui-monospace;font-size:.9rem;color:#ffb4a9;white-space:pre-wrap}
+  /* Calendar heatmap */
+  .cal{overflow:auto}
+  .month-label{fill:var(--muted);font-size:12px}
+  .day-label{fill:var(--muted);font-size:10px}
+  .tooltip{position:fixed;pointer-events:none;background:#0b0d12;border:1px solid var(--line);padding:6px 8px;border-radius:6px;font-size:.9rem;display:none}
 </style>
 </head>
 <body>
-<header><h1>Holland Homes — PTO Dashboard</h1></header>
+<div class="wrap grid">
+  <header class="panel">
+    <h1>PTO Dashboard</h1>
+    <div class="muted">PTO Requests • Burnout Radar • Calendar Heatmap</div>
+    <div class="row muted" style="margin-top:8px">
+      Data sources: <code>PTO Requests.csv</code> • <code>Employee Reference.csv</code> • <code>PTO Employee Info.csv</code>
+    </div>
+  </header>
 
-<div class="wrap">
-
-  <div class="toolbar card" style="justify-content:space-between;">
-    <div class="toolbar">
-      <label>From: <input id="dateFrom" type="date" /></label>
-      <label>To: <input id="dateTo" type="date" /></label>
-
-      <button class="btn" id="rngToday">Today</button>
-      <button class="btn" id="rng7">Next 7</button>
-      <button class="btn" id="rng14">Next 14</button>
-      <button class="btn" id="rng30">Next 30</button>
-      <button class="btn" id="rngMonth">This Month</button>
-
-      <label>Department:<select id="fDept"><option value="">All</option></select></label>
-      <label>Manager:<select id="fMgr"><option value="">All</option></select></label>
-      <label>Type:
-        <select id="fType">
-          <option value="">All</option>
-          <option>Vacation</option><option>Sick</option><option>Unpaid</option>
+  <!-- Controls -->
+  <section class="panel">
+    <h2>Controls</h2>
+    <div class="controls" style="margin-top:10px">
+      <label>Year:
+        <select id="yearSelect"></select>
+      </label>
+      <label>Status:
+        <select id="statusFilter">
+          <option value="approved">Approved only</option>
+          <option value="approved,pending">Approved + Pending</option>
+          <option value="all">All (Approved, Pending, Denied)</option>
         </select>
       </label>
-      <label>Status:<select id="fStatus"><option value="">All</option><option>Active</option><option>Inactive</option></select></label>
-      <label>Tenure:<select id="fTenure"><option value="">All</option><option value="<1y">&lt;1y</option><option>1-2y</option><option>2-5y</option><option>5y+</option></select></label>
-      <label>Gender:<select id="fGender"><option value="">All</option><option>Male</option><option>Female</option><option>Other</option></select></label>
-      <label>Age:<select id="fAge"><option value="">All</option><option value="<25">&lt;25</option><option>25-34</option><option>35-44</option><option>45-54</option><option>55+</option></select></label>
-      <label>Search: <input id="fSearch" type="search" placeholder="Name, dept, manager…" /></label>
-    </div>
-    <div class="toolbar">
-      <button id="refreshBtn" class="btn" type="button">Reload Data</button>
-      <span class="footer">From CSVs • <span id="asOf"></span></span>
-    </div>
-  </div>
-
-  <div class="row grid-6">
-    <div class="card kpi"><span class="big" id="kpiRequests">0</span><span class="label">Requests</span></div>
-    <div class="card kpi"><span class="big" id="kpiPeople">0</span><span class="label">Unique Employees</span></div>
-    <div class="card kpi"><span class="big" id="kpiDepts">0</span><span class="label">Departments</span></div>
-    <div class="card kpi"><span class="big" id="kpiDays">0</span><span class="label">Total Person-Days</span></div>
-    <div class="card kpi"><span class="big" id="kpiSickAvail">0</span><span class="label">Sick Avail (days)</span></div>
-    <div class="card kpi"><span class="big" id="kpiUnpaidAvail">0</span><span class="label">Unpaid Avail (days)</span></div>
-  </div>
-
-  <div class="row grid-3" style="margin-top:12px;">
-    <div class="card scroll-card">
-      <h3>Requests</h3>
-      <ul class="list" id="reqList"></ul>
-    </div>
-    <div class="card scroll-card">
-      <h3>By Employee</h3>
-      <ul class="list" id="empList"></ul>
-    </div>
-    <div class="card scroll-card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">By Team</h3>
-        <label class="muted">Metric:
-          <select id="chartMode">
-            <option value="days">Person-Days</option>
-            <option value="coverage">Coverage %</option>
-          </select>
-        </label>
+      <label>Type:
+        <select id="typeFilter">
+          <option value="all">All PTO</option>
+          <option value="non-sick">Vacation/Personal only</option>
+          <option value="sick">Sick only</option>
+        </select>
+      </label>
+      <div class="slider-wrap">
+        <span class="muted">Burnout: days since any time-off ≥</span>
+        <input id="anyCutoff" type="range" min="5" max="30" value="12" />
+        <span id="anyCutoffVal">12</span>
       </div>
-      <canvas id="deptChart" aria-label="Team metric"></canvas>
+      <div class="slider-wrap">
+        <span class="muted">Burnout: days since vacation (excl. sick) ≥</span>
+        <input id="vacCutoff" type="range" min="15" max="120" value="45" />
+        <span id="vacCutoffVal">45</span>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="row grid-2" style="margin-top:12px;">
-    <div class="card scroll-card">
-      <h3>Calendar Heatmap</h3>
-      <div id="heatmapLegend" class="legend" style="margin:6px 0 8px;"></div>
-      <div id="heatmap" class="heatmap"></div>
-      <div class="footer" id="heatmapNote"></div>
-    </div>
-    <div class="card scroll-card">
-      <h3>Burnout Radar (±60 days)</h3>
-      <div class="muted" style="margin:4px 0 8px;">Vacation only • Active employees</div>
-      <ul class="list" id="burnoutList"></ul>
-      <div class="footer"><span id="burnoutCount">0</span> employee(s) flagged</div>
-    </div>
-  </div>
+  <!-- Burnout Radar -->
+  <section class="panel">
+    <h2>Burnout Radar</h2>
+    <div class="muted" style="margin:.25rem 0 .75rem">Sick days <em>do</em> count as rest for “days since any time-off,” but are tracked separately from true vacation/personal time.</div>
+    <table class="table" id="burnoutTable">
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Days since ANY time-off</th>
+          <th>Days since Vacation/Personal</th>
+          <th>Last 14 days: Sick</th>
+          <th>Last 14 days: Vac/Personal</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
 
-  <div class="card" style="margin-top:12px;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="margin:0;">Timeline</h3>
-      <div class="muted" id="ganttRange"></div>
-    </div>
-    <div class="gantt"><div class="gantt-grid" id="ganttGrid"></div></div>
-    <div class="footer">Showing requests overlapping the selected range (max 150 rows).</div>
-  </div>
+  <!-- Calendar Heatmap -->
+  <section class="panel">
+    <h2>Calendar Heatmap</h2>
+    <div class="legend" id="legend"></div>
+    <div class="cal" id="calWrap" style="margin-top:10px"></div>
+  </section>
 
-  <div class="card" style="margin-top:12px;">
-    <h3 style="margin:0 0 6px;">Roster Snapshot</h3>
-    <div class="table-wrap">
-      <table id="balTable">
-        <thead>
-          <tr>
-            <th>Employee</th><th>Department</th><th>Manager</th><th>Status</th>
-            <th>Vacation Avail (days)</th><th>Days Since Last PTO</th><th>Risk Score</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <div class="toolbar" style="margin-top:8px;">
-      <a href="./PTO Requests.csv" download>⬇️ PTO Requests.csv</a>
-      <a href="./Employee Reference.csv" download>⬇️ Employee Reference.csv</a>
-      <a href="./PTO Employee Info.csv" download>⬇️ PTO Employee Info.csv</a>
-    </div>
-    <div class="footer">Roster = Employee Reference ⊕ PTO Employee Info (joined on NAME).</div>
-  </div>
+  <!-- Data quality -->
+  <section class="panel">
+    <h2>Data Quality & Missing Rows</h2>
+    <div class="muted">If something “went missing,” it will be listed here with the reason. Fix the source CSV or adjust filters and reload.</div>
+    <details style="margin-top:10px">
+      <summary><strong>Skipped rows (click to expand)</strong></summary>
+      <div id="badRows"></div>
+    </details>
+  </section>
 </div>
 
+<div class="tooltip" id="tooltip"></div>
+
 <script>
-  function setVH(){ const vh=window.innerHeight*0.01; document.documentElement.style.setProperty('--vh', vh+'px'); }
-  window.addEventListener('resize', setVH); window.addEventListener('orientationchange', setVH); setVH();
-</script>
+/*** ⇢ 1) CONFIG: paste your raw GitHub CSV URLs here ***/
+const CSV_URLS = {
+  ptoRequests: "https://raw.githubusercontent.com/meekste10/HH/main/PTO%20Requests.csv",
+  employeeRef: "https://raw.githubusercontent.com/meekste10/HH/main/Employee%20Reference.csv",
+  ptoEmployeeInfo: "https://raw.githubusercontent.com/meekste10/HH/main/PTO%20Employee%20Info.csv",
+};
 
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>
-  // ===== CONFIG (3 CSVs) =====
-  const CSV_REQ  = './PTO Requests.csv';
-  const CSV_REF  = './Employee Reference.csv';
-  const CSV_INFO = './PTO Employee Info.csv';
-  const MS_DAY=86400000;
+/*** ⇢ 2) UTILITIES ***/
+const parseDate = (v) => {
+  if (!v) return null;
+  let s = (""+v).trim().replace(/\./g,'/').replace(/-/g,'/');
+  // Accept M/D/Y, Y/M/D, etc.
+  const d = new Date(s);
+  return isNaN(d) ? null : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+};
+const fmt = (d)=> d ? d.toLocaleDateString('en-US') : '';
+const daysBetween = (a,b)=> Math.round((a - b)/(1000*60*60*24));
+const today = new Date(); const todayUTC = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+const norm = (s)=> (s??"").toString().trim();
+const normID = (s)=> norm(s).toUpperCase();
 
-  // ===== UTIL =====
-  const todayISO = () => new Date().toISOString().slice(0,10);
-  const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
-  const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const dayISO   = d => dayStart(d).toISOString().slice(0,10);
-  const L = s => String(s||'').toLowerCase().trim();
-  const num = v => { const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
-
-  function parseDate(d){
-    if(!d) return null;
-    if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(d)){
-      const [m,dd,yy]=d.split('/').map(x=>parseInt(x,10));
-      const y = yy < 100 ? 2000+yy : yy;
-      return new Date(y,m-1,dd);
-    }
-    const t=new Date(d); return isNaN(t)?null:t;
-  }
-
-  const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').replace(/\s+/g,' ').trim().toLowerCase();
-  function pick(row, candidates){
-    const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
-    for (const wanted of candidates){
-      const k = map.get(cleanKey(wanted));
-      if (k !== undefined) return row[k];
-    }
-    return undefined;
-  }
-  function normName(s){
-    const t = String(s||'').trim();
-    if (!t) return '';
-    const m = /^([^,]+),\s*(.+)$/.exec(t);
-    if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
-    return t.replace(/\s+/g,' ').trim();
-  }
-
-  function overlapDays(r, rs, re){
-    const s=r.s, e=r.e; if(!s||!e) return 0;
-    const a=dayStart(s), b=dayStart(e), R1=dayStart(rs), R2=dayStart(re);
-    if(b<R1 || a>R2) return 0;
-    const start=a<R1?R1:a, end=b>R2?R2:b;
-    let days = Math.floor((end - start)/MS_DAY) + 1;
-    const AMPM = t => (String(t||'').toUpperCase()==='AM' || String(t||'').toUpperCase()==='PM');
-    if(dayISO(start)===dayISO(a) && AMPM(r.sh)) days -= 0.5;
-    if(dayISO(end)  ===dayISO(b) && AMPM(r.eh)) days -= 0.5;
-    return Math.max(0, days);
-  }
-
-  function parseTenureMonths(s){
-    if(!s) return null;
-    const txt=String(s);
-    const ym = /(\d+)\s*years?,?\s*(\d+)\s*months?/i.exec(txt);
-    if(ym) return (+ym[1])*12 + (+ym[2]);
-    const yOnly = /(\d+(?:\.\d+)?)\s*years?/i.exec(txt);
-    if(yOnly) return Math.round(parseFloat(yOnly[1])*12);
-    const mOnly = /(\d+)\s*months?/i.exec(txt);
-    if(mOnly) return +mOnly[1];
-    const n = parseFloat(txt); return isFinite(n) ? Math.round(n*12) : null;
-  }
-  function tenureBand(months){
-    if(months==null) return '';
-    if(months<12) return '<1y';
-    if(months<24) return '1-2y';
-    if(months<60) return '2-5y';
-    return '5y+';
-  }
-  function ageBand(a){
-    const n=Number(a); if(!isFinite(n)) return '';
-    if(n<25) return '<25'; if(n<35) return '25-34'; if(n<45) return '35-44'; if(n<55) return '45-54'; return '55+';
-  }
-
-  async function loadCSV(url){
-    const res = await fetch(url+'?v='+Date.now(), {cache:'no-store'});
-    if(!res.ok) throw new Error('fetch failed '+url);
-    const text = await res.text();
-    return new Promise(resolve => Papa.parse(text, {header:true, skipEmptyLines:true, complete: out=>resolve(out.data)}));
-  }
-
-  // ===== STATE =====
-  let REQ_RAW=[], REF_RAW=[], INFO_RAW=[];
-  let REQ=[], ROST_RAW=[], ROSTER=new Map();
-  let chart;
-
-  // ===== DOM =====
-  const dateFrom=document.getElementById('dateFrom');
-  const dateTo=document.getElementById('dateTo');
-  const rngToday=document.getElementById('rngToday');
-  const rng7=document.getElementById('rng7');
-  const rng14=document.getElementById('rng14');
-  const rng30=document.getElementById('rng30');
-  const rngMonth=document.getElementById('rngMonth');
-
-  const fDept=document.getElementById('fDept');
-  const fMgr=document.getElementById('fMgr');
-  const fType=document.getElementById('fType');
-  const fStatus=document.getElementById('fStatus');
-  const fTenure=document.getElementById('fTenure');
-  const fGender=document.getElementById('fGender');
-  const fAge=document.getElementById('fAge');
-  const fSearch=document.getElementById('fSearch');
-
-  const asOf=document.getElementById('asOf');
-  const kpiRequests=document.getElementById('kpiRequests');
-  const kpiPeople=document.getElementById('kpiPeople');
-  const kpiDepts=document.getElementById('kpiDepts');
-  const kpiDays=document.getElementById('kpiDays');
-  const kpiSickAvail=document.getElementById('kpiSickAvail');
-  const kpiUnpaidAvail=document.getElementById('kpiUnpaidAvail');
-
-  const reqList=document.getElementById('reqList');
-  const empList=document.getElementById('empList');
-  const chartMode=document.getElementById('chartMode');
-  const deptChart=document.getElementById('deptChart');
-
-  const heatmap=document.getElementById('heatmap');
-  const heatmapLegend=document.getElementById('heatmapLegend');
-  const heatmapNote=document.getElementById('heatmapNote');
-
-  const burnoutList=document.getElementById('burnoutList');
-  const burnoutCount=document.getElementById('burnoutCount');
-
-  const ganttGrid=document.getElementById('ganttGrid');
-  const ganttRange=document.getElementById('ganttRange');
-
-  const balTableBody=document.querySelector('#balTable tbody');
-
-  // ===== LOAD + MERGE =====
-  async function loadAll(){
-    REQ_RAW  = await loadCSV(CSV_REQ);
-    REF_RAW  = await loadCSV(CSV_REF);
-    INFO_RAW = await loadCSV(CSV_INFO);
-
-    // Build roster from REF + INFO (join on name)
-    const byName = new Map();
-    REF_RAW.forEach(r=>{
-      const nm = normName(pick(r, ['Name','NAME','Employee Name','Employee']));
-      if(!nm) return;
-      byName.set(nm, Object.assign({NAME:nm}, r));
+/*** ⇢ 3) LOAD CSVs (robust) ***/
+function loadCSV(url){
+  return new Promise((resolve,reject)=>{
+    Papa.parse(url,{
+      download:true, header:true, dynamicTyping:true, skipEmptyLines:'greedy',
+      complete: (res)=> resolve(res.data),
+      error: (err)=> reject(err)
     });
-    INFO_RAW.forEach(r=>{
-      const nm = normName(pick(r, ['NAME','Name','Employee']));
-      if(!nm) return;
-      const base = byName.get(nm) || {NAME:nm};
-      byName.set(nm, Object.assign(base, r));
-    });
-    ROST_RAW = [...byName.values()];
-  }
+  });
+}
 
-  // ===== ROSTER =====
-  function buildRoster(){
-    ROSTER.clear();
-    // last PTO end per employee
-    const lastByEmp = new Map();
-    REQ_RAW.forEach(r=>{
-      const emp  = normName(pick(r, ['Employee Name','Employee']));
-      const endD = parseDate(pick(r, ['PTO Request End Date','End']));
-      if(!emp || !endD) return;
-      const prev = lastByEmp.get(emp);
-      if(!prev || endD>prev) lastByEmp.set(emp, endD);
-    });
-    const today = dayStart(new Date());
+async function loadAll(){
+  const [ptoReq, empRef, ptoInfo] = await Promise.all([
+    loadCSV(CSV_URLS.ptoRequests),
+    loadCSV(CSV_URLS.employeeRef),
+    loadCSV(CSV_URLS.ptoEmployeeInfo)
+  ]);
+  return {ptoReq, empRef, ptoInfo};
+}
 
-    ROST_RAW.forEach(r=>{
-      const name = normName(pick(r, ['NAME','Name','Employee']));
-      if(!name) return;
+/*** ⇢ 4) CLEAN + INDEX ***/
+function prepareData(raw){
+  const badRows = [];
+  const employees = new Map();
 
-      const dept   = (pick(r, ['Department','Team']) || 'Unknown').toString().trim();
-      const mgr    = (pick(r, ['Direct Report','Manager']) || '').toString().trim();
-      const status = (pick(r, ['Employee Status','Status']) || '').toString().trim();
-      const gender = (pick(r, ['Gender']) || '').toString().trim();
-      const ageVal = pick(r, ['Age']);
-      const tenureTxt = pick(r, ['Tenure (in years)','Tenure']) || '';
-      const vacAvail   = pick(r, ['Vacation Available','Vacation Avail (days)']);
-      const sickAvail  = pick(r, ['Sick Available']);
-      const unpaidAvail= pick(r, ['Unpaid Available']);
-      const risk = pick(r, ['Risk Score (Burnout)','Risk Score']);
-
-      const last = lastByEmp.get(name);
-      const daysSince = last ? Math.floor((today - dayStart(last))/MS_DAY) : null;
-
-      ROSTER.set(name, {
-        name,
-        dept, mgr, status, gender,
-        age: ageVal,
-        tenureM: parseTenureMonths(tenureTxt),
-        vacAvail: vacAvail!=null ? String(vacAvail).trim() : '',
-        sickAvail: sickAvail!=null ? String(sickAvail).trim() : '',
-        unpaidAvail: unpaidAvail!=null ? String(unpaidAvail).trim() : '',
-        daysSince,
-        risk: risk!=null ? String(risk).trim() : ''
+  // Build a quick employee lookup by EmpID or Email
+  const addEmp = (row)=>{
+    const id = normID(row.EmpID || row.EmployeeID || row.ID);
+    if(!id) return;
+    if(!employees.has(id)){
+      employees.set(id,{
+        id,
+        name: norm(row.EmployeeName || row.Name || row.FullName),
+        email: norm(row.Email || row.Email1 || row["Email 1"]),
+        department: norm(row.Department),
+        requests: []
       });
-    });
-  }
-
-  // ===== REQUESTS =====
-  function normalizeRequests(){
-    REQ = REQ_RAW.map(r=>{
-      const emp  = normName(pick(r, ['Employee Name','Employee']));
-      const type = (pick(r, ['PTO Request Type','Type']) || '').toString().trim();
-      const s    = parseDate(pick(r, ['PTO Request Start Date','Start']));
-      const e    = parseDate(pick(r, ['PTO Request End Date','End']));
-      const sh   = pick(r, ['Start AM/PM']) || '';
-      const eh   = pick(r, ['End AM/PM'])   || '';
-
-      const meta = emp ? (ROSTER.get(emp) || {}) : {};
-      const dept   = (meta.dept || pick(r, ['Department','Team']) || 'Unknown').toString().trim();
-      const mgr    = (meta.mgr  || pick(r, ['Direct Report','Manager']) || '').toString().trim();
-      const status = (meta.status|| pick(r, ['Employment Status','Status']) || '').toString().trim();
-      const gender = (meta.gender|| pick(r, ['Gender']) || '').toString().trim();
-      const age    = meta.age ?? pick(r, ['Age']) ?? '';
-      const tenureM= meta.tenureM;
-
-      return { emp, type, s, e, sh, eh, dept, mgr, status, gender, age, tenureM, raw:r };
-    }).filter(x=> x.emp && x.s && x.e);
-  }
-
-  // ===== FILTERS =====
-  function passesFilters(r){
-    const q=L(fSearch.value);
-    const dept=L(fDept.value), mgr=L(fMgr.value), type=L(fType.value), st=L(fStatus.value);
-    const ten=fTenure.value, gen=L(fGender.value), ageB=fAge.value;
-
-    if(dept && L(r.dept)!==dept) return false;
-    if(mgr  && L(r.mgr)!==mgr) return false;
-    if(type && L(r.type)!==type) return false;
-    if(st   && L(r.status)!==st) return false;
-    if(ten  && tenureBand(r.tenureM)!==ten) return false;
-    if(gen  && L(r.gender)!==gen) return false;
-    if(ageB){
-      const b=ageBand(r.age);
-      if(b!==ageB) return false;
+    }else{
+      // fill gaps
+      const e = employees.get(id);
+      if(!e.name && row.EmployeeName) e.name = norm(row.EmployeeName);
+      if(!e.email && row.Email) e.email = norm(row.Email);
+      if(!e.department && row.Department) e.department = norm(row.Department);
     }
-    if(q){
-      const blob=[r.emp,r.dept,r.mgr,r.type,r.status,r.gender].map(x=>String(x||'').toLowerCase()).join('|');
-      if(!blob.includes(q)) return false;
-    }
-    return true;
-  }
-  function buildFilterOptions(){
-    function setOptions(el, arr){
-      const opts=[...new Set(arr.map(x=>String(x||'').trim()).filter(Boolean))].sort();
-      el.innerHTML='<option value="">All</option>'+opts.map(v=>`<option>${v}</option>`).join('');
-    }
-    const depts = new Set(); const mgrs = new Set();
-    ROSTER.forEach(m=>{ if(m.dept) depts.add(m.dept); if(m.mgr) mgrs.add(m.mgr); });
-    REQ.forEach(r=>{ if(r.dept) depts.add(r.dept); if(r.mgr) mgrs.add(r.mgr); });
-    setOptions(fDept, [...depts]);
-    setOptions(fMgr,  [...mgrs]);
-  }
+  };
 
-  // ===== RENDER =====
-  function sumAvail(field){
-    let s=0; ROSTER.forEach(m=>{ if(L(m.status)==='active') s += num(m[field]); });
-    return Math.round((s + Number.EPSILON)*10)/10;
-  }
+  raw.empRef.forEach(addEmp);
+  raw.ptoInfo.forEach(addEmp);
 
-  function renderAll(){
-    const rs=parseDate(dateFrom.value)||new Date();
-    const re=parseDate(dateTo.value)||rs;
-    if(re<rs){ dateTo.value=dateFrom.value; return; }
+  // Parse PTO Requests
+  const requests = [];
+  (raw.ptoReq||[]).forEach((r, idx)=>{
+    const EmpID = normID(r.EmpID || r.EmployeeID || r.ID);
+    const Employee = norm(r.Employee || r.EmployeeName || r.Name);
+    const Type = norm(r.Type || r.PTOType || r.Category); // e.g., Vacation, Sick, Personal
+    const Status = norm(r.Status || r.ApprovalStatus || r.State).toLowerCase(); // approved/pending/denied
+    const Start = parseDate(r.StartDate || r.Start || r.Date);
+    const End   = parseDate(r.EndDate || r.End || r.Date);
+    const Days  = Number(r.Days || r.TotalDays || r.Length || 1);
+    const Reason = norm(r.Reason || r.Notes);
 
-    const rows = REQ
-      .map(r=> ({...r, overlapDays: overlapDays(r, rs, re)}))
-      .filter(r=> r.overlapDays>0 && passesFilters(r));
+    // Validate
+    let reason = [];
+    if(!EmpID && !Employee) reason.push("missing EmpID & Employee name");
+    if(!Start) reason.push("bad Start date");
+    // Normalize End
+    const endDate = End ? End : Start;
+    // Infer days if missing and start/end present
+    const spanDays = endDate && Start ? (daysBetween(endDate, Start)+1) : 1;
+    const totalDays = isFinite(Days) && Days>0 ? Days : Math.max(1, spanDays);
+    const typeClean = Type.toLowerCase();
+    const mappedType =
+      typeClean.includes("sick") ? "Sick" :
+      (typeClean.includes("vac")||typeClean.includes("pto")||typeClean.includes("personal")) ? "Vacation/Personal" :
+      Type || "Other";
+    let mappedStatus =
+      Status.includes("appr") ? "approved" :
+      Status.includes("pend") ? "pending" :
+      Status.includes("deny") ? "denied" :
+      (Status||"").length ? Status : "approved"; // default to approved if blank
 
-    kpiRequests.textContent = rows.length;
-    kpiPeople.textContent   = new Set(rows.map(r=>r.emp)).size;
-    kpiDepts.textContent    = new Set(rows.map(r=>r.dept)).size;
-    kpiDays.textContent     = rows.reduce((a,r)=>a+r.overlapDays,0);
-    kpiSickAvail.textContent   = sumAvail('sickAvail');
-    kpiUnpaidAvail.textContent = sumAvail('unpaidAvail');
-
-    reqList.innerHTML='';
-    rows.sort((a,b)=> (a.s-b.s) || a.emp.localeCompare(b.emp)).forEach(r=>{
-      const li=document.createElement('li');
-      li.innerHTML = `<div>${r.emp} • ${r.type}</div>
-                      <div><span class="pill">${r.dept}</span> <span class="muted">${dayISO(r.s)} → ${dayISO(r.e)} • ${r.overlapDays}d</span></div>`;
-      reqList.appendChild(li);
-    });
-
-    const byEmp={};
-    rows.forEach(r=>{ byEmp[r.emp]=(byEmp[r.emp]||0)+r.overlapDays; });
-    const empItems=Object.entries(byEmp).sort((a,b)=>b[1]-a[1]);
-    empList.innerHTML='';
-    empItems.forEach(([name,days])=>{
-      const r0 = rows.find(r=>r.emp===name);
-      const li=document.createElement('li');
-      li.innerHTML = `<div>${name}</div><div><span class="pill">${r0?r0.dept:''}</span> <span class="muted">${days} day(s)</span></div>`;
-      empList.appendChild(li);
-    });
-
-    renderChart(rows);
-    renderHeatmap(rows, rs, re);
-    renderGantt(rows, rs, re);
-    renderRosterTable();
-    renderBurnout();
-  }
-
-  function renderChart(rows){
-    if(chart) chart.destroy();
-    const mode = chartMode.value;
-
-    if(mode==='days'){
-      const byDept={}; rows.forEach(r=>{ byDept[r.dept]=(byDept[r.dept]||0)+r.overlapDays; });
-      const labels=Object.keys(byDept).sort();
-      const data=labels.map(l=>byDept[l]);
-      chart = new Chart(deptChart, {
-        type:'bar',
-        data:{ labels, datasets:[{ label:'Person-Days', data }] },
-        options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
-      });
-    } else {
-      const active = [...ROSTER.entries()].filter(([n,m])=> L(m.status)==='active');
-      const headcountByDept={}; active.forEach(([n,m])=>{ headcountByDept[m.dept]=(headcountByDept[m.dept]||0)+1; });
-      const byDeptPeople=new Map();
-      rows.forEach(r=>{
-        const set = byDeptPeople.get(r.dept) || new Set();
-        set.add(r.emp); byDeptPeople.set(r.dept,set);
-      });
-
-      const labels=Object.keys(headcountByDept).sort();
-      const data=labels.map(d=>{
-        const tot=headcountByDept[d]||0, outs=(byDeptPeople.get(d)||new Set()).size;
-        return tot>0 ? Math.round((1 - outs/tot)*100) : 100;
-      });
-      chart = new Chart(deptChart, {
-        type:'bar',
-        data:{ labels, datasets:[{ label:'Coverage %', data }] },
-        options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, max:100, ticks:{ callback:v=>v+'%' } } } }
-      });
-    }
-  }
-
-  function renderHeatmap(rows, rs, re){
-    heatmap.innerHTML=''; heatmapLegend.innerHTML='';
-    const perDay=[]; let max=0;
-    for(let d=new Date(rs); d<=re; d=addDays(d,1)){
-      const count = rows.reduce((acc,r)=> acc + ( (dayStart(r.s)<=d && dayStart(r.e)>=d) ? (r.sh||r.eh?0.5:1) : 0 ), 0);
-      perDay.push({d:new Date(d), count}); max=Math.max(max,count);
-    }
-    const scale = c => {
-      if(max<=0) return '#fafafa';
-      const t = c/max;
-      const a = Math.max(0.08, 0.15 + 0.55*t);
-      return `rgba(16,185,129,${a})`;
-    };
-    heatmapLegend.innerHTML = `<span class="muted">Load:</span>
-      <span class="swatch" style="background:#fafafa;"></span>
-      <span class="swatch" style="background:${scale(max*0.33)}"></span>
-      <span class="swatch" style="background:${scale(max*0.66)}"></span>
-      <span class="swatch" style="background:${scale(max)}"></span>`;
-
-    const pad = (rs.getDay()+6)%7;
-    for(let i=0;i<pad;i++){ const c=document.createElement('div'); c.className='heatcell'; c.style.visibility='hidden'; heatmap.appendChild(c); }
-    perDay.forEach(({d,count})=>{
-      const cell=document.createElement('div'); cell.className='heatcell';
-      cell.style.background=scale(count);
-      cell.innerHTML = `<div class="d">${d.getDate()}</div><div class="muted" style="font-size:12px;">${count||0}</div>`;
-      heatmap.appendChild(cell);
-    });
-    heatmapNote.textContent = `${dayISO(rs)} → ${dayISO(re)} • Max daily load: ${max}`;
-  }
-
-  function renderGantt(rows, rs, re){
-    ganttRange.textContent = `${dayISO(rs)} → ${dayISO(re)}`;
-    const MAX=150, span=Math.max(1, Math.floor((dayStart(re)-dayStart(rs))/MS_DAY)+1);
-    ganttGrid.innerHTML='';
-    rows.slice(0,MAX).sort((a,b)=> a.emp.localeCompare(b.emp) || (a.s-b.s)).forEach(r=>{
-      const row=document.createElement('div'); row.className='gantt-row';
-      const name=document.createElement('div'); name.className='gantt-name'; name.textContent=r.emp;
-      const lane=document.createElement('div'); lane.className='gantt-lane';
-      const start = dayStart(r.s)<dayStart(rs) ? rs : r.s;
-      const end   = dayStart(r.e)>dayStart(re) ? re : r.e;
-      const offset = Math.max(0, Math.floor((dayStart(start)-dayStart(rs))/MS_DAY));
-      const len = Math.max(0.2, overlapDays(r, rs, re));
-      const leftPct = (offset/span)*100, widthPct=(len/span)*100;
-      const bar=document.createElement('div'); bar.className='bar'; bar.style.left=leftPct+'%'; bar.style.width=widthPct+'%';
-      bar.title = `${r.emp} • ${r.type} • ${dayISO(r.s)} → ${dayISO(r.e)} (${r.overlapDays}d)`;
-      lane.appendChild(bar);
-      row.appendChild(name); row.appendChild(lane); ganttGrid.appendChild(row);
-    });
-  }
-
-  function renderRosterTable(){
-    balTableBody.innerHTML='';
-    const rows=[...ROSTER.entries()]
-      .map(([name,m])=>({name,...m}))
-      .sort((a,b)=> a.name.localeCompare(b.name));
-    rows.forEach(r=>{
-      const tr=document.createElement('tr');
-      tr.innerHTML = `
-        <td data-label="Employee">${r.name}</td>
-        <td data-label="Department">${r.dept||''}</td>
-        <td data-label="Manager">${r.mgr||''}</td>
-        <td data-label="Status">${r.status||''}</td>
-        <td data-label="Vacation Avail (days)">${r.vacAvail||''}</td>
-        <td data-label="Days Since Last PTO">${(r.daysSince??'')!==''?r.daysSince:''}</td>
-        <td data-label="Risk Score">${r.risk||''}</td>`;
-      balTableBody.appendChild(tr);
-    });
-  }
-
-  function renderBurnout(){
-    const today = dayStart(new Date());
-    const winStart = addDays(today, -60);
-    const winEnd   = addDays(today,  60);
-
-    const byEmp=new Map();
-    REQ.forEach(r=>{
-      if(L(r.type)!=='vacation') return;
-      (byEmp.get(r.emp) ?? byEmp.set(r.emp, []).get(r.emp)).push(r);
-    });
-
-    const active = [...ROSTER.entries()].filter(([n,m])=> L(m.status)==='active');
-
-    function hasVacationInWindow(name){
-      const list=byEmp.get(name)||[];
-      for(const r of list){ if(overlapDays(r, winStart, winEnd)>0) return true; }
-      return false;
-    }
-    function lastNext(name){
-      const list=(byEmp.get(name)||[]).filter(r=>r.s&&r.e);
-      let last=null,next=null;
-      list.forEach(r=>{
-        if(r.e<=today){ if(!last || r.e>last) last=r.e; }
-        if(r.s>=today){ if(!next || r.s<next) next=r.s; }
-      });
-      return {last,next};
-    }
-
-    const flagged=[];
-    active.forEach(([name,m])=>{
-      if(!hasVacationInWindow(name)){
-        const {last,next}=lastNext(name);
-        const daysSince = last ? Math.floor((today - dayStart(last))/MS_DAY) : (m.daysSince!=null? m.daysSince : null);
-        flagged.push({name, dept:m.dept||'', mgr:m.mgr||'', last, next, daysSince});
-      }
-    });
-
-    flagged.sort((a,b)=>{
-      const da=a.daysSince??-1, db=b.daysSince??-1;
-      if(db!==da) return db-da;
-      return a.name.localeCompare(b.name);
-    });
-
-    burnoutList.innerHTML='';
-    flagged.forEach(x=>{
-      const li=document.createElement('li');
-      li.innerHTML = `<div>${x.name} • <span class="pill">${x.dept}</span> <span class="muted">${x.mgr||''}</span></div>
-                      <div class="muted">Last: ${x.last?x.last.toLocaleDateString(): '—'} • Next: ${x.next?x.next.toLocaleDateString():'—'}${x.daysSince!=null?` • ${x.daysSince}d since`:''}</div>`;
-      burnoutList.appendChild(li);
-    });
-    burnoutCount.textContent = flagged.length;
-  }
-
-  // ===== INIT =====
-  async function init(){
-    const t=new Date();
-    dateFrom.value = todayISO();
-    dateTo.value   = addDays(t,7).toISOString().slice(0,10);
-
-    try{
-      await loadAll();
-    }catch(e){
-      console.error(e);
-      alert('Could not load one or more CSV files. Ensure the three CSVs are in the same folder as index.html.');
+    if(reason.length){
+      badRows.push({idx, raw:r, why:reason.join(", ")});
       return;
     }
 
-    asOf.textContent = new Date().toLocaleString();
-
-    buildRoster();
-    normalizeRequests();
-    buildFilterOptions();
-    renderAll();
-  }
-
-  document.getElementById('refreshBtn').addEventListener('click', init);
-  [dateFrom,dateTo,fDept,fMgr,fType,fStatus,fTenure,fGender,fAge,chartMode].forEach(el=> el.addEventListener('change', renderAll));
-  fSearch.addEventListener('input', renderAll);
-
-  function setRange(start,end){ dateFrom.value=dayISO(start); dateTo.value=dayISO(end); renderAll(); }
-  rngToday.addEventListener('click', ()=>{ const t=new Date(); setRange(t,t); });
-  rng7.addEventListener('click', ()=>{ const t=new Date(); setRange(t, addDays(t,7)); });
-  rng14.addEventListener('click', ()=>{ const t=new Date(); setRange(t, addDays(t,14)); });
-  rng30.addEventListener('click', ()=>{ const t=new Date(); setRange(t, addDays(t,30)); });
-  rngMonth.addEventListener('click', ()=>{
-    const t=new Date();
-    const start=new Date(t.getFullYear(), t.getMonth(), 1);
-    const end=new Date(t.getFullYear(), t.getMonth()+1, 0);
-    setRange(start,end);
+    // push day-by-day events for calendar
+    for(let i=0;i<totalDays;i++){
+      let d = new Date(Start.getFullYear(), Start.getMonth(), Start.getDate()+i);
+      requests.push({
+        EmpID: EmpID || ("NAME:"+Employee.toUpperCase()),
+        Employee: Employee,
+        Type: mappedType,
+        Status: mappedStatus,
+        Date: d,
+        Reason
+      });
+    }
   });
 
-  init();
+  // Attach requests to employees; also create shell employee if unknown
+  requests.forEach(ev=>{
+    const empKey = ev.EmpID;
+    if(!employees.has(empKey)){
+      employees.set(empKey, {id:empKey, name: ev.Employee || "", email:"", department:"", requests:[]});
+    }
+    employees.get(empKey).requests.push(ev);
+  });
+
+  // Build years list
+  const years = Array.from(new Set(requests.map(r=>r.Date.getFullYear()))).sort((a,b)=>a-b);
+
+  return { employees, requests, years, badRows };
+}
+
+/*** ⇢ 5) UI BINDINGS ***/
+const yearSel = document.getElementById('yearSelect');
+const statusSel = document.getElementById('statusFilter');
+const typeSel = document.getElementById('typeFilter');
+const anyCutoff = document.getElementById('anyCutoff');
+const anyCutoffVal = document.getElementById('anyCutoffVal');
+const vacCutoff = document.getElementById('vacCutoff');
+const vacCutoffVal = document.getElementById('vacCutoffVal');
+
+anyCutoff.addEventListener('input', ()=> anyCutoffVal.textContent = anyCutoff.value);
+vacCutoff.addEventListener('input', ()=> vacCutoffVal.textContent = vacCutoff.value);
+
+/*** ⇢ 6) RENDER: Burnout Radar ***/
+function renderBurnout(employeesMap, year){
+  const tbody = document.querySelector('#burnoutTable tbody');
+  tbody.innerHTML = '';
+  const statuses = statusSel.value === 'all' ? ['approved','pending','denied']
+                  : statusSel.value.split(',');
+  const todayRef = todayUTC;
+
+  const rows = [];
+
+  employeesMap.forEach(emp=>{
+    // Filter requests by status and year (but burnout is based on *up to today*, not just the selected year)
+    const reqs = emp.requests.filter(r=> statuses.includes(r.Status));
+    // Build last-any / last-vac dates
+    const pastReqs = reqs.filter(r=> r.Date <= todayRef).sort((a,b)=> a.Date - b.Date);
+    let lastAny = null, lastVac = null;
+    let sick14 = 0, vac14 = 0;
+
+    pastReqs.forEach(r=>{
+      if(!lastAny || r.Date > lastAny) lastAny = r.Date;
+      if(r.Type !== 'Sick'){
+        if(!lastVac || r.Date > lastVac) lastVac = r.Date;
+      }
+      const diff = daysBetween(todayRef, r.Date);
+      if(diff >=0 && diff < 14){
+        if(r.Type === 'Sick') sick14++;
+        else vac14++;
+      }
+    });
+
+    const daysSinceAny = lastAny ? daysBetween(todayRef, lastAny) : 999;
+    const daysSinceVac = lastVac ? daysBetween(todayRef, lastVac) : 999;
+
+    const risk =
+      (daysSinceAny >= Number(anyCutoff.value) && daysSinceVac >= Number(vacCutoff.value)) ? 'High' :
+      (daysSinceAny >= Number(anyCutoff.value) || daysSinceVac >= Number(vacCutoff.value)) ? 'Watch' :
+      'OK';
+
+    rows.push({
+      name: emp.name || emp.id,
+      daysSinceAny, daysSinceVac, sick14, vac14, risk
+    });
+  });
+
+  // Sort: High → Watch → OK, then by daysSinceAny desc
+  const order = {High:0, Watch:1, OK:2};
+  rows.sort((a,b)=> (order[a.risk]-order[b.risk]) || (b.daysSinceAny - a.daysSinceAny));
+
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    const riskClass = r.risk==='High' ? 'bad' : (r.risk==='Watch' ? 'warn' : 'ok');
+    tr.innerHTML = `
+      <td>${r.name}</td>
+      <td>${r.daysSinceAny===999?'<span class="muted">no time-off yet</span>':r.daysSinceAny}</td>
+      <td>${r.daysSinceVac===999?'<span class="muted">no vacation yet</span>':r.daysSinceVac}</td>
+      <td><span class="pill">${r.sick14}</span></td>
+      <td><span class="pill">${r.vac14}</span></td>
+      <td><span class="pill ${riskClass}">${r.risk}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/*** ⇢ 7) RENDER: Calendar Heatmap ***/
+function renderHeatmap(requests, year){
+  const container = d3.select("#calWrap");
+  container.selectAll("*").remove();
+
+  const statuses = statusSel.value === 'all' ? ['approved','pending','denied']
+                  : statusSel.value.split(',');
+  const typeMode = typeSel.value; // all | non-sick | sick
+  const filtered = requests.filter(r=>{
+    const passYear = r.Date.getFullYear() === Number(year);
+    const passStatus = statuses.includes(r.Status);
+    const passType = typeMode==='all' ? true : (typeMode==='sick' ? r.Type==='Sick' : r.Type!=='Sick');
+    return passYear && passStatus && passType;
+  });
+
+  // Count PTO per day
+  const key = d => d.toISOString().slice(0,10);
+  const counts = d3.rollup(filtered, v=>v.length, r=> key(r.Date));
+  const firstDay = new Date(year,0,1);
+  const lastDay = new Date(year,11,31);
+
+  const day = d3.timeDay;
+  const week = d3.timeWeek;
+  const weeksInYear = week.count(day.floor(firstDay), day.ceil(d3.timeYear.offset(firstDay,1)));
+  const cellSize = 16, gutter = 4, leftMargin = 50, topMargin = 24;
+  const width = leftMargin + (cellSize+gutter)*53 + 10;
+  const heightPerMonth = topMargin + (cellSize+gutter)*7 + 24;
+
+  const svg = container.append("svg")
+    .attr("width", width)
+    .attr("height", heightPerMonth*12);
+
+  // Day labels
+  const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  svg.selectAll(".day-label")
+    .data(days)
+    .enter()
+    .append("text")
+    .attr("class","day-label")
+    .attr("x", leftMargin - 8)
+    .attr("y", (d,i)=> 24 + i*(cellSize+gutter) + cellSize*.75)
+    .attr("text-anchor","end")
+    .text(d=>d);
+
+  // Color scale
+  const maxCount = d3.max(Array.from(counts.values())) || 0;
+  const color = d3.scaleLinear().domain([0, Math.max(1,maxCount)]).range(["#1b2130","#6ea8fe"]);
+
+  // Month groups
+  const months = d3.range(0,12);
+  const tooltip = d3.select("#tooltip");
+
+  months.forEach(m=>{
+    const monthStart = new Date(year, m, 1);
+    const monthEnd = new Date(year, m+1, 0);
+    const monthWeeks = d3.timeWeeks(d3.timeSunday.floor(monthStart), d3.timeSunday.ceil(monthEnd));
+    const xOffset = 0;
+    const yOffset = m*heightPerMonth;
+
+    // Month label
+    svg.append("text")
+      .attr("class","month-label")
+      .attr("x", 8)
+      .attr("y", yOffset + 14)
+      .text(monthStart.toLocaleString('en-US',{month:'long'}));
+
+    // Draw cells
+    const startWeek = d3.timeSunday.count(d3.timeYear.floor(new Date(year,0,1)), monthStart);
+    const daysInMonth = d3.timeDays(monthStart, d3.timeDay.offset(monthEnd,1));
+
+    svg.selectAll(`.cell-${m}`)
+      .data(daysInMonth)
+      .enter()
+      .append("rect")
+      .attr("class", `cell cell-${m}`)
+      .attr("width", cellSize)
+      .attr("height", cellSize)
+      .attr("rx", 3).attr("ry",3)
+      .attr("x", d=>{
+        const wk = d3.timeSunday.count(d3.timeYear.floor(new Date(year,0,1)), d);
+        return leftMargin + (cellSize+gutter)*wk;
+      })
+      .attr("y", d=> yOffset + topMargin + d.getDay()*(cellSize+gutter))
+      .attr("fill", d=>{
+        const c = counts.get(key(d)) || 0;
+        return c===0 ? "#1b2130" : color(c);
+      })
+      .on("mousemove", (event,d)=>{
+        const c = counts.get(key(d)) || 0;
+        tooltip
+          .style("display","block")
+          .style("left", (event.clientX+12)+"px")
+          .style("top", (event.clientY+12)+"px")
+          .html(`<strong>${d.toLocaleDateString()}</strong><br/>PTO Events: ${c}`);
+      })
+      .on("mouseleave", ()=> tooltip.style("display","none"));
+  });
+
+  // Legend
+  const legend = d3.select("#legend");
+  legend.selectAll("*").remove();
+  const steps = Math.max(4, Math.min(8, maxCount || 4));
+  const vals = d3.range(0, steps+1);
+  legend.append("span").attr("class","muted").text("Intensity:");
+  vals.forEach(v=>{
+    const sw = document.createElement('span');
+    sw.className = 'swatch';
+    sw.style.background = v===0 ? "#1b2130" : color(v);
+    legend.node().appendChild(sw);
+  });
+  legend.append("span").classed("muted",true).text(` 0 → ${maxCount||'+'}`);
+}
+
+/*** ⇢ 8) RENDER: Bad rows ***/
+function renderBadRows(badRows){
+  const box = document.getElementById('badRows');
+  if(!badRows.length){ box.innerHTML = '<div class="muted">No skipped rows 🎉</div>'; return; }
+  box.innerHTML = '';
+  badRows.slice(0,250).forEach(b=>{
+    const div = document.createElement('div');
+    div.className = 'badrow';
+    const sample = JSON.stringify(b.raw);
+    div.textContent = `Row#${b.idx+1} • ${b.why}\n${sample}`;
+    box.appendChild(div);
+  });
+  if(badRows.length>250){
+    const more = document.createElement('div');
+    more.className='muted';
+    more.textContent = `+ ${badRows.length-250} more rows…`;
+    box.appendChild(more);
+  }
+}
+
+/*** ⇢ 9) BOOT ***/
+let GLOBAL = null;
+
+function populateYears(years){
+  yearSel.innerHTML = '';
+  const uniq = Array.from(new Set([...years, todayUTC.getFullYear()])).sort((a,b)=>a-b);
+  uniq.forEach(y=>{
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    if(y===todayUTC.getFullYear()) opt.selected = true;
+    yearSel.appendChild(opt);
+  });
+}
+
+function redraw(){
+  if(!GLOBAL) return;
+  renderBurnout(GLOBAL.employees, Number(yearSel.value));
+  renderHeatmap(GLOBAL.requests, Number(yearSel.value));
+}
+
+yearSel.addEventListener('change', redraw);
+statusSel.addEventListener('change', redraw);
+typeSel.addEventListener('change', redraw);
+anyCutoff.addEventListener('change', redraw);
+vacCutoff.addEventListener('change', redraw);
+
+(async function init(){
+  try{
+    const raw = await loadAll();
+    const prepped = prepareData(raw);
+    GLOBAL = prepped;
+    populateYears(prepped.years.length ? prepped.years : [todayUTC.getFullYear()]);
+    renderBadRows(prepped.badRows);
+    anyCutoffVal.textContent = anyCutoff.value;
+    vacCutoffVal.textContent = vacCutoff.value;
+    redraw();
+  }catch(err){
+    alert("Error loading CSVs: " + err);
+    console.error(err);
+  }
+})();
 </script>
 </body>
 </html>
