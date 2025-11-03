@@ -216,68 +216,72 @@
     return t.replace(/\s+/g,' ').trim();
   }
 
-const excelSerialToDate = (num) => {
-  // Excel epoch (Windows): 1899-12-30 (Excel's 1900 leap bug baked in)
-  const base = new Date(Date.UTC(1899,11,30));
-  const ms = num * 86400000;
-  const d = new Date(base.getTime() + ms);
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-};
+  const excelSerialToDate = (num) => {
+    // Excel epoch (Windows): 1899-12-30 (Excel's 1900 leap bug baked in)
+    const base = new Date(Date.UTC(1899,11,30));
+    const ms = num * 86400000;
+    const d = new Date(base.getTime() + ms);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  };
 
-const tryParseOneDate = (raw) => {
-  if (raw == null || raw === '') return null;
+  // <-- UPDATED to accept Excel serials passed as strings, plus YYYYMMDD
+  const tryParseOneDate = (raw) => {
+    if (raw == null || raw === '') return null;
 
-  // Numbers
-  if (typeof raw === 'number') {
-    // Heuristic:
-    //  - 30000–60000 → Excel serials (~1982–2064)
-    //  - 8-digit YYYYMMDD (e.g., 20250312)
-    if (raw >= 30000 && raw <= 60000) return excelSerialToDate(raw);
-    if (raw >= 19000101 && raw <= 20991231) {
-      const s = String(raw);
-      const y = +s.slice(0,4), m = +s.slice(4,6), d = +s.slice(6,8);
-      return new Date(y, m-1, d);
+    // Numbers (Excel serials or YYYYMMDD numeric)
+    if (typeof raw === 'number') {
+      if (raw >= 30000 && raw <= 60000) return excelSerialToDate(raw); // Excel serial (~1982–2064)
+      if (raw >= 19000101 && raw <= 20991231) {
+        const s = String(raw);
+        const y = +s.slice(0,4), m = +s.slice(4,6), d = +s.slice(6,8);
+        return new Date(y, m-1, d);
+      }
+      return null;
     }
-    return null;
-  }
 
-  // Strings
-  let s = String(raw).trim();
+    // Strings
+    let s = String(raw).trim();
 
-  // 1) "YYYYMMDD"
-  const ymd = s.match(/^(\d{4})(\d{2})(\d{2})$/);
-  if (ymd) return new Date(+ymd[1], +ymd[2]-1, +ymd[3]);
+    // Excel serial as string (e.g., "45567")
+    if (/^\d{5}$/.test(s)) {
+      const n = +s;
+      if (n >= 30000 && n <= 60000) return excelSerialToDate(n);
+    }
 
-  // 2) "M/D/YY" or "MM/DD/YYYY" (with optional time)
-  const md = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})(?:\s+\d{1,2}:\d{2}(:\d{2})?\s*[AP]M?)?$/i);
-  if (md) {
-    const y = md[3].length===2 ? (2000+ +md[3]) : +md[3];
-    return new Date(y, +md[1]-1, +md[2]);
-  }
+    // "YYYYMMDD"
+    const ymd = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if (ymd) return new Date(+ymd[1], +ymd[2]-1, +ymd[3]);
 
-  // 3) "14-Oct-2025" or "Oct 14, 2025"
-  const d1 = new Date(Date.parse(s));
-  if (!isNaN(d1)) return new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+    // "M/D/YY" or "MM/DD/YYYY" (optional time)
+    const md = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})(?:\s+\d{1,2}:\d{2}(:\d{2})?\s*[AP]M?)?$/i);
+    if (md) {
+      const y = md[3].length===2 ? (2000+ +md[3]) : +md[3];
+      return new Date(y, +md[1]-1, +md[2]);
+    }
 
-  // 4) Last chance
-  const d2 = new Date(s.replace(/\./g,'/'));
-  return isNaN(d2) ? null : new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
-};
+    // "14-Oct-2025" or "Oct 14, 2025"
+    const d1 = new Date(Date.parse(s));
+    if (!isNaN(d1)) return new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
 
-// Accept single date OR "start - end" (e.g., "10/14/2025 - 10/16/2025")
-const parseDateFlexible = (raw) => {
-  if (raw == null || raw === '') return {start:null, end:null};
-  if (typeof raw === 'number') { const d = tryParseOneDate(raw); return {start:d, end:d}; }
-  const s = String(raw).trim();
-  const parts = s.split(/\s*-\s*/);
-  if (parts.length === 2) {
-    const a = tryParseOneDate(parts[0]);
-    const b = tryParseOneDate(parts[1]);
-    return {start:a, end:b || a};
-  }
-  const single = tryParseOneDate(s);
-  return {start:single, end:single};
-};
+    // Last chance
+    const d2 = new Date(s.replace(/\./g,'/'));
+    return isNaN(d2) ? null : new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+  };
+
+  // Accept single date OR "start - end" (e.g., "10/14/2025 - 10/16/2025")
+  const parseDateFlexible = (raw) => {
+    if (raw == null || raw === '') return {start:null, end:null};
+    if (typeof raw === 'number') { const d = tryParseOneDate(raw); return {start:d, end:d}; }
+    const s = String(raw).trim();
+    const parts = s.split(/\s*-\s*/);
+    if (parts.length === 2) {
+      const a = tryParseOneDate(parts[0]);
+      const b = tryParseOneDate(parts[1]);
+      return {start:a, end:b || a};
+    }
+    const single = tryParseOneDate(s);
+    return {start:single, end:single};
+  };
 
   function overlapDays(r, rs, re){
     const s=r.s, e=r.e; if(!s||!e) return 0;
@@ -366,10 +370,24 @@ const parseDateFlexible = (raw) => {
     if(Name)  return ('NAME:'+Name).toUpperCase();
     return null;
   }
+
+  // --- NEW: indexes to merge dupes across files/keys
+  const nameIndex = new Map();  // "FIRST LAST" -> key
+  const emailIndex = new Map(); // lower(email) -> key
+  function registerIndexes(key, Name, Email){
+    if (Name)  nameIndex.set(String(Name).toUpperCase(), key);
+    if (Email) emailIndex.set(String(Email).toLowerCase(), key);
+  }
+  function findExistingKey(Name, Email){
+    if (Email && emailIndex.has(String(Email).toLowerCase())) return emailIndex.get(String(Email).toLowerCase());
+    if (Name && nameIndex.has(String(Name).toUpperCase()))    return nameIndex.get(String(Name).toUpperCase());
+    return null;
+  }
+
   function harvestEmpRows(rows){
     rows.forEach(r=>{
       const EmpID = String(pick(r,['EmpID','Emp ID','EmployeeID','Employee ID','EEID','ID'])||'').trim();
-      const Name  = normName(pick(r,['Employee Name','Employee','Name','Full Name'])||'');
+      const Name  = normName(pick(r,['Employee Name','Employee','Name','Full Name','Employee Name 1','Employee Name 2','Employee Name 3'])||'');
       const Email = String(pick(r,['Email','Work Email','Email 1'])||'').trim();
       const Department = String(pick(r,['Department','Team'])||'').trim();
       const Manager    = String(pick(r,['Direct Report','Manager'])||'').trim();
@@ -380,20 +398,24 @@ const parseDateFlexible = (raw) => {
       const DaysSince  = pick(r,['Days Since Last PTO','Days Since Last PTO (ANY)']);
       const Risk       = pick(r,['Risk Score (Burnout)','Risk Score']);
 
-      const key = bestKey({EmpID,Email,Name});
-      if(!key) return;
+      // Prefer EmpID; else reuse an existing record by email/name; else synthesize
+      let key = EmpID ? EmpID.toUpperCase() : findExistingKey(Name, Email);
+      if (!key) key = Email ? ('EMAIL:'+Email).toUpperCase() : (Name ? ('NAME:'+Name).toUpperCase() : null);
+      if (!key) return;
 
       upsertEmp(key, { EmpID, Name, Email });
       const rec = ROSTER.get(key);
-      setIfEmpty(rec,'Department',Department);
-      setIfEmpty(rec,'Manager',Manager);
-      setIfEmpty(rec,'Status',Status);
-      setIfEmpty(rec,'VacAvail',VacAvail);
-      setIfEmpty(rec,'SickAvail',SickAvail);
-      setIfEmpty(rec,'UnpaidAvail',UnpaidAvail);
-      if(rec.DaysSinceAny==null && DaysSince!=null && DaysSince!=='') rec.DaysSinceAny = Number(DaysSince);
-      setIfEmpty(rec,'Risk',Risk);
+      if (!rec.Department && Department) rec.Department = Department;
+      if (!rec.Manager && Manager)       rec.Manager    = Manager;
+      if (!rec.Status && Status)         rec.Status     = Status;
+      if (!rec.VacAvail && VacAvail!=null)     rec.VacAvail   = String(VacAvail).trim();
+      if (!rec.SickAvail && SickAvail!=null)   rec.SickAvail  = String(SickAvail).trim();
+      if (!rec.UnpaidAvail && UnpaidAvail!=null) rec.UnpaidAvail = String(UnpaidAvail).trim();
+      if (rec.DaysSinceAny==null && DaysSince!=null && DaysSince!=='') rec.DaysSinceAny = Number(DaysSince);
+      if (!rec.Risk && Risk) rec.Risk = String(Risk).trim();
+
       ROSTER.set(key, rec);
+      registerIndexes(key, rec.Name, rec.Email);
     });
   }
 
@@ -404,7 +426,7 @@ const parseDateFlexible = (raw) => {
 
     REQ_RAW.forEach((r, idx)=>{
       const EmpID = String(pick(r,['EmpID','Emp ID','EmployeeID','Employee ID','EEID','ID'])||'').trim();
-      let Name    = normName(pick(r,['Employee Name','Employee','Name'])||'');
+      let Name    = normName(pick(r,['Employee Name','Employee','Name','Employee Name 1','Employee Name 2','Employee Name 3'])||'');
       const Email = String(pick(r,['Email','Work Email'])||'').trim();
 
       // Derive key and name from roster if missing
