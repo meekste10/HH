@@ -127,7 +127,7 @@
               <th>Unpaid Used</th><th>Unpaid Avail</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="empUsageTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -206,7 +206,7 @@
   const PTO_INFO_CSV = './PTO Employee Info.csv';
   const MS_DAY = 86400000;
 
-  // ===== Simple CSV parser (quotes + commas) =====
+  // ===== Simple CSV parser (handles quotes/commas/CRLF) =====
   async function loadCSV(url){
     const res = await fetch(url, {cache:'no-store'});
     if(!res.ok) throw new Error('Fetch failed: '+url);
@@ -214,36 +214,22 @@
     return parseCSV(text);
   }
   function parseCSV(str){
-    const rows=[]; let i=0, cur='', inQ=false;
-    const push = (r,cell)=>{ r.push(cell); };
-    const lines=[]; let row=[];
+    const lines=[]; let i=0, cur='', row=[], inQ=false;
+    const pushRow=()=>{ lines.push(row); row=[]; };
     while(i<str.length){
       const ch=str[i];
-      if(ch==='\"'){
-        if(inQ && str[i+1]==='\"'){ cur+='\"'; i+=2; continue; }
-        inQ=!inQ; i++; continue;
-      }
+      if(ch==='\"'){ if(inQ && str[i+1]==='\"'){ cur+='\"'; i+=2; continue; } inQ=!inQ; i++; continue; }
       if(ch===',' && !inQ){ row.push(cur); cur=''; i++; continue; }
-      if((ch==='\n' || ch==='\r') && !inQ){
-        row.push(cur); cur='';
-        if(row.length>1 || row[0]!==''){ lines.push(row); }
-        row=[]; // handle CRLF
-        if(ch==='\r' && str[i+1]==='\n') i++;
-        i++; continue;
-      }
+      if((ch==='\n'||ch==='\r') && !inQ){ row.push(cur); cur=''; if(row.length) pushRow(); if(ch==='\r' && str[i+1]==='\n') i++; i++; continue; }
       cur+=ch; i++;
     }
-    if(cur!=='' || row.length){ row.push(cur); lines.push(row); }
-
+    if(cur!=='' || row.length){ row.push(cur); pushRow(); }
     if(lines.length===0) return [];
-    const header = lines[0];
-    return lines.slice(1).map(r=>{
-      const o={}; header.forEach((h,idx)=> o[h]=r[idx] ?? '');
-      return o;
-    });
+    const header=lines[0];
+    return lines.slice(1).map(r=>{ const o={}; header.forEach((h,idx)=>o[h]=r[idx]??''); return o; });
   }
 
-  // ===== DOM refs =====
+  // ===== DOM =====
   const dateFrom = document.getElementById('dateFrom');
   const dateTo   = document.getElementById('dateTo');
   const rngToday = document.getElementById('rngToday');
@@ -259,7 +245,7 @@
   const refreshBtn = document.getElementById('refreshBtn');
   const asOf = document.getElementById('asOf');
   const reqList = document.getElementById('reqList');
-  const empUsageTableBody = document.querySelector('#empUsageTable tbody');
+  const empUsageTableBody = document.getElementById('empUsageTableBody');
   const chartMode = document.getElementById('chartMode');
   const deptChart = document.getElementById('deptChart');
   const heatmap = document.getElementById('heatmap');
@@ -352,7 +338,6 @@
     if (Name)  return ('NAME:'+String(Name).trim().toUpperCase());
     return null;
   }
-  // ISO week number
   function isoWeek(d) {
     const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     const dayNum = date.getUTCDay() || 7;
@@ -362,13 +347,13 @@
   }
   const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-  // ===== Data stores =====
+  // ===== Data =====
   let REQ_RAW=[], EMP_REF_RAW=[], PTO_INFO_RAW=[];
   let REQ=[]; const badRows=[];
-  const ROSTER = new Map(); // key -> {Name, Department, Manager, Status, VacAvail, SickAvail, UnpaidAvail, DaysSinceAny, ...}
-  let chart=null;
+  const ROSTER = new Map();
+  let deptBarChart=null;
 
-  // ===== Roster harvest & merge (dedupe) =====
+  // ===== Build roster (dedupe) =====
   function harvestEmpRows(rows){
     rows.forEach(r=>{
       const EmpID = String(pick(r,['EmpID','Emp ID','EmployeeID','Employee ID','EEID','ID'])||'').trim();
@@ -396,7 +381,7 @@
     });
   }
 
-  // ===== Normalize Requests =====
+  // ===== Requests =====
   function normalizeRequests(){
     REQ = [];
     badRows.length = 0;
@@ -466,7 +451,7 @@
     setOptions(fMgr,  [...mgrs]);
   }
 
-  // ===== Helpers for range overlap & usage =====
+  // ===== Overlap helper =====
   function overlapDays(r, rs, re){
     const s = dayStart(r.s), e = dayStart(r.e);
     const S = s<rs?rs:s, E = e>re?re:e;
@@ -477,11 +462,12 @@
 
   // ===== Render =====
   function renderAll(){
-    const rs=parseDateFlexible(dateFrom.value).start||new Date();
-    const re=parseDateFlexible(dateTo.value).start||rs;
-    if(re<rs){ dateTo.value=dateFrom.value; return; }
+    // Robust default dates in case inputs are blank at first paint
+    const rs = parseDateFlexible(dateFrom.value).start || dayStart(new Date());
+    const re = parseDateFlexible(dateTo.value).start   || rs;
 
-    // Range-filtered, employee-filtered rows
+    if(re<rs){ dateTo.value=dateFrom.value; }
+
     const rows = REQ
       .map(r=> ({...r, overlapDays: overlapDays(r, rs, re)}))
       .filter(r=> r.overlapDays>0 && passesFilters(r));
@@ -512,8 +498,8 @@
       reqList.appendChild(li);
     });
 
-    renderUsageTable(rows, rs, re);
-    renderChart(rows);
+    renderUsageTable(rows);
+    renderDeptChart(rows);
     renderHeatmap(rows, rs, re);
     renderGantt(rows, rs, re);
     renderRosterTable();
@@ -521,9 +507,8 @@
     renderDiagnostics();
   }
 
-  // ---- By Employee Usage & Balances table
-  function renderUsageTable(rows, rs, re){
-    // usage by employee in range
+  // ---- Usage table
+  function renderUsageTable(rows){
     const use = {};
     rows.forEach(r=>{
       const k = r.key;
@@ -533,7 +518,6 @@
       else if(r.type==='Unpaid') use[k].unpaid += r.overlapDays;
     });
 
-    // build table rows only for included employees (active by default)
     const entries = [];
     ROSTER.forEach((rec, key)=>{
       if(!employeeIsIncluded(rec.Status)) return;
@@ -559,15 +543,16 @@
     });
   }
 
-  function renderChart(rows){
+  // ---- Dept chart
+  function renderDeptChart(rows){
     const mode = chartMode.value;
-    if(chart) chart.destroy();
+    if(deptBarChart) deptBarChart.destroy();
 
     if(mode==='days'){
       const byDept={}; rows.forEach(r=>{ byDept[r.dept]=(byDept[r.dept]||0)+r.overlapDays; });
       const labels=Object.keys(byDept).sort();
       const data=labels.map(l=>byDept[l]);
-      chart = new Chart(deptChart, {
+      deptBarChart = new Chart(deptChart, {
         type:'bar',
         data:{ labels, datasets:[{ label:'Person-Days', data }] },
         options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
@@ -581,8 +566,7 @@
       });
       const byDeptPeople=new Map();
       rows.forEach(r=>{
-        const set = byDeptPeople.get(r.dept) || new Set();
-        set.add(r.emp); byDeptPeople.set(r.dept,set);
+        const set = byDeptPeople.get(r.dept) || new Set(); set.add(r.emp); byDeptPeople.set(r.dept,set);
       });
 
       const labels=Object.keys(headcountByDept).sort();
@@ -590,7 +574,7 @@
         const tot=headcountByDept[d]||0, outs=(byDeptPeople.get(d)||new Set()).size;
         return tot>0 ? Math.round((1 - outs/tot)*100) : 100;
       });
-      chart = new Chart(deptChart, {
+      deptBarChart = new Chart(deptChart, {
         type:'bar',
         data:{ labels, datasets:[{ label:'Coverage %', data }] },
         options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, max:100, ticks:{ callback:v=>v+'%' } } } }
@@ -598,6 +582,7 @@
     }
   }
 
+  // ---- Heatmap
   function renderHeatmap(rows, rs, re){
     heatmap.innerHTML=''; heatmapLegend.innerHTML='';
     const perDay=[]; let max=0;
@@ -621,12 +606,12 @@
     };
     heatmapLegend.innerHTML = `<span class="muted">Load:</span>
       <span class="pill" style="border-color:#e5e7eb;background:#fafafa;">0</span>
-      <span class="swatch" style="background:${scale(max*0.33)}"></span>
-      <span class="swatch" style="background:${scale(max*0.66)}"></span>
-      <span class="swatch" style="background:${scale(max)}"></span>
-      <span class="muted" style="margin-left:8px;">Sundays show ISO week # • First day of a month has a badge and thicker top border.</span>`;
+      <span class="swatch" style="display:inline-block;width:18px;height:12px;border:1px solid #e5e7eb;background:${scale(max*0.33)}"></span>
+      <span class="swatch" style="display:inline-block;width:18px;height:12px;border:1px solid #e5e7eb;background:${scale(max*0.66)}"></span>
+      <span class="swatch" style="display:inline-block;width:18px;height:12px;border:1px solid #e5e7eb;background:${scale(max)}"></span>
+      <span class="muted" style="margin-left:8px;">Sundays show ISO week # • First day of month has a badge & border.</span>`;
 
-    perDay.forEach(({d,count},i)=>{
+    perDay.forEach(({d,count})=>{
       const cell=document.createElement('div'); cell.className='heatcell';
       cell.style.background=scale(count);
       const firstOfMonth = d.getDate()===1;
@@ -640,12 +625,15 @@
         const mb=document.createElement('div'); mb.className='mo'; mb.textContent=MONTH_NAMES[d.getMonth()];
         cell.appendChild(mb);
       }
-      cell.innerHTML += `<div class="d" style="margin-top:${isSunday?12:0}px">${d.getDate()}</div><div class="muted" style="font-size:12px;">${count||0}</div>`;
+      const numberWrap = document.createElement('div');
+      numberWrap.innerHTML = `<div class="d" style="margin-top:${isSunday?12:0}px">${d.getDate()}</div><div class="muted" style="font-size:12px;">${count||0}</div>`;
+      cell.appendChild(numberWrap);
       heatmap.appendChild(cell);
     });
     heatmapNote.textContent = `${dayISO(rs)} → ${dayISO(re)} • Max daily load: ${max}`;
   }
 
+  // ---- Gantt
   function renderGantt(rows, rs, re){
     ganttRange.textContent = `${dayISO(rs)} → ${dayISO(re)}`;
     const MAX=150, span=Math.max(1, Math.floor((dayStart(re)-dayStart(rs))/MS_DAY)+1);
@@ -671,11 +659,12 @@
       });
   }
 
+  // ---- Roster
   function renderRosterTable(){
     balTableBody.innerHTML='';
     const rows=[];
     ROSTER.forEach(r=>{
-      if(!employeeIsIncluded(r.Status)) return; // exclude inactive by default
+      if(!employeeIsIncluded(r.Status)) return;
       rows.push(r);
     });
     rows.sort((a,b)=> (a.Name||'').localeCompare(b.Name||''));
@@ -693,6 +682,7 @@
     });
   }
 
+  // ---- Burnout
   function renderBurnout(){
     const today = dayStart(new Date());
     const last14 = addDays(today, -14);
@@ -741,6 +731,7 @@
     document.getElementById('burnoutCount').textContent = items.filter(i=>i.risk!=='OK').length;
   }
 
+  // ---- Diagnostics
   function renderDiagnostics(){
     const colsReq = Object.keys(REQ_RAW?.[0]||{}).map(c=>c.replace(/\uFEFF/g,'').trim());
     const colsEmp = Object.keys(EMP_REF_RAW?.[0]||{}).map(c=>c.replace(/\uFEFF/g,'').trim());
@@ -765,15 +756,12 @@
     try{ [REQ_RAW, EMP_REF_RAW, PTO_INFO_RAW] = await Promise.all([loadCSV(REQUESTS_CSV), loadCSV(EMP_REF_CSV), loadCSV(PTO_INFO_CSV)]); }
     catch(e){ console.error(e); }
 
-    // Build roster (dedup + merge) from both employee files
     ROSTER.clear();
     harvestEmpRows(EMP_REF_RAW||[]);
     harvestEmpRows(PTO_INFO_RAW||[]);
 
-    // Requests
     normalizeRequests();
 
-    // Filters + render
     buildFilterOptions();
     renderAll();
   }
