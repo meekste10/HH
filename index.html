@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Holland Homes • PTO Dashboard</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-<link rel="preconnect" href="https://cdnjs.cloudflare.com/" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   :root { --brand:#184A30; --ink:#1c1c1c; --muted:#6b7280; --bg:#f7f7f7; --card:#ffffff; --line:#e5e7eb; --ok:#10b981; --warn:#f59e0b; --bad:#ef4444; }
@@ -52,6 +52,9 @@
   .mo { position:absolute; top:-10px; right:4px; font-size:10px; color:#111827; background:#fff; border:1px solid #e5e7eb; padding:0 6px; border-radius:999px; }
   .monthTop { border-top:2px solid #94a3b8 !important; }
 
+  /* Error banner */
+  #err { display:none; background:#fef2f2; color:#7f1d1d; border:1px solid #fecaca; padding:10px 12px; border-radius:10px; margin:12px 0; font-size:13px; white-space:pre-wrap; }
+
   details summary{cursor:pointer}
   code{font-family:ui-monospace,Menlo,Consolas,monospace}
   .badrow{font-family:ui-monospace; font-size:12px; white-space:pre-wrap; background:#fff7ed; border:1px dashed #f59e0b; padding:8px; border-radius:8px; margin:6px 0;}
@@ -62,6 +65,7 @@
 <header><h1>Holland Homes — PTO Dashboard</h1></header>
 
 <div class="wrap">
+  <div id="err"></div>
 
   <!-- Controls -->
   <div class="toolbar card" style="justify-content:space-between;">
@@ -108,7 +112,7 @@
     <div class="card kpi"><span class="big" id="kpiVac14">0</span><span class="label">Vac/Personal (14d)</span></div>
   </div>
 
-  <!-- Lists + Team chart -->
+  <!-- Lists + By-Employee + Chart -->
   <div class="row grid-3" style="margin-top:12px;">
     <div class="card scroll-card">
       <h3>Requests</h3>
@@ -200,55 +204,57 @@
 
 <script>
   // ===== CONFIG =====
-  const REQUESTS_CSV = './PTO Requests.csv';
-  const EMP_REF_CSV  = './Employee Reference.csv';
-  const PTO_INFO_CSV = './PTO Employee Info.csv';
+  const FILES = {
+    REQ: './PTO Requests.csv',
+    EMP: './Employee Reference.csv',
+    INFO:'./PTO Employee Info.csv'
+  };
   const MS_DAY = 86400000;
 
-  // ===== Robust date IO =====
+  // ===== Date helpers =====
   const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
   const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const L = s => String(s||'').toLowerCase().trim();
 
   function parseInputDate(v){
-    // Only accepts YYYY-MM-DD from input[type=date]
     if(!v) return null;
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
     if(!m) return null;
     return new Date(+m[1], +m[2]-1, +m[3]);
   }
-
   function setRange(start,end){
     dateFrom.value = fmt(dayStart(start));
     dateTo.value   = fmt(dayStart(end));
     renderAll();
   }
 
-  // ===== CSV loader (cache-busted) =====
+  // ===== CSV loader (space-safe + cache-busted) =====
   async function loadCSV(url){
-    const res = await fetch(url + `?v=${Date.now()}`, {cache:'no-store'});
-    if(!res.ok) throw new Error('Fetch failed: '+url);
-    const text = await res.text();
-    return parseCSV(text);
+    const encoded = encodeURI(url);
+    const res = await fetch(`${encoded}?v=${Date.now()}`, {cache:'no-store'});
+    if(!res.ok) throw new Error(`Fetch failed ${res.status}: ${url}`);
+    return parseCSV(await res.text());
   }
   function parseCSV(str){
-    const lines=[]; let i=0, cur='', row=[], inQ=false;
-    const pushRow=()=>{ lines.push(row); row=[]; };
+    // Robust CSV (quotes, commas, CRLF)
+    const rows=[]; let i=0, cur='', row=[], inQ=false;
+    const push=()=>{ rows.push(row); row=[]; };
     while(i<str.length){
       const ch=str[i];
-      if(ch==='\"'){ if(inQ && str[i+1]==='\"'){ cur+='\"'; i+=2; continue; } inQ=!inQ; i++; continue; }
+      if(ch==='\"'){ if(inQ && str[i+1]==='\"'){cur+='\"'; i+=2; continue;} inQ=!inQ; i++; continue; }
       if(ch===',' && !inQ){ row.push(cur); cur=''; i++; continue; }
-      if((ch==='\n'||ch==='\r') && !inQ){ row.push(cur); cur=''; if(row.length) pushRow(); if(ch==='\r' && str[i+1]==='\n') i++; i++; continue; }
+      if((ch==='\n'||ch==='\r') && !inQ){ row.push(cur); cur=''; if(row.length) push(); if(ch==='\r'&&str[i+1]==='\n') i++; i++; continue; }
       cur+=ch; i++;
     }
-    if(cur!=='' || row.length){ row.push(cur); pushRow(); }
-    if(lines.length===0) return [];
-    const header=lines[0];
-    return lines.slice(1).map(r=>{ const o={}; header.forEach((h,idx)=>o[h]=r[idx]??''); return o; });
+    if(cur!=='' || row.length){ row.push(cur); push(); }
+    if(rows.length===0) return [];
+    const header = rows[0];
+    return rows.slice(1).map(r=>{ const o={}; header.forEach((h,idx)=>o[h]=r[idx]??''); return o; });
   }
 
   // ===== DOM =====
+  const errBox = document.getElementById('err');
   const dateFrom = document.getElementById('dateFrom');
   const dateTo   = document.getElementById('dateTo');
   const rngToday = document.getElementById('rngToday');
@@ -283,7 +289,7 @@
   const kpiSick14 = document.getElementById('kpiSick14');
   const kpiVac14 = document.getElementById('kpiVac14');
 
-  // ===== Helpers for parsing request dates =====
+  // ===== utils =====
   const num = v => { const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
   const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').replace(/\s+/g,' ').trim().toLowerCase();
   function pick(row, candidates){
@@ -298,6 +304,8 @@
     if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
     return t.replace(/\s+/g,' ').trim();
   }
+
+  // Excel serials, YYYYMMDD, M/D/YY, text months
   const excelSerialToDate = (n) => {
     const base = new Date(Date.UTC(1899,11,30));
     const d = new Date(base.getTime() + n*MS_DAY);
@@ -318,23 +326,66 @@
     const d1 = new Date(Date.parse(s)); if (!isNaN(d1)) return new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
     const d2 = new Date(s.replace(/\./g,'/')); return isNaN(d2) ? null : new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
   }
-  function parseDateFlexible(raw){
+
+  // Month/Day/Year pieces fallback
+  const MONTH_MAP = new Map(['january','february','march','april','may','june','july','august','september','october','november','december'].map((n,i)=>[n,i]));
+  function monthToIndex(v){
+    if (v==null || v==='') return null;
+    const s=String(v).trim().toLowerCase();
+    const n = parseInt(s,10);
+    if (!isNaN(n) && n>=1 && n<=12) return n-1;
+    if (MONTH_MAP.has(s)) return MONTH_MAP.get(s);
+    const short = ['jan','feb','mar','apr','may','jun','jul','aug','sep','sept','oct','nov','dec'];
+    const i = short.indexOf(s); if(i>=0) return (i===8?8:i);
+    for (const [name,idx] of MONTH_MAP.entries()){
+      if (name.startsWith(s) || s.startsWith(name.slice(0,3))) return idx;
+    }
+    return null;
+  }
+  function buildDateFromPieces(row, which){
+    const Y = num(pick(row, ['Year']));
+    if (!Y) return null;
+    const mCandidates = which==='start'
+      ? ['Month of Start Date','PTO Request Month 1','Month 1','Month of Start']
+      : ['Month of End Date','PTO Request Month 2','Month 2','Month of End'];
+    const dCandidates = which==='start'
+      ? ['Start Day of Request','Request Day of Month','Day of Start Date','Start Day']
+      : ['Day of End Date','End Day of Month','Day of End','End Day'];
+
+    let M = monthToIndex(pick(row, mCandidates));
+    let D = num(pick(row, dCandidates));
+    if (!D && which==='end') D = num(pick(row, ['Day of End Date','Request Day of Month'])) || null;
+    if (M==null || !D) return null;
+    const dt = new Date(Y, M, D);
+    return isNaN(+dt) ? null : dt;
+  }
+  function parseDateFlexible(raw, row, which){
     if (raw != null && String(raw).trim()!=='') {
       if (typeof raw === 'number') { const d=tryParseOneDate(raw); return {start:d, end:d}; }
       const s = String(raw).trim();
       const parts = s.split(/\s*-\s*/);
-      if (parts.length === 2) { const a=tryParseOneDate(parts[0]); const b=tryParseOneDate(parts[1])||a; return {start:a,end:b}; }
+      if (parts.length === 2) {
+        const a = tryParseOneDate(parts[0]);
+        const b = tryParseOneDate(parts[1]) || a;
+        return {start:a, end:b};
+      }
       const single = tryParseOneDate(s);
       return {start:single, end:single};
+    }
+    const sPiece = which==='start' ? buildDateFromPieces(row,'start') : null;
+    const ePiece = which==='end'   ? buildDateFromPieces(row,'end')   : null;
+    if (sPiece || ePiece) {
+      const start = sPiece || ePiece;
+      const end   = ePiece || sPiece;
+      return {start, end};
     }
     return {start:null, end:null};
   }
 
-  // ===== Data structures =====
+  // ===== Data =====
   let REQ_RAW=[], EMP_REF_RAW=[], PTO_INFO_RAW=[];
   let REQ=[]; const badRows=[];
   const ROSTER = new Map();
-  let deptBarChart=null;
 
   function keyFrom(EmpID, Email, Name){
     if (EmpID) return ('ID:'+String(EmpID).trim().toUpperCase());
@@ -350,7 +401,6 @@
     return (v||'Other');
   }
 
-  // ===== Build roster (dedupe) =====
   function harvestEmpRows(rows){
     rows.forEach(r=>{
       const EmpID = String(pick(r,['EmpID','Emp ID','EmployeeID','Employee ID','EEID','ID'])||'').trim();
@@ -358,7 +408,6 @@
       const Name  = normName(pick(r,['Employee Name','Employee','Name','Full Name'])||'');
       const key = keyFrom(EmpID, Email, Name);
       if(!key) return;
-
       const prev = ROSTER.get(key) || {};
       const rec = {
         key,
@@ -378,23 +427,33 @@
     });
   }
 
-  // ===== Requests =====
   function normalizeRequests(){
     REQ = [];
     badRows.length = 0;
     REQ_RAW.forEach((r, idx)=>{
       const EmpID = String(pick(r,['EmpID','Emp ID','EmployeeID','Employee ID','EEID','ID'])||'').trim();
-      let Name    = normName(pick(r,['Employee Name','Employee','Name','Full Name','Employee Name 1','Employee Name 2'])||'');
+      let Name    = normName(pick(r,['Employee Name','Employee','Name','Full Name','Employee Name 1','Employee Name 2','Employee Name 3'])||'');
       const Email = String(pick(r,['Email','Work Email','Email 1'])||'').trim();
       const key = keyFrom(EmpID, Email, Name);
       if(!Name && key && ROSTER.has(key)) Name = ROSTER.get(key).Name || Name;
 
-      let {start:Start, end:End} = parseDateFlexible(pick(r,['PTO Request Dates','Dates','PTO Date','Date','Start']));
-      if(!Start){
-        const s2 = parseDateFlexible(pick(r,['PTO Request Start Date','Start Date','Start'])).start;
-        const e2 = parseDateFlexible(pick(r,['PTO Request End Date','End Date','End'])).end;
-        Start = s2||e2||null; End = e2||s2||null;
+      let rng = parseDateFlexible(pick(r,[
+        'PTO Request Dates','Dates','PTO Date','Date','Start'
+      ]), r, 'start');
+
+      if(!rng.start){
+        const s2 = parseDateFlexible(pick(r,['PTO Request Start Date','Start Date','Start']), r, 'start').start;
+        const e2 = parseDateFlexible(pick(r,['PTO Request End Date','End Date','End']), r, 'end').end;
+        rng = {start: s2||e2||null, end: e2||s2||null};
       }
+
+      if(!rng.start){
+        const s3 = buildDateFromPieces(r,'start');
+        const e3 = buildDateFromPieces(r,'end') || s3;
+        rng = {start:s3, end:e3};
+      }
+
+      let {start:Start, end:End} = rng;
       if(End && Start && End<Start){ const t=Start; Start=End; End=t; }
 
       const sh   = pick(r,['Start AM/PM']) || '';
@@ -408,7 +467,7 @@
 
       const reasons=[];
       if(!Name && !key) reasons.push('no EmpID/Email/Name');
-      if(!Start) reasons.push('no parsable date');
+      if(!Start) reasons.push('no parsable date (even after pieces)');
       if(reasons.length){ badRows.push({idx, why: reasons.join(', '), raw:r}); return; }
 
       REQ.push({ key: key||('NAME:'+Name.toUpperCase()), emp: Name||key, type, s:Start, e:End||Start, sh, eh, dept, mgr, status, raw:r });
@@ -458,13 +517,9 @@
 
   // ===== Render =====
   function renderAll(){
-    // Always read inputs with the strict parser
     const rs = parseInputDate(dateFrom.value) || dayStart(new Date());
     const re = parseInputDate(dateTo.value)   || rs;
-
-    if(re < rs){ // auto-correct
-      dateTo.value = fmt(rs);
-    }
+    if(re < rs){ dateTo.value = fmt(rs); }
 
     const rows = REQ
       .map(r=> ({...r, overlapDays: overlapDays(r, rs, re)}))
@@ -744,18 +799,19 @@
 
   // ===== INIT =====
   async function init(){
+    showErr('');
     const t=new Date();
-    // Always seed inputs with valid strings before any render calls
     dateFrom.value = fmt(dayStart(t));
     dateTo.value   = fmt(dayStart(addDays(t,7)));
     asOf.textContent = new Date().toLocaleString();
 
     try{
       [REQ_RAW, EMP_REF_RAW, PTO_INFO_RAW] = await Promise.all([
-        loadCSV(REQUESTS_CSV), loadCSV(EMP_REF_CSV), loadCSV(PTO_INFO_CSV)
+        loadCSV(FILES.REQ), loadCSV(FILES.EMP), loadCSV(FILES.INFO)
       ]);
     }catch(e){
-      console.error(e);
+      showErr(`Unable to load CSV. Check filenames & paths are EXACT and in the same folder as index.html:\n- ${FILES.REQ}\n- ${FILES.EMP}\n- ${FILES.INFO}\n\nError: ${e.message}`);
+      return;
     }
 
     ROSTER.clear();
@@ -767,12 +823,16 @@
     renderAll();
   }
 
+  function showErr(msg){
+    if(!msg){ errBox.style.display='none'; errBox.textContent=''; }
+    else { errBox.style.display='block'; errBox.textContent=msg; }
+  }
+
   // Events
   refreshBtn.addEventListener('click', init);
   [dateFrom,dateTo,fDept,fMgr,fType,fStatus,chartMode].forEach(el=> el.addEventListener('change', renderAll));
   fSearch.addEventListener('input', renderAll);
 
-  // Quick ranges (use fmt() always)
   rngToday.addEventListener('click', ()=>{ const t=dayStart(new Date()); setRange(t,t); });
   rng7.addEventListener('click', ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,7)); });
   rng14.addEventListener('click', ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,14)); });
@@ -784,7 +844,6 @@
     setRange(start,end);
   });
 
-  // Defer init until the page is fully loaded to avoid any race
   window.addEventListener('load', init);
 </script>
 </body>
