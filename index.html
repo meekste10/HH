@@ -20,8 +20,7 @@
   .grid-2 { grid-template-columns: repeat(2, 1fr); }
   .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
   .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .toolbar input, .toolbar select, .toolbar button, .toolbar label { font-size:14px; }
-  .toolbar input, .toolbar select, .toolbar button { border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
+  .toolbar input, .toolbar select, .toolbar button { border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; font-size:14px; }
   .btn { cursor:pointer; }
   .kpi { display:flex; align-items:baseline; gap:8px; }
   .kpi .big { font-size:26px; font-weight:700; }
@@ -206,9 +205,29 @@
   const PTO_INFO_CSV = './PTO Employee Info.csv';
   const MS_DAY = 86400000;
 
-  // ===== Simple CSV parser (handles quotes/commas/CRLF) =====
+  // ===== Robust date IO =====
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+  const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const L = s => String(s||'').toLowerCase().trim();
+
+  function parseInputDate(v){
+    // Only accepts YYYY-MM-DD from input[type=date]
+    if(!v) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+    if(!m) return null;
+    return new Date(+m[1], +m[2]-1, +m[3]);
+  }
+
+  function setRange(start,end){
+    dateFrom.value = fmt(dayStart(start));
+    dateTo.value   = fmt(dayStart(end));
+    renderAll();
+  }
+
+  // ===== CSV loader (cache-busted) =====
   async function loadCSV(url){
-    const res = await fetch(url, {cache:'no-store'});
+    const res = await fetch(url + `?v=${Date.now()}`, {cache:'no-store'});
     if(!res.ok) throw new Error('Fetch failed: '+url);
     const text = await res.text();
     return parseCSV(text);
@@ -264,20 +283,12 @@
   const kpiSick14 = document.getElementById('kpiSick14');
   const kpiVac14 = document.getElementById('kpiVac14');
 
-  // ===== Utils =====
-  const todayISO = () => new Date().toISOString().slice(0,10);
-  const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
-  const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const dayISO   = d => dayStart(d).toISOString().slice(0,10);
-  const L = s => String(s||'').toLowerCase().trim();
+  // ===== Helpers for parsing request dates =====
   const num = v => { const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; };
   const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').replace(/\s+/g,' ').trim().toLowerCase();
   function pick(row, candidates){
     const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
-    for (const wanted of candidates){
-      const k = map.get(cleanKey(wanted));
-      if (k !== undefined) return row[k];
-    }
+    for (const wanted of candidates){ const k = map.get(cleanKey(wanted)); if (k !== undefined) return row[k]; }
     return undefined;
   }
   function normName(s){
@@ -296,14 +307,11 @@
     if (raw == null || raw === '') return null;
     if (typeof raw === 'number') {
       if (raw >= 30000 && raw <= 60000) return excelSerialToDate(raw);
-      if (raw >= 19000101 && raw <= 20991231) {
-        const s = String(raw);
-        return new Date(+s.slice(0,4), +s.slice(4,6)-1, +s.slice(6,8));
-      }
+      if (raw >= 19000101 && raw <= 20991231) { const s=String(raw); return new Date(+s.slice(0,4), +s.slice(4,6)-1, +s.slice(6,8)); }
       return null;
     }
     let s = String(raw).trim();
-    if (/^\d{5}$/.test(s)) { const n = +s; if (n>=30000 && n<=60000) return excelSerialToDate(n); }
+    if (/^\d{5}$/.test(s)) { const n=+s; if (n>=30000 && n<=60000) return excelSerialToDate(n); }
     const ymd = s.match(/^(\d{4})(\d{2})(\d{2})$/); if (ymd) return new Date(+ymd[1], +ymd[2]-1, +ymd[3]);
     const md = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/);
     if (md) { const y = md[3].length===2 ? (2000+ +md[3]) : +md[3]; return new Date(y, +md[1]-1, +md[2]); }
@@ -315,15 +323,24 @@
       if (typeof raw === 'number') { const d=tryParseOneDate(raw); return {start:d, end:d}; }
       const s = String(raw).trim();
       const parts = s.split(/\s*-\s*/);
-      if (parts.length === 2) {
-        const a = tryParseOneDate(parts[0]);
-        const b = tryParseOneDate(parts[1]) || a;
-        return {start:a, end:b};
-      }
+      if (parts.length === 2) { const a=tryParseOneDate(parts[0]); const b=tryParseOneDate(parts[1])||a; return {start:a,end:b}; }
       const single = tryParseOneDate(s);
       return {start:single, end:single};
     }
     return {start:null, end:null};
+  }
+
+  // ===== Data structures =====
+  let REQ_RAW=[], EMP_REF_RAW=[], PTO_INFO_RAW=[];
+  let REQ=[]; const badRows=[];
+  const ROSTER = new Map();
+  let deptBarChart=null;
+
+  function keyFrom(EmpID, Email, Name){
+    if (EmpID) return ('ID:'+String(EmpID).trim().toUpperCase());
+    if (Email) return ('EMAIL:'+String(Email).trim().toUpperCase());
+    if (Name)  return ('NAME:'+String(Name).trim().toUpperCase());
+    return null;
   }
   function normalizeType(v){
     const t=L(v);
@@ -332,26 +349,6 @@
     if (/unpaid|unpaiid/.test(t)) return 'Unpaid';
     return (v||'Other');
   }
-  function keyFrom(EmpID, Email, Name){
-    if (EmpID) return ('ID:'+String(EmpID).trim().toUpperCase());
-    if (Email) return ('EMAIL:'+String(Email).trim().toUpperCase());
-    if (Name)  return ('NAME:'+String(Name).trim().toUpperCase());
-    return null;
-  }
-  function isoWeek(d) {
-    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    const dayNum = date.getUTCDay() || 7;
-    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
-    return Math.ceil(((date - yearStart) / MS_DAY + 1)/7);
-  }
-  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-  // ===== Data =====
-  let REQ_RAW=[], EMP_REF_RAW=[], PTO_INFO_RAW=[];
-  let REQ=[]; const badRows=[];
-  const ROSTER = new Map();
-  let deptBarChart=null;
 
   // ===== Build roster (dedupe) =====
   function harvestEmpRows(rows){
@@ -451,7 +448,6 @@
     setOptions(fMgr,  [...mgrs]);
   }
 
-  // ===== Overlap helper =====
   function overlapDays(r, rs, re){
     const s = dayStart(r.s), e = dayStart(r.e);
     const S = s<rs?rs:s, E = e>re?re:e;
@@ -462,11 +458,13 @@
 
   // ===== Render =====
   function renderAll(){
-    // Robust default dates in case inputs are blank at first paint
-    const rs = parseDateFlexible(dateFrom.value).start || dayStart(new Date());
-    const re = parseDateFlexible(dateTo.value).start   || rs;
+    // Always read inputs with the strict parser
+    const rs = parseInputDate(dateFrom.value) || dayStart(new Date());
+    const re = parseInputDate(dateTo.value)   || rs;
 
-    if(re<rs){ dateTo.value=dateFrom.value; }
+    if(re < rs){ // auto-correct
+      dateTo.value = fmt(rs);
+    }
 
     const rows = REQ
       .map(r=> ({...r, overlapDays: overlapDays(r, rs, re)}))
@@ -494,7 +492,7 @@
     rows.sort((a,b)=> (a.s-b.s) || a.emp.localeCompare(b.emp)).forEach(r=>{
       const li=document.createElement('li');
       li.innerHTML = `<div>${r.emp} • ${r.type}</div>
-                      <div><span class="pill">${r.dept}</span> <span class="muted">${dayISO(r.s)} → ${dayISO(r.e)} • ${r.overlapDays}d</span></div>`;
+                      <div><span class="pill">${r.dept}</span> <span class="muted">${fmt(dayStart(r.s))} → ${fmt(dayStart(r.e))} • ${r.overlapDays}d</span></div>`;
       reqList.appendChild(li);
     });
 
@@ -507,7 +505,6 @@
     renderDiagnostics();
   }
 
-  // ---- Usage table
   function renderUsageTable(rows){
     const use = {};
     rows.forEach(r=>{
@@ -543,16 +540,15 @@
     });
   }
 
-  // ---- Dept chart
   function renderDeptChart(rows){
     const mode = chartMode.value;
-    if(deptBarChart) deptBarChart.destroy();
+    if(window._deptBarChart) window._deptBarChart.destroy();
 
     if(mode==='days'){
       const byDept={}; rows.forEach(r=>{ byDept[r.dept]=(byDept[r.dept]||0)+r.overlapDays; });
       const labels=Object.keys(byDept).sort();
       const data=labels.map(l=>byDept[l]);
-      deptBarChart = new Chart(deptChart, {
+      window._deptBarChart = new Chart(deptChart, {
         type:'bar',
         data:{ labels, datasets:[{ label:'Person-Days', data }] },
         options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
@@ -574,7 +570,7 @@
         const tot=headcountByDept[d]||0, outs=(byDeptPeople.get(d)||new Set()).size;
         return tot>0 ? Math.round((1 - outs/tot)*100) : 100;
       });
-      deptBarChart = new Chart(deptChart, {
+      window._deptBarChart = new Chart(deptChart, {
         type:'bar',
         data:{ labels, datasets:[{ label:'Coverage %', data }] },
         options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, max:100, ticks:{ callback:v=>v+'%' } } } }
@@ -582,13 +578,20 @@
     }
   }
 
-  // ---- Heatmap
+  function isoWeek(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dayNum = date.getUTCDay() || 7;
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+    return Math.ceil(((date - yearStart) / MS_DAY + 1)/7);
+  }
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
   function renderHeatmap(rows, rs, re){
     heatmap.innerHTML=''; heatmapLegend.innerHTML='';
     const perDay=[]; let max=0;
 
-    // pad grid from Sunday
-    const pad = rs.getDay(); // 0=Sun
+    const pad = rs.getDay();
     for(let i=0;i<pad;i++){
       const c=document.createElement('div'); c.className='heatcell'; c.style.visibility='hidden'; heatmap.appendChild(c);
     }
@@ -609,7 +612,7 @@
       <span class="swatch" style="display:inline-block;width:18px;height:12px;border:1px solid #e5e7eb;background:${scale(max*0.33)}"></span>
       <span class="swatch" style="display:inline-block;width:18px;height:12px;border:1px solid #e5e7eb;background:${scale(max*0.66)}"></span>
       <span class="swatch" style="display:inline-block;width:18px;height:12px;border:1px solid #e5e7eb;background:${scale(max)}"></span>
-      <span class="muted" style="margin-left:8px;">Sundays show ISO week # • First day of month has a badge & border.</span>`;
+      <span class="muted" style="margin-left:8px;">Sundays show ISO week # • First of month has a badge & border.</span>`;
 
     perDay.forEach(({d,count})=>{
       const cell=document.createElement('div'); cell.className='heatcell';
@@ -630,12 +633,11 @@
       cell.appendChild(numberWrap);
       heatmap.appendChild(cell);
     });
-    heatmapNote.textContent = `${dayISO(rs)} → ${dayISO(re)} • Max daily load: ${max}`;
+    heatmapNote.textContent = `${fmt(rs)} → ${fmt(re)} • Max daily load: ${max}`;
   }
 
-  // ---- Gantt
   function renderGantt(rows, rs, re){
-    ganttRange.textContent = `${dayISO(rs)} → ${dayISO(re)}`;
+    ganttRange.textContent = `${fmt(rs)} → ${fmt(re)}`;
     const MAX=150, span=Math.max(1, Math.floor((dayStart(re)-dayStart(rs))/MS_DAY)+1);
     ganttGrid.innerHTML='';
     rows
@@ -653,20 +655,16 @@
         const leftPct = (offset/span)*100, widthPct=(len/span)*100;
         const bar=document.createElement('div'); bar.style.position='absolute'; bar.style.top='-2px'; bar.style.height='12px'; bar.style.borderRadius='8px';
         bar.style.background='#d1fae5'; bar.style.border='1px solid #10b981'; bar.style.left=leftPct+'%'; bar.style.width=widthPct+'%';
-        bar.title = `${r.emp} • ${r.type} • ${dayISO(r.s)} → ${dayISO(r.e)} (${r.overlapDays}d)`;
+        bar.title = `${r.emp} • ${r.type} • ${fmt(dayStart(r.s))} → ${fmt(dayStart(r.e))} (${r.overlapDays}d)`;
         lane.appendChild(bar);
         row.appendChild(name); row.appendChild(lane); ganttGrid.appendChild(row);
       });
   }
 
-  // ---- Roster
   function renderRosterTable(){
     balTableBody.innerHTML='';
     const rows=[];
-    ROSTER.forEach(r=>{
-      if(!employeeIsIncluded(r.Status)) return;
-      rows.push(r);
-    });
+    ROSTER.forEach(r=>{ if(employeeIsIncluded(r.Status)) rows.push(r); });
     rows.sort((a,b)=> (a.Name||'').localeCompare(b.Name||''));
     rows.forEach(r=>{
       const tr=document.createElement('tr');
@@ -682,7 +680,6 @@
     });
   }
 
-  // ---- Burnout
   function renderBurnout(){
     const today = dayStart(new Date());
     const last14 = addDays(today, -14);
@@ -731,7 +728,6 @@
     document.getElementById('burnoutCount').textContent = items.filter(i=>i.risk!=='OK').length;
   }
 
-  // ---- Diagnostics
   function renderDiagnostics(){
     const colsReq = Object.keys(REQ_RAW?.[0]||{}).map(c=>c.replace(/\uFEFF/g,'').trim());
     const colsEmp = Object.keys(EMP_REF_RAW?.[0]||{}).map(c=>c.replace(/\uFEFF/g,'').trim());
@@ -749,19 +745,24 @@
   // ===== INIT =====
   async function init(){
     const t=new Date();
-    dateFrom.value = todayISO();
-    dateTo.value   = addDays(t,7).toISOString().slice(0,10);
+    // Always seed inputs with valid strings before any render calls
+    dateFrom.value = fmt(dayStart(t));
+    dateTo.value   = fmt(dayStart(addDays(t,7)));
     asOf.textContent = new Date().toLocaleString();
 
-    try{ [REQ_RAW, EMP_REF_RAW, PTO_INFO_RAW] = await Promise.all([loadCSV(REQUESTS_CSV), loadCSV(EMP_REF_CSV), loadCSV(PTO_INFO_CSV)]); }
-    catch(e){ console.error(e); }
+    try{
+      [REQ_RAW, EMP_REF_RAW, PTO_INFO_RAW] = await Promise.all([
+        loadCSV(REQUESTS_CSV), loadCSV(EMP_REF_CSV), loadCSV(PTO_INFO_CSV)
+      ]);
+    }catch(e){
+      console.error(e);
+    }
 
     ROSTER.clear();
     harvestEmpRows(EMP_REF_RAW||[]);
     harvestEmpRows(PTO_INFO_RAW||[]);
 
     normalizeRequests();
-
     buildFilterOptions();
     renderAll();
   }
@@ -771,12 +772,11 @@
   [dateFrom,dateTo,fDept,fMgr,fType,fStatus,chartMode].forEach(el=> el.addEventListener('change', renderAll));
   fSearch.addEventListener('input', renderAll);
 
-  // Quick ranges
-  function setRange(start,end){ dateFrom.value=dayISO(start); dateTo.value=dayISO(end); renderAll(); }
-  rngToday.addEventListener('click', ()=>{ const t=new Date(); setRange(t,t); });
-  rng7.addEventListener('click', ()=>{ const t=new Date(); setRange(t, addDays(t,7)); });
-  rng14.addEventListener('click', ()=>{ const t=new Date(); setRange(t, addDays(t,14)); });
-  rng30.addEventListener('click', ()=>{ const t=new Date(); setRange(t, addDays(t,30)); });
+  // Quick ranges (use fmt() always)
+  rngToday.addEventListener('click', ()=>{ const t=dayStart(new Date()); setRange(t,t); });
+  rng7.addEventListener('click', ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,7)); });
+  rng14.addEventListener('click', ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,14)); });
+  rng30.addEventListener('click', ()=>{ const t=dayStart(new Date()); setRange(t, addDays(t,30)); });
   rngMonth.addEventListener('click', ()=>{
     const t=new Date();
     const start=new Date(t.getFullYear(), t.getMonth(), 1);
@@ -784,7 +784,8 @@
     setRange(start,end);
   });
 
-  init();
+  // Defer init until the page is fully loaded to avoid any race
+  window.addEventListener('load', init);
 </script>
 </body>
 </html>
