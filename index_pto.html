@@ -1,452 +1,226 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Holland Homes • PPP Dashboard</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holland Homes • PTO Dashboard</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 <style>
-  :root{--brand:#184A30;--ink:#1b1b1b;--muted:#6b7280;--bg:#f7f7f7;--card:#fff;--line:#e5e7eb;}
-  *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-  body{margin:0;background:var(--bg);color:var(--ink)}
-  header{background:var(--brand);color:#fff;padding:14px 18px}
-  header h1{margin:0;font-size:18px;letter-spacing:.2px}
-  .wrap{max-width:1100px;margin:0 auto;padding:14px}
-  .row{display:grid;gap:12px}
-  .grid-4{grid-template-columns:repeat(4,1fr)}
-  .grid-3{grid-template-columns:repeat(3,1fr)}
-  .grid-2{grid-template-columns:repeat(2,1fr)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
-  .kpi{display:flex;flex-direction:column;gap:4px}
-  .kpi .big{font-size:24px;font-weight:800}
-  .kpi .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.25px}
-  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .toolbar input,.toolbar select,.toolbar button{font-size:14px;border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;background:#fff}
-  .toolbar button{cursor:pointer}
-  label.chk{display:inline-flex;gap:6px;align-items:center;border:1px solid #d1d5db;border-radius:999px;padding:6px 10px;background:#fff}
-  /* shorter charts overall */
-  canvas{width:100%;height:240px}
-  .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:460px}
-  table{width:100%;border-collapse:collapse;min-width:760px;font-size:14px}
-  th,td{padding:10px 8px;border-bottom:1px solid #eee;text-align:left}
-  th{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:#fff;z-index:1}
-  .mini{height:8px;background:#eef7f1;border-radius:6px;overflow:hidden}
-  .mini > i{display:block;height:100%;background:#10b981}
-  .muted{color:var(--muted)}
-  .footer{color:var(--muted);font-size:12px;margin-top:6px}
-  @media (max-width:980px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+  :root { --brand:#184A30; --ink:#1b1b1b; --muted:#6b7280; --bg:#f7f7f7; --card:#fff; --line:#e5e7eb; }
+  * { box-sizing:border-box; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; }
+  body { margin:0; background:var(--bg); color:var(--ink); }
+  header { background:var(--brand); color:#fff; padding:14px 18px; }
+  header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+  .wrap { max-width:1200px; margin:0 auto; padding:16px; }
+  .row { display:grid; gap:12px; }
+  .grid-6 { grid-template-columns:repeat(6,1fr); }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .kpi { display:flex; align-items:baseline; gap:8px; }
+  .kpi .big { font-size:26px; font-weight:700; }
+  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px; }
+  .toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .toolbar input,.toolbar select,.toolbar button { font-size:14px; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff }
+  .btn { cursor:pointer; }
+  .footer { color:var(--muted); font-size:12px; margin-top:8px; }
+  .table-wrap { overflow:auto; border:1px solid #e5e7eb; border-radius:12px; max-height:420px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; min-width:720px; }
+  th,td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
+  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; position:sticky; top:0; background:#fff; }
+  @media (max-width:900px){ .grid-6{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
-<header><h1>Holland Homes — People • Profitability • Performance</h1></header>
+<header><h1>Holland Homes — PTO Dashboard</h1></header>
 
 <div class="wrap">
-  <!-- Controls -->
-  <div class="card toolbar" style="justify-content:space-between">
-    <div class="toolbar" id="metricToggles">
-      <span class="muted">Show:</span>
-      <label class="chk"><input type="checkbox" id="togNI" checked> Net Income</label>
-      <label class="chk"><input type="checkbox" id="togGR" checked> Gross Revenue</label>
-      <label class="chk"><input type="checkbox" id="togNIPE"> NI / Employee</label>
-      <label class="chk"><input type="checkbox" id="togGRPE"> GR / Employee</label>
-
-      <label class="chk" style="margin-left:8px">Years:
-        <input id="yrStart" type="number" style="width:92px">
-        <span class="muted">—</span>
-        <input id="yrEnd" type="number" style="width:92px">
+  <div class="toolbar card" style="justify-content:space-between;">
+    <div class="toolbar">
+      <label>From: <input id="dateFrom" type="date" /></label>
+      <label>To: <input id="dateTo" type="date" /></label>
+      <button class="btn" id="rng7">Next 7</button>
+      <button class="btn" id="rng30">Next 30</button>
+      <label>Type:
+        <select id="fType">
+          <option value="">All</option>
+          <option>Vacation</option>
+          <option>Sick</option>
+          <option>Unpaid</option>
+        </select>
       </label>
-      <button id="btnAll">All</button>
-      <button id="btn5">Last 5</button>
-      <button id="btn3">Last 3</button>
     </div>
     <div class="toolbar">
-      <button id="downloadCsv">Download filtered CSV</button>
-      <span class="footer">Source: PPP.csv • <span id="asOf"></span></span>
+      <button id="refreshBtn" class="btn">Reload Data</button>
+      <span class="footer">From CSVs • <span id="asOf"></span></span>
     </div>
   </div>
 
-  <!-- KPIs (labels will update to "YTD <year>") -->
-  <div class="row grid-4">
-    <div class="card kpi"><div class="label" id="kpiNILabel">Net Income (YTD —)</div><div class="big" id="kpiNI">$0</div></div>
-    <div class="card kpi"><div class="label" id="kpiGRLabel">Gross Revenue (YTD —)</div><div class="big" id="kpiGR">$0</div></div>
-    <div class="card kpi"><div class="label" id="kpiEmpLabel">Avg Employees (YTD —)</div><div class="big" id="kpiEmp">0</div></div>
-    <div class="card kpi"><div class="label" id="kpiEffLabel">Efficiency (YTD —)</div><div class="big" id="kpiEff">0%</div></div>
+  <div class="row grid-6">
+    <div class="card kpi"><span class="big" id="kpiRequests">0</span><span class="label">Requests</span></div>
+    <div class="card kpi"><span class="big" id="kpiPeople">0</span><span class="label">Employees</span></div>
+    <div class="card kpi"><span class="big" id="kpiDays">0</span><span class="label">Person-Days</span></div>
+    <div class="card kpi"><span class="big" id="kpiSick">0</span><span class="label">Sick Avail</span></div>
+    <div class="card kpi"><span class="big" id="kpiUnpaid">0</span><span class="label">Unpaid Avail</span></div>
+    <div class="card kpi"><span class="big" id="kpiVac">0</span><span class="label">Vacation Avail</span></div>
   </div>
 
-  <!-- Charts + Stats -->
-  <div class="row grid-3" style="margin-top:12px">
-    <div class="card" style="grid-column: span 2;">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 style="margin:0">Trend</h3>
-        <span class="muted" id="trendCaption"></span>
-      </div>
-      <canvas id="trend"></canvas>
-      <div class="footer">Left axis = totals • Right axis = per-employee.</div>
-    </div>
-
-    <!-- Stats card -->
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <h3 style="margin:0">Range Stats</h3>
-        <label>Metric:
-          <select id="statMetric">
-            <option value="NetIncome">Net Income</option>
-            <option value="GrossRevenue">Gross Revenue</option>
-            <option value="NIperEmp">NI / Employee</option>
-            <option value="GRperEmp">GR / Employee</option>
-          </select>
-        </label>
-      </div>
-      <div class="row grid-2">
-        <div class="kpi"><div class="label">Average</div><div class="big" id="statAvg">—</div></div>
-        <div class="kpi"><div class="label">Median</div><div class="big" id="statMedian">—</div></div>
-        <div class="kpi"><div class="label">Max</div><div class="big" id="statMax">—</div></div>
-        <div class="kpi"><div class="label">Min</div><div class="big" id="statMin">—</div></div>
-        <div class="kpi"><div class="label">CAGR <span class="muted" id="statCAGRNote">— compound annual growth rate over the selected years</span></div><div class="big" id="statCAGR">—</div></div>
-        <div class="kpi"><div class="label">Δ vs Prior Year</div><div class="big" id="statDelta">—</div></div>
-      </div>
-      <div class="footer" id="statRangeNote"></div>
-    </div>
-  </div>
-
-  <!-- Efficiency line (shorter + fewer ticks) -->
-  <div class="card" style="margin-top:12px">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <h3 style="margin:0">Efficiency %</h3>
-      <span class="muted" id="effCaption"></span>
-    </div>
-    <canvas id="effChart"></canvas>
-  </div>
-
-  <!-- Table -->
-  <div class="card" style="margin-top:12px">
-    <h3 style="margin:0 0 6px">Yearly Detail</h3>
+  <div class="card" style="margin-top:12px;">
+    <h3>Upcoming Requests</h3>
     <div class="table-wrap">
-      <table id="tbl">
-        <thead>
-          <tr>
-            <th>Year</th>
-            <th>Avg Active Employees</th>
-            <th>Net Income</th>
-            <th>Gross Revenue</th>
-            <th>Net Income / Emp</th>
-            <th>Gross Revenue / Emp</th>
-            <th>Efficiency %</th>
-            <th style="width:160px">Efficiency Meter</th>
-          </tr>
-        </thead>
+      <table id="reqTable">
+        <thead><tr><th>Employee</th><th>Department</th><th>Type</th><th>Start</th><th>End</th><th>Days</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
-    <div class="footer">Efficiency = Net Income ÷ Gross Revenue.</div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script>
-  // ---------- UTIL ----------
-  const fmtMoney = n => n==null ? '—' :
-    n.toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0});
-  const fmtMoney1 = n => n==null ? '—' :
-    n.toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
-  const fmtPct = n => n==null ? '—' :
-    (n*100).toLocaleString(undefined,{maximumFractionDigits:2})+'%';
+const CSV_REQ  = './PTO Requests.csv';
+const CSV_REF  = './Employee Reference.csv';
+const CSV_INFO = './PTO Employee Info.csv';
+const MS_DAY = 86400000;
 
-  const toNum = v => {
-    if (v==null) return null;
-    if (typeof v === 'number') return v;
-    const s = String(v).replace(/\$/g,'').replace(/,/g,'').replace(/\s/g,'');
-    if (s.endsWith('%')) return parseFloat(s)/100;
-    const n = parseFloat(s);
-    return isFinite(n) ? n : null;
-  };
-
-  const median = arr => {
-    if (!arr.length) return null;
-    const a=[...arr].sort((x,y)=>x-y);
-    const m=Math.floor(a.length/2);
-    return a.length%2 ? a[m] : (a[m-1]+a[m])/2;
-  };
-
-  const asOf = document.getElementById('asOf');
-  asOf.textContent = new Date().toLocaleString();
-
-  // ---------- LOAD CSV ----------
-  async function loadPPP(){
-    const text = await fetch('./PPP.csv').then(r=>r.text());
-    const lines = text.split(/\r?\n/).filter(x=>x.trim().length);
-    const headers = lines[0].split(',').map(h=>h.trim());
-    const rows = lines.slice(1).map(line=>{
-      const parts = []; let cur='', inQ=false;
-      for (let i=0;i<line.length;i++){
-        const ch=line[i];
-        if (ch==='\"'){ inQ=!inQ; continue; }
-        if (ch===',' && !inQ){ parts.push(cur); cur=''; continue; }
-        cur+=ch;
-      }
-      parts.push(cur);
-      const obj={}; headers.forEach((h,i)=>obj[h]=parts[i]);
-      return obj;
-    });
-
-    const out = rows.map(r=>({
-      Year: +r['Year'],
-      Employees: toNum(r['Average Active Employees']),
-      NetIncome: toNum(r['Net Income']),
-      GrossRevenue: toNum(r['Gross Revenue']),
-      NIperEmp: toNum(r['Net Income Per Employee']),
-      GRperEmp: toNum(r['Gross Revenue Per Employee']),
-      Efficiency: toNum(r['Efficiency'])
-    })).filter(r=>!isNaN(r.Year));
-
-    out.sort((a,b)=>a.Year-b.Year);
-    return out;
+// ---------- Helpers ----------
+const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').trim().toLowerCase();
+function pick(row, candidates){
+  const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
+  for (const wanted of candidates){
+    const k = map.get(cleanKey(wanted));
+    if (k !== undefined) return row[k];
   }
+  return undefined;
+}
+function normName(s){
+  const t = String(s||'').trim();
+  if (!t) return '';
+  const m = /^([^,]+),\s*(.+)$/.exec(t);
+  if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
+  return t.replace(/\s+/g,' ').trim();
+}
+function parseDate(d){
+  if(!d) return null;
+  const s = String(d).trim();
+  // MM/DD/YY or MM/DD/YYYY
+  const m1 = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/.exec(s);
+  if (m1){
+    const mm = +m1[1], dd = +m1[2]; let yy = +m1[3];
+    if (yy < 100) yy = 2000 + yy; // <-- fix two-digit years
+    const dt = new Date(yy, mm-1, dd);
+    return isNaN(dt) ? null : dt;
+  }
+  const t = new Date(s); // ISO or other parseable
+  return isNaN(t) ? null : t;
+}
+function fmtDateInput(d){ return d.toISOString().slice(0,10); }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function num(v){ const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; }
 
-  // ---------- STATE ----------
-  let DATA = [];
-  let trendChart, effChart;
+// Half-day aware duration from a request row
+function computeDays(r){
+  const s = parseDate(pick(r, ['PTO Request Start Date','Start']));
+  const e = parseDate(pick(r, ['PTO Request End Date','End']));
+  if (!s || !e) return 0;
+  let days = Math.floor((e - s)/MS_DAY) + 1;
+  const sh = String(pick(r, ['Start AM/PM'])||'').toUpperCase();
+  const eh = String(pick(r, ['End AM/PM'])  ||'').toUpperCase();
+  if (sh==='AM' || sh==='PM') days -= 0.5;
+  if (eh==='AM' || eh==='PM') days -= 0.5;
+  return Math.max(0, days);
+}
 
-  // Toggles
-  const togNI   = document.getElementById('togNI');
-  const togGR   = document.getElementById('togGR');
-  const togNIPE = document.getElementById('togNIPE');
-  const togGRPE = document.getElementById('togGRPE');
+async function loadCSV(url){
+  const res = await fetch(url+'?v='+Date.now(), {cache:'no-store'});
+  const text = await res.text();
+  return new Promise(resolve => Papa.parse(text, {header:true, skipEmptyLines:true, complete: out => resolve(out.data)}));
+}
 
-  const yrStart = document.getElementById('yrStart');
-  const yrEnd   = document.getElementById('yrEnd');
-  const btnAll  = document.getElementById('btnAll');
-  const btn5    = document.getElementById('btn5');
-  const btn3    = document.getElementById('btn3');
+// ---------- State ----------
+let REQ_RAW=[], REF_RAW=[], INFO_RAW=[];
+let DEPT_BY_NAME = new Map();
+
+async function init(){
+  REQ_RAW  = await loadCSV(CSV_REQ);
+  REF_RAW  = await loadCSV(CSV_REF);
+  INFO_RAW = await loadCSV(CSV_INFO);
+
+  // build name->dept map from reference
+  DEPT_BY_NAME.clear();
+  REF_RAW.forEach(r=>{
+    const nm = normName(pick(r, ['Name','Employee','Employee Name','NAME']));
+    const dept = pick(r, ['Department','Team']) || '';
+    if (nm) DEPT_BY_NAME.set(nm, String(dept).trim());
+  });
+
+  document.getElementById('asOf').textContent = new Date().toLocaleString();
+
+  // Default range: today → +30
+  const t=new Date();
+  document.getElementById('dateFrom').value = fmtDateInput(t);
+  document.getElementById('dateTo').value   = fmtDateInput(addDays(t,30));
+
+  refresh();
+}
+
+function refresh(){
+  const from = parseDate(document.getElementById('dateFrom').value) || new Date();
+  const to   = parseDate(document.getElementById('dateTo').value)   || addDays(from,7);
+  const type = document.getElementById('fType').value;
+
+  // Filter upcoming requests that overlap the window
+  const rows = REQ_RAW.map(r=>{
+      const emp  = normName(pick(r, ['Employee Name','Employee']));
+      const dept = (pick(r, ['Department']) || DEPT_BY_NAME.get(emp) || '').toString().trim();
+      const t    = (pick(r, ['PTO Request Type','Type']) || '').toString().trim();
+      const sStr = pick(r, ['PTO Request Start Date','Start']);
+      const eStr = pick(r, ['PTO Request End Date','End']);
+      const s = parseDate(sStr), e = parseDate(eStr);
+      const days = num(pick(r,['PTO Request Total Days','Total Days'])) || computeDays(r);
+      return {emp,dept,type:t,s,e,days};
+    })
+    .filter(r=>{
+      if (!r.emp || !r.s || !r.e) return false;
+      if (type && r.type !== type) return false;
+      // overlap test
+      return !(r.e < from || r.s > to);
+    })
+    .sort((a,b)=> (a.s-b.s) || a.emp.localeCompare(b.emp));
+
+  // Table
+  const tbody = document.querySelector('#reqTable tbody');
+  tbody.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${r.emp}</td><td>${r.dept||'—'}</td><td>${r.type||'—'}</td>
+                    <td>${r.s.toLocaleDateString()}</td><td>${r.e.toLocaleDateString()}</td><td>${r.days||0}</td>`;
+    tbody.appendChild(tr);
+  });
 
   // KPIs
-  const kpiNI=document.getElementById('kpiNI');
-  const kpiGR=document.getElementById('kpiGR');
-  const kpiEmp=document.getElementById('kpiEmp');
-  const kpiEff=document.getElementById('kpiEff');
-  const kpiNILabel=document.getElementById('kpiNILabel');
-  const kpiGRLabel=document.getElementById('kpiGRLabel');
-  const kpiEmpLabel=document.getElementById('kpiEmpLabel');
-  const kpiEffLabel=document.getElementById('kpiEffLabel');
+  document.getElementById('kpiRequests').textContent = rows.length;
+  document.getElementById('kpiPeople').textContent   = (new Set(rows.map(r=>r.emp))).size;
+  document.getElementById('kpiDays').textContent     = rows.reduce((a,r)=>a+(r.days||0),0);
 
-  const trendCaption=document.getElementById('trendCaption');
-  const effCaption=document.getElementById('effCaption');
+  const activeInfo = INFO_RAW.filter(r => String(pick(r,['Employee Status','Status'])||'').toLowerCase()==='active');
+  const sum = (fieldKeys) => activeInfo.reduce((a,r)=> a + num(pick(r, fieldKeys)), 0);
+  document.getElementById('kpiSick').textContent   = Math.round(sum(['Sick Available','Sick Avail'])*10)/10;
+  document.getElementById('kpiUnpaid').textContent = Math.round(sum(['Unpaid Available','Unpaid Avail'])*10)/10;
+  document.getElementById('kpiVac').textContent    = Math.round(sum(['Vacation Available','Vacation Avail'])*10)/10;
+}
 
-  // Stats
-  const statMetric=document.getElementById('statMetric');
-  const statAvg=document.getElementById('statAvg');
-  const statMedian=document.getElementById('statMedian');
-  const statMax=document.getElementById('statMax');
-  const statMin=document.getElementById('statMin');
-  const statCAGR=document.getElementById('statCAGR');
-  const statDelta=document.getElementById('statDelta');
-  const statRangeNote=document.getElementById('statRangeNote');
+// Events
+document.getElementById('refreshBtn').addEventListener('click', init);
+document.getElementById('rng7').addEventListener('click', ()=>{
+  const t=new Date(); document.getElementById('dateFrom').value=fmtDateInput(t);
+  document.getElementById('dateTo').value=fmtDateInput(addDays(t,7)); refresh();
+});
+document.getElementById('rng30').addEventListener('click', ()=>{
+  const t=new Date(); document.getElementById('dateFrom').value=fmtDateInput(t);
+  document.getElementById('dateTo').value=fmtDateInput(addDays(t,30)); refresh();
+});
 
-  const tblBody = document.querySelector('#tbl tbody');
-
-  function yearsFiltered(){
-    const a = +yrStart.value || -Infinity;
-    const b = +yrEnd.value   || +Infinity;
-    return DATA.filter(r=>r.Year>=a && r.Year<=b);
-  }
-
-  function updateKpiLabels(year){
-    const tag = `YTD ${year ?? '—'}`;
-    kpiNILabel.textContent = `Net Income (${tag})`;
-    kpiGRLabel.textContent = `Gross Revenue (${tag})`;
-    kpiEmpLabel.textContent = `Avg Employees (${tag})`;
-    kpiEffLabel.textContent = `Efficiency (${tag})`;
-  }
-
-  function updateKPIs(rows){
-    if (!rows.length) {
-      updateKpiLabels(null);
-      kpiNI.textContent=kpiGR.textContent=kpiEmp.textContent=kpiEff.textContent='—';
-      return;
-    }
-    const latest = rows[rows.length-1];
-    updateKpiLabels(latest.Year);
-    kpiNI.textContent  = fmtMoney1(latest.NetIncome);
-    kpiGR.textContent  = fmtMoney1(latest.GrossRevenue);
-    kpiEmp.textContent = (latest.Employees??'—').toString();
-    kpiEff.textContent = fmtPct(latest.Efficiency);
-  }
-
-  function renderTable(rows){
-    tblBody.innerHTML='';
-    rows.forEach(r=>{
-      const tr=document.createElement('tr');
-      const bar = Math.max(0, Math.min(1, r.Efficiency ?? 0));
-      tr.innerHTML = `
-        <td>${r.Year}</td>
-        <td>${r.Employees??'—'}</td>
-        <td>${fmtMoney1(r.NetIncome)}</td>
-        <td>${fmtMoney1(r.GrossRevenue)}</td>
-        <td>${fmtMoney1(r.NIperEmp)}</td>
-        <td>${fmtMoney1(r.GRperEmp)}</td>
-        <td>${fmtPct(r.Efficiency)}</td>
-        <td><div class="mini"><i style="width:${bar*100}%"></i></div></td>`;
-      tblBody.appendChild(tr);
-    });
-  }
-
-  // ---- Trend chart (hide right axis labels) ----
-  function renderTrend(rows){
-    const labels = rows.map(r=>r.Year);
-
-    const ds = [];
-    if (togNI.checked)   ds.push({label:'Net Income',            data: rows.map(r=>r.NetIncome??0),      yAxisID:'y',  tension:.2});
-    if (togGR.checked)   ds.push({label:'Gross Revenue',         data: rows.map(r=>r.GrossRevenue??0),   yAxisID:'y',  tension:.2});
-    if (togNIPE.checked) ds.push({label:'NI / Employee',         data: rows.map(r=>r.NIperEmp??0),       yAxisID:'y1', tension:.2});
-    if (togGRPE.checked) ds.push({label:'GR / Employee',         data: rows.map(r=>r.GRperEmp??0),       yAxisID:'y1', tension:.2});
-
-    if (trendChart) trendChart.destroy();
-    trendChart = new Chart(document.getElementById('trend'), {
-      type:'line',
-      data:{ labels, datasets: ds },
-      options:{
-        responsive:true,
-        interaction:{mode:'nearest',intersect:false},
-        plugins:{ legend:{position:'bottom'} },
-        scales:{
-          y:{ type:'linear', position:'left', ticks:{ callback:v=>fmtMoney(v) } },
-          y1:{ type:'linear', position:'right',
-               grid:{drawOnChartArea:false},
-               ticks:{ display:false }, // hide labels
-               title:{ display:false } }
-        }
-      }
-    });
-    trendCaption.textContent = `${labels[0]}–${labels[labels.length-1]}`;
-  }
-
-  // ---- Stats box for selected metric (with year on max/min) ----
-  function updateStats(rows){
-    const key = statMetric.value;
-    const friendly = {
-      NetIncome:'Net Income',
-      GrossRevenue:'Gross Revenue',
-      NIperEmp:'NI / Employee',
-      GRperEmp:'GR / Employee'
-    }[key];
-
-    const vals = rows.map(r=>r[key]).filter(v=>v!=null);
-    if (!vals.length){
-      statAvg.textContent=statMedian.textContent=statMax.textContent=statMin.textContent=statCAGR.textContent=statDelta.textContent='—';
-      statRangeNote.textContent = `${friendly}`;
-      return;
-    }
-    const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
-    const med = median(vals);
-    const max = Math.max(...vals);
-    const min = Math.min(...vals);
-    const maxYear = rows[vals.indexOf(max)]?.Year ?? '';
-    const minYear = rows[vals.indexOf(min)]?.Year ?? '';
-
-    // CAGR (only if first & last are > 0 and at least 2 years)
-    let cagr = null;
-    if (vals.length>=2 && vals[0]>0 && vals.at(-1)>0){
-      const years = rows.length-1; // consecutive annual points
-      cagr = Math.pow(vals.at(-1)/vals[0], 1/years)-1;
-    }
-
-    let delta = null;
-    if (vals.length>=2) delta = vals.at(-1) - vals.at(-2);
-
-    const moneyish = (key==='NetIncome'||key==='GrossRevenue'||key==='NIperEmp'||key==='GRperEmp');
-    const F = moneyish ? fmtMoney1 : (n=>n);
-    statAvg.textContent   = F(avg);
-    statMedian.textContent= F(med);
-    statMax.textContent   = `${F(max)} ${maxYear ? '• '+maxYear : ''}`;
-    statMin.textContent   = `${F(min)} ${minYear ? '• '+minYear : ''}`;
-    statCAGR.textContent  = cagr==null ? '—' : (cagr*100).toFixed(2)+'%';
-    statDelta.textContent = delta==null ? '—' : (delta>=0?'+':'') + F(delta);
-
-    const yrs = rows.map(r=>r.Year);
-    statRangeNote.textContent = `${friendly} • ${yrs[0]}–${yrs.at(-1)}`;
-  }
-
-  // ---- Efficiency line (shorter & fewer ticks) ----
-  function renderEfficiency(rows){
-    const labels = rows.map(r=>r.Year);
-    if (effChart) effChart.destroy();
-    const effs = rows.map(r=> (r.Efficiency ?? 0)*100);
-    effChart = new Chart(document.getElementById('effChart'), {
-      type:'line',
-      data:{ labels, datasets:[{ label:'Efficiency %', data: effs, tension:.2, fill:false }] },
-      options:{ responsive:true, plugins:{ legend:{display:false} },
-        scales:{ y:{
-          beginAtZero:true,
-          suggestedMax: Math.max(10, Math.ceil((Math.max(...effs,0)+1)/2)*2), // keep compact
-          ticks:{ stepSize:2, maxTicksLimit:6, callback:v=> v+'%' }
-        } } }
-    });
-    effCaption.textContent = `${labels[0]}–${labels[labels.length-1]} (Net Income ÷ Revenue)`;
-  }
-
-  function refresh(){
-    const rows = yearsFiltered();
-    updateKPIs(rows);
-    renderTrend(rows);
-    updateStats(rows);
-    renderEfficiency(rows);
-    renderTable(rows);
-  }
-
-  // Download filtered CSV
-  document.getElementById('downloadCsv').addEventListener('click', ()=>{
-    const rows = yearsFiltered();
-    const head = ['Year','Average Active Employees','Net Income','Gross Revenue','Net Income Per Employee','Gross Revenue Per Employee','Efficiency'];
-    const toCSV = [head.join(',')].concat(rows.map(r=>[
-      r.Year,
-      r.Employees ?? '',
-      r.NetIncome ?? '',
-      r.GrossRevenue ?? '',
-      r.NIperEmp ?? '',
-      r.GRperEmp ?? '',
-      r.Efficiency ?? ''
-    ].join(','))).join('\n');
-    const blob = new Blob([toCSV], {type:'text/csv'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'PPP_filtered.csv';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
-
-  // Reactivity
-  [togNI,togGR,togNIPE,togGRPE].forEach(el=> el.addEventListener('change', refresh));
-  [yrStart,yrEnd].forEach(el=> el.addEventListener('change', refresh));
-  statMetric.addEventListener('change', ()=> updateStats(yearsFiltered()));
-
-  // Quick year buttons
-  btnAll.addEventListener('click', ()=>{
-    yrStart.value = DATA[0]?.Year || '';
-    yrEnd.value   = DATA.at(-1)?.Year || '';
-    refresh();
-  });
-  btn5.addEventListener('click', ()=>{
-    if (!DATA.length) return;
-    yrStart.value = DATA[Math.max(0, DATA.length-5)].Year;
-    yrEnd.value   = DATA.at(-1).Year;
-    refresh();
-  });
-  btn3.addEventListener('click', ()=>{
-    if (!DATA.length) return;
-    yrStart.value = DATA[Math.max(0, DATA.length-3)].Year;
-    yrEnd.value   = DATA.at(-1).Year;
-    refresh();
-  });
-
-  // ---------- BOOT ----------
-  (async function init(){
-    DATA = await loadPPP();
-    yrStart.value = DATA[0]?.Year || '';
-    yrEnd.value = DATA.at(-1)?.Year || '';
-    statMetric.value = 'NetIncome';
-    refresh();
-  })();
+init();
 </script>
 </body>
 </html>
