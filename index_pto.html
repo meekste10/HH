@@ -15,22 +15,19 @@
   .wrap { max-width:1200px; margin:0 auto; padding:16px; }
   .row { display:grid; gap:12px; }
   .grid-6 { grid-template-columns:repeat(6,1fr); }
-  .grid-3 { grid-template-columns:repeat(3,1fr); }
-  .grid-2 { grid-template-columns:repeat(2,1fr); }
   .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
   .kpi { display:flex; align-items:baseline; gap:8px; }
   .kpi .big { font-size:26px; font-weight:700; }
   .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px; }
   .toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-  .toolbar input,.toolbar select,.toolbar button { font-size:14px; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
+  .toolbar input,.toolbar select,.toolbar button { font-size:14px; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff }
   .btn { cursor:pointer; }
   .footer { color:var(--muted); font-size:12px; margin-top:8px; }
-  canvas { width:100%; height:240px; }
-  .table-wrap { overflow:auto; border:1px solid #e5e7eb; border-radius:12px; max-height:400px; }
-  table { width:100%; border-collapse:collapse; font-size:14px; min-width:800px; }
+  .table-wrap { overflow:auto; border:1px solid #e5e7eb; border-radius:12px; max-height:420px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; min-width:720px; }
   th,td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
   th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; position:sticky; top:0; background:#fff; }
-  @media (max-width:900px){ .grid-6,.grid-3,.grid-2{ grid-template-columns:1fr; } }
+  @media (max-width:900px){ .grid-6{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -43,7 +40,14 @@
       <label>To: <input id="dateTo" type="date" /></label>
       <button class="btn" id="rng7">Next 7</button>
       <button class="btn" id="rng30">Next 30</button>
-      <label>Type:<select id="fType"><option value="">All</option><option>Vacation</option><option>Sick</option><option>Unpaid</option></select></label>
+      <label>Type:
+        <select id="fType">
+          <option value="">All</option>
+          <option>Vacation</option>
+          <option>Sick</option>
+          <option>Unpaid</option>
+        </select>
+      </label>
     </div>
     <div class="toolbar">
       <button id="refreshBtn" class="btn">Reload Data</button>
@@ -73,65 +77,149 @@
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script>
-const CSV_REQ='./PTO Requests.csv';
-const CSV_REF='./Employee Reference.csv';
-const CSV_INFO='./PTO Employee Info.csv';
-const MS_DAY=86400000;
+const CSV_REQ  = './PTO Requests.csv';
+const CSV_REF  = './Employee Reference.csv';
+const CSV_INFO = './PTO Employee Info.csv';
+const MS_DAY = 86400000;
 
-function fmtDate(d){ return d.toISOString().slice(0,10); }
-function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
-function dayStart(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
-function parseDate(s){if(!s)return null;const [m,d2,y]=s.split('/').map(x=>+x);return new Date(y,m-1,d2);}
-function overlap(r,rs,re){const s=parseDate(r.s),e=parseDate(r.e);if(!s||!e)return 0;if(e<rs||s>re)return 0;const a=s<rs?rs:s,b=e>re?re:e;return Math.floor((b-a)/MS_DAY)+1;}
-function num(v){return parseFloat(String(v).replace(/[^0-9.-]/g,''))||0;}
+// ---------- Helpers ----------
+const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').trim().toLowerCase();
+function pick(row, candidates){
+  const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
+  for (const wanted of candidates){
+    const k = map.get(cleanKey(wanted));
+    if (k !== undefined) return row[k];
+  }
+  return undefined;
+}
+function normName(s){
+  const t = String(s||'').trim();
+  if (!t) return '';
+  const m = /^([^,]+),\s*(.+)$/.exec(t);
+  if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
+  return t.replace(/\s+/g,' ').trim();
+}
+function parseDate(d){
+  if(!d) return null;
+  const s = String(d).trim();
+  // MM/DD/YY or MM/DD/YYYY
+  const m1 = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/.exec(s);
+  if (m1){
+    const mm = +m1[1], dd = +m1[2]; let yy = +m1[3];
+    if (yy < 100) yy = 2000 + yy; // <-- fix two-digit years
+    const dt = new Date(yy, mm-1, dd);
+    return isNaN(dt) ? null : dt;
+  }
+  const t = new Date(s); // ISO or other parseable
+  return isNaN(t) ? null : t;
+}
+function fmtDateInput(d){ return d.toISOString().slice(0,10); }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function num(v){ const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; }
 
-async function loadCSV(url){
-  const res=await fetch(url+'?v='+Date.now());
-  const text=await res.text();
-  return new Promise(resolve=>Papa.parse(text,{header:true,skipEmptyLines:true,complete:o=>resolve(o.data)}));
+// Half-day aware duration from a request row
+function computeDays(r){
+  const s = parseDate(pick(r, ['PTO Request Start Date','Start']));
+  const e = parseDate(pick(r, ['PTO Request End Date','End']));
+  if (!s || !e) return 0;
+  let days = Math.floor((e - s)/MS_DAY) + 1;
+  const sh = String(pick(r, ['Start AM/PM'])||'').toUpperCase();
+  const eh = String(pick(r, ['End AM/PM'])  ||'').toUpperCase();
+  if (sh==='AM' || sh==='PM') days -= 0.5;
+  if (eh==='AM' || eh==='PM') days -= 0.5;
+  return Math.max(0, days);
 }
 
-let REQ=[],REF=[],INFO=[];
+async function loadCSV(url){
+  const res = await fetch(url+'?v='+Date.now(), {cache:'no-store'});
+  const text = await res.text();
+  return new Promise(resolve => Papa.parse(text, {header:true, skipEmptyLines:true, complete: out => resolve(out.data)}));
+}
+
+// ---------- State ----------
+let REQ_RAW=[], REF_RAW=[], INFO_RAW=[];
+let DEPT_BY_NAME = new Map();
 
 async function init(){
-  REQ=await loadCSV(CSV_REQ);
-  REF=await loadCSV(CSV_REF);
-  INFO=await loadCSV(CSV_INFO);
-  document.getElementById('asOf').textContent=new Date().toLocaleString();
+  REQ_RAW  = await loadCSV(CSV_REQ);
+  REF_RAW  = await loadCSV(CSV_REF);
+  INFO_RAW = await loadCSV(CSV_INFO);
+
+  // build name->dept map from reference
+  DEPT_BY_NAME.clear();
+  REF_RAW.forEach(r=>{
+    const nm = normName(pick(r, ['Name','Employee','Employee Name','NAME']));
+    const dept = pick(r, ['Department','Team']) || '';
+    if (nm) DEPT_BY_NAME.set(nm, String(dept).trim());
+  });
+
+  document.getElementById('asOf').textContent = new Date().toLocaleString();
+
+  // Default range: today → +30
+  const t=new Date();
+  document.getElementById('dateFrom').value = fmtDateInput(t);
+  document.getElementById('dateTo').value   = fmtDateInput(addDays(t,30));
+
   refresh();
 }
 
 function refresh(){
-  const from=parseDate(document.getElementById('dateFrom').value)||new Date();
-  const to=parseDate(document.getElementById('dateTo').value)||addDays(from,7);
-  const type=document.getElementById('fType').value;
-  const rows=REQ.filter(r=>{
-    const t=r['PTO Request Type']||''; if(type&&t!==type)return false;
-    const s=parseDate(r['PTO Request Start Date']); const e=parseDate(r['PTO Request End Date']);
-    return s&&e&&e>=from&&s<=to;
-  }).map(r=>({
-    emp:r['Employee Name'],dept:r['Department'],type:r['PTO Request Type'],
-    s:r['PTO Request Start Date'],e:r['PTO Request End Date'],days:r['PTO Request Total Days']
-  }));
-  const tbl=document.querySelector('#reqTable tbody');
-  tbl.innerHTML='';
+  const from = parseDate(document.getElementById('dateFrom').value) || new Date();
+  const to   = parseDate(document.getElementById('dateTo').value)   || addDays(from,7);
+  const type = document.getElementById('fType').value;
+
+  // Filter upcoming requests that overlap the window
+  const rows = REQ_RAW.map(r=>{
+      const emp  = normName(pick(r, ['Employee Name','Employee']));
+      const dept = (pick(r, ['Department']) || DEPT_BY_NAME.get(emp) || '').toString().trim();
+      const t    = (pick(r, ['PTO Request Type','Type']) || '').toString().trim();
+      const sStr = pick(r, ['PTO Request Start Date','Start']);
+      const eStr = pick(r, ['PTO Request End Date','End']);
+      const s = parseDate(sStr), e = parseDate(eStr);
+      const days = num(pick(r,['PTO Request Total Days','Total Days'])) || computeDays(r);
+      return {emp,dept,type:t,s,e,days};
+    })
+    .filter(r=>{
+      if (!r.emp || !r.s || !r.e) return false;
+      if (type && r.type !== type) return false;
+      // overlap test
+      return !(r.e < from || r.s > to);
+    })
+    .sort((a,b)=> (a.s-b.s) || a.emp.localeCompare(b.emp));
+
+  // Table
+  const tbody = document.querySelector('#reqTable tbody');
+  tbody.innerHTML='';
   rows.forEach(r=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${r.emp}</td><td>${r.dept}</td><td>${r.type}</td><td>${r.s}</td><td>${r.e}</td><td>${r.days}</td>`;
-    tbl.appendChild(tr);
+    tr.innerHTML = `<td>${r.emp}</td><td>${r.dept||'—'}</td><td>${r.type||'—'}</td>
+                    <td>${r.s.toLocaleDateString()}</td><td>${r.e.toLocaleDateString()}</td><td>${r.days||0}</td>`;
+    tbody.appendChild(tr);
   });
-  document.getElementById('kpiRequests').textContent=rows.length;
-  const uniq=new Set(rows.map(r=>r.emp)); document.getElementById('kpiPeople').textContent=uniq.size;
-  document.getElementById('kpiDays').textContent=rows.reduce((a,b)=>a+num(b.days),0);
-  const act=INFO.filter(r=>(r['Employee Status']||'').toLowerCase()==='active');
-  document.getElementById('kpiSick').textContent=act.reduce((a,b)=>a+num(b['Sick Available']),0);
-  document.getElementById('kpiUnpaid').textContent=act.reduce((a,b)=>a+num(b['Unpaid Available']),0);
-  document.getElementById('kpiVac').textContent=act.reduce((a,b)=>a+num(b['Vacation Available']),0);
+
+  // KPIs
+  document.getElementById('kpiRequests').textContent = rows.length;
+  document.getElementById('kpiPeople').textContent   = (new Set(rows.map(r=>r.emp))).size;
+  document.getElementById('kpiDays').textContent     = rows.reduce((a,r)=>a+(r.days||0),0);
+
+  const activeInfo = INFO_RAW.filter(r => String(pick(r,['Employee Status','Status'])||'').toLowerCase()==='active');
+  const sum = (fieldKeys) => activeInfo.reduce((a,r)=> a + num(pick(r, fieldKeys)), 0);
+  document.getElementById('kpiSick').textContent   = Math.round(sum(['Sick Available','Sick Avail'])*10)/10;
+  document.getElementById('kpiUnpaid').textContent = Math.round(sum(['Unpaid Available','Unpaid Avail'])*10)/10;
+  document.getElementById('kpiVac').textContent    = Math.round(sum(['Vacation Available','Vacation Avail'])*10)/10;
 }
 
-document.getElementById('refreshBtn').addEventListener('click',init);
-document.getElementById('rng7').addEventListener('click',()=>{const t=new Date();document.getElementById('dateFrom').value=fmtDate(t);document.getElementById('dateTo').value=fmtDate(addDays(t,7));refresh();});
-document.getElementById('rng30').addEventListener('click',()=>{const t=new Date();document.getElementById('dateFrom').value=fmtDate(t);document.getElementById('dateTo').value=fmtDate(addDays(t,30));refresh();});
+// Events
+document.getElementById('refreshBtn').addEventListener('click', init);
+document.getElementById('rng7').addEventListener('click', ()=>{
+  const t=new Date(); document.getElementById('dateFrom').value=fmtDateInput(t);
+  document.getElementById('dateTo').value=fmtDateInput(addDays(t,7)); refresh();
+});
+document.getElementById('rng30').addEventListener('click', ()=>{
+  const t=new Date(); document.getElementById('dateFrom').value=fmtDateInput(t);
+  document.getElementById('dateTo').value=fmtDateInput(addDays(t,30)); refresh();
+});
+
 init();
 </script>
 </body>
