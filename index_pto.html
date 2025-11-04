@@ -5,220 +5,217 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Holland Homes • PTO Dashboard</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 <style>
-  :root { --brand:#184A30; --ink:#1b1b1b; --muted:#6b7280; --bg:#f7f7f7; --card:#fff; --line:#e5e7eb; }
-  * { box-sizing:border-box; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; }
+  :root { --brand:#184A30; --ink:#1c1c1c; --muted:#6b7280; --bg:#f7f7f7; --card:#ffffff; --line:#e5e7eb; }
+  * { box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; }
   body { margin:0; background:var(--bg); color:var(--ink); }
-  header { background:var(--brand); color:#fff; padding:14px 18px; }
+  header { background:var(--brand); color:#fff; padding:16px 20px; }
   header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
   .wrap { max-width:1200px; margin:0 auto; padding:16px; }
   .row { display:grid; gap:12px; }
-  .grid-6 { grid-template-columns:repeat(6,1fr); }
+  .grid-6 { grid-template-columns: repeat(6, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
   .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
-  .kpi { display:flex; align-items:baseline; gap:8px; }
+  .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .toolbar input, .toolbar select, .toolbar button, .toolbar label { font-size:14px; }
+  .toolbar input, .toolbar select, .toolbar button { border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
+  .btn { cursor:pointer; }
+  .kpi { display:flex; flex-direction:column; gap:4px; }
   .kpi .big { font-size:26px; font-weight:700; }
   .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px; }
-  .toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-  .toolbar input,.toolbar select,.toolbar button { font-size:14px; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff }
-  .btn { cursor:pointer; }
+  .list { margin:8px 0 0; padding:0; list-style:none; }
+  .list li { padding:8px 0; border-bottom:1px dashed #eee; font-size:14px; display:flex; justify-content:space-between; gap:10px; }
+  .pill { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; background:#fafafa; color:#374151; }
+  .muted { color:var(--muted); }
   .footer { color:var(--muted); font-size:12px; margin-top:8px; }
-  .table-wrap { overflow:auto; border:1px solid #e5e7eb; border-radius:12px; max-height:420px; }
-  table { width:100%; border-collapse:collapse; font-size:14px; min-width:720px; }
-  th,td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
-  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; position:sticky; top:0; background:#fff; }
-  @media (max-width:900px){ .grid-6{ grid-template-columns:1fr; } }
+
+  .scroll-card { 
+    max-height: calc(var(--vh, 1vh) * 35);
+    overflow:auto; border-radius:12px; -webkit-overflow-scrolling:touch;
+  }
+  .scroll-card h3 { position: sticky; top: 0; background: var(--card); padding-bottom:6px; margin-top:0; }
+
+  canvas { width:100%; height:260px; }
+  table { width:100%; border-collapse: collapse; font-size:14px; min-width: 820px; }
+  th, td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
+  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; position: sticky; top: 0; background: #fff; z-index: 1; }
+  .table-wrap { overflow:auto; max-height: calc(var(--vh, 1vh) * 40); border:1px solid #e5e7eb; border-radius:12px; }
 </style>
 </head>
 <body>
 <header><h1>Holland Homes — PTO Dashboard</h1></header>
 
 <div class="wrap">
+
   <div class="toolbar card" style="justify-content:space-between;">
     <div class="toolbar">
       <label>From: <input id="dateFrom" type="date" /></label>
       <label>To: <input id="dateTo" type="date" /></label>
+      <button class="btn" id="rngToday">Today</button>
       <button class="btn" id="rng7">Next 7</button>
       <button class="btn" id="rng30">Next 30</button>
-      <label>Type:
-        <select id="fType">
-          <option value="">All</option>
-          <option>Vacation</option>
-          <option>Sick</option>
-          <option>Unpaid</option>
-        </select>
-      </label>
+      <button class="btn" id="rngMonth">This Month</button>
+      <label>Department:<select id="fDept"><option value="">All</option></select></label>
+      <label>Type:<select id="fType"><option value="">All</option><option>Vacation</option><option>Sick</option><option>Unpaid</option></select></label>
+      <label>Search: <input id="fSearch" type="search" placeholder="Name or dept…" /></label>
     </div>
     <div class="toolbar">
-      <button id="refreshBtn" class="btn">Reload Data</button>
+      <button id="refreshBtn" class="btn" type="button">Reload Data</button>
       <span class="footer">From CSVs • <span id="asOf"></span></span>
     </div>
   </div>
 
   <div class="row grid-6">
-    <div class="card kpi"><span class="big" id="kpiRequests">0</span><span class="label">Requests</span></div>
-    <div class="card kpi"><span class="big" id="kpiPeople">0</span><span class="label">Employees</span></div>
-    <div class="card kpi"><span class="big" id="kpiDays">0</span><span class="label">Person-Days</span></div>
-    <div class="card kpi"><span class="big" id="kpiSick">0</span><span class="label">Sick Avail</span></div>
-    <div class="card kpi"><span class="big" id="kpiUnpaid">0</span><span class="label">Unpaid Avail</span></div>
-    <div class="card kpi"><span class="big" id="kpiVac">0</span><span class="label">Vacation Avail</span></div>
+    <div class="card kpi"><div class="label">Requests</div><div class="big" id="kpiRequests">0</div></div>
+    <div class="card kpi"><div class="label">Employees</div><div class="big" id="kpiPeople">0</div></div>
+    <div class="card kpi"><div class="label">Departments</div><div class="big" id="kpiDepts">0</div></div>
+    <div class="card kpi"><div class="label">Person-Days</div><div class="big" id="kpiDays">0</div></div>
+    <div class="card kpi"><div class="label">Sick Avail</div><div class="big" id="kpiSickAvail">0</div></div>
+    <div class="card kpi"><div class="label">Unpaid Avail</div><div class="big" id="kpiUnpaidAvail">0</div></div>
   </div>
 
   <div class="card" style="margin-top:12px;">
-    <h3>Upcoming Requests</h3>
+    <h3>Upcoming PTO Requests</h3>
+    <ul class="list" id="reqList"></ul>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <h3>Roster Snapshot</h3>
     <div class="table-wrap">
-      <table id="reqTable">
-        <thead><tr><th>Employee</th><th>Department</th><th>Type</th><th>Start</th><th>End</th><th>Days</th></tr></thead>
+      <table id="balTable">
+        <thead><tr><th>Employee</th><th>Department</th><th>Status</th><th>Vacation Avail</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
   </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script>
+const MS_DAY=86400000;
 const CSV_REQ  = './PTO Requests.csv';
 const CSV_REF  = './Employee Reference.csv';
 const CSV_INFO = './PTO Employee Info.csv';
-const MS_DAY = 86400000;
+const L = s => String(s||'').toLowerCase().trim();
+const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const dayISO = d => dayStart(d).toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
 
-// ---------- Helpers ----------
-const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').trim().toLowerCase();
-function pick(row, candidates){
-  const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
-  for (const wanted of candidates){
-    const k = map.get(cleanKey(wanted));
-    if (k !== undefined) return row[k];
-  }
-  return undefined;
-}
-function normName(s){
-  const t = String(s||'').trim();
-  if (!t) return '';
-  const m = /^([^,]+),\s*(.+)$/.exec(t);
-  if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
-  return t.replace(/\s+/g,' ').trim();
-}
 function parseDate(d){
   if(!d) return null;
-  const s = String(d).trim();
-  // MM/DD/YY or MM/DD/YYYY
-  const m1 = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/.exec(s);
-  if (m1){
-    const mm = +m1[1], dd = +m1[2]; let yy = +m1[3];
-    if (yy < 100) yy = 2000 + yy; // <-- fix two-digit years
-    const dt = new Date(yy, mm-1, dd);
-    return isNaN(dt) ? null : dt;
-  }
-  const t = new Date(s); // ISO or other parseable
-  return isNaN(t) ? null : t;
-}
-function fmtDateInput(d){ return d.toISOString().slice(0,10); }
-function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
-function num(v){ const n = Number(String(v??'').replace(/[^0-9.\-]/g,'')); return isFinite(n)?n:0; }
+  const s=String(d).trim();
 
-// Half-day aware duration from a request row
-function computeDays(r){
-  const s = parseDate(pick(r, ['PTO Request Start Date','Start']));
-  const e = parseDate(pick(r, ['PTO Request End Date','End']));
-  if (!s || !e) return 0;
-  let days = Math.floor((e - s)/MS_DAY) + 1;
-  const sh = String(pick(r, ['Start AM/PM'])||'').toUpperCase();
-  const eh = String(pick(r, ['End AM/PM'])  ||'').toUpperCase();
-  if (sh==='AM' || sh==='PM') days -= 0.5;
-  if (eh==='AM' || eh==='PM') days -= 0.5;
-  return Math.max(0, days);
+  // Fix: always parse LOCAL for iOS Safari (no UTC shift)
+  const iso=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if(iso) return new Date(+iso[1], +iso[2]-1, +iso[3]);
+
+  const mdy=/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/.exec(s);
+  if(mdy){
+    let y=+mdy[3]; if(y<100) y+=2000;
+    return new Date(y, +mdy[1]-1, +mdy[2]);
+  }
+  const t=new Date(s);
+  if(!isNaN(t)) return new Date(t.getFullYear(),t.getMonth(),t.getDate());
+  return null;
 }
 
 async function loadCSV(url){
-  const res = await fetch(url+'?v='+Date.now(), {cache:'no-store'});
-  const text = await res.text();
-  return new Promise(resolve => Papa.parse(text, {header:true, skipEmptyLines:true, complete: out => resolve(out.data)}));
+  const res=await fetch(url+'?v='+Date.now());
+  const text=await res.text();
+  return new Promise(r=>Papa.parse(text,{header:true,skipEmptyLines:true,complete:o=>r(o.data)}));
 }
 
-// ---------- State ----------
-let REQ_RAW=[], REF_RAW=[], INFO_RAW=[];
-let DEPT_BY_NAME = new Map();
+let REQ=[],REF=[],INFO=[],ROSTER=new Map();
 
 async function init(){
-  REQ_RAW  = await loadCSV(CSV_REQ);
-  REF_RAW  = await loadCSV(CSV_REF);
-  INFO_RAW = await loadCSV(CSV_INFO);
-
-  // build name->dept map from reference
-  DEPT_BY_NAME.clear();
-  REF_RAW.forEach(r=>{
-    const nm = normName(pick(r, ['Name','Employee','Employee Name','NAME']));
-    const dept = pick(r, ['Department','Team']) || '';
-    if (nm) DEPT_BY_NAME.set(nm, String(dept).trim());
-  });
-
-  document.getElementById('asOf').textContent = new Date().toLocaleString();
-
-  // Default range: today → +30
-  const t=new Date();
-  document.getElementById('dateFrom').value = fmtDateInput(t);
-  document.getElementById('dateTo').value   = fmtDateInput(addDays(t,30));
-
-  refresh();
+  REQ=await loadCSV(CSV_REQ);
+  REF=await loadCSV(CSV_REF);
+  INFO=await loadCSV(CSV_INFO);
+  document.getElementById('asOf').textContent=new Date().toLocaleString();
+  buildRoster();
+  render();
 }
 
-function refresh(){
-  const from = parseDate(document.getElementById('dateFrom').value) || new Date();
-  const to   = parseDate(document.getElementById('dateTo').value)   || addDays(from,7);
-  const type = document.getElementById('fType').value;
+function normName(s){
+  const t=String(s||'').trim();
+  const m=/^([^,]+),\s*(.+)$/.exec(t);
+  if(m) return (m[2]+' '+m[1]).trim();
+  return t;
+}
 
-  // Filter upcoming requests that overlap the window
-  const rows = REQ_RAW.map(r=>{
-      const emp  = normName(pick(r, ['Employee Name','Employee']));
-      const dept = (pick(r, ['Department']) || DEPT_BY_NAME.get(emp) || '').toString().trim();
-      const t    = (pick(r, ['PTO Request Type','Type']) || '').toString().trim();
-      const sStr = pick(r, ['PTO Request Start Date','Start']);
-      const eStr = pick(r, ['PTO Request End Date','End']);
-      const s = parseDate(sStr), e = parseDate(eStr);
-      const days = num(pick(r,['PTO Request Total Days','Total Days'])) || computeDays(r);
-      return {emp,dept,type:t,s,e,days};
-    })
-    .filter(r=>{
-      if (!r.emp || !r.s || !r.e) return false;
-      if (type && r.type !== type) return false;
-      // overlap test
-      return !(r.e < from || r.s > to);
-    })
-    .sort((a,b)=> (a.s-b.s) || a.emp.localeCompare(b.emp));
+function buildRoster(){
+  ROSTER.clear();
+  INFO.forEach(r=>{
+    const n=normName(r['Name']||r['Employee']);
+    if(!n) return;
+    ROSTER.set(n,{
+      dept:r['Department']||'',
+      vac:r['Vacation Available']||'',
+      status:r['Employee Status']||''
+    });
+  });
+}
 
-  // Table
-  const tbody = document.querySelector('#reqTable tbody');
-  tbody.innerHTML='';
+function overlapDays(r,rs,re){
+  const s=parseDate(r['PTO Request Start Date']);
+  const e=parseDate(r['PTO Request End Date']);
+  if(!s||!e) return 0;
+  const a=dayStart(s), b=dayStart(e), R1=dayStart(rs), R2=dayStart(re);
+  if(b<R1||a>R2) return 0;
+  const start=a<R1?R1:a, end=b>R2?R2:b;
+  return Math.floor((end-start)/MS_DAY)+1;
+}
+
+function render(){
+  const rs=dayStart(parseDate(dateFrom.value)||new Date());
+  const re=dayStart(parseDate(dateTo.value)||rs);
+  if(re<rs){dateTo.value=dateFrom.value;return;}
+
+  const fType=L(fType.value);
+  const q=L(fSearch.value);
+  const rows=REQ.filter(r=>{
+    const s=parseDate(r['PTO Request Start Date']);
+    const e=parseDate(r['PTO Request End Date']);
+    if(!s||!e) return false;
+    if(overlapDays(r,rs,re)<=0) return false;
+    if(fType && L(r['PTO Request Type'])!==fType) return false;
+    if(q){
+      const blob=L(r['Employee Name']||'')+' '+L(r['Department']||'');
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const reqList=document.getElementById('reqList');
+  reqList.innerHTML='';
   rows.forEach(r=>{
+    const li=document.createElement('li');
+    li.innerHTML=`<div>${r['Employee Name']} • ${r['PTO Request Type']}</div>
+      <div class="muted">${r['PTO Request Start Date']} → ${r['PTO Request End Date']}</div>`;
+    reqList.appendChild(li);
+  });
+
+  document.getElementById('kpiRequests').textContent=rows.length;
+  document.getElementById('kpiPeople').textContent=new Set(rows.map(r=>r['Employee Name'])).size;
+  document.getElementById('kpiDays').textContent=rows.reduce((a,r)=>a+overlapDays(r,rs,re),0);
+
+  const tbody=document.querySelector('#balTable tbody');
+  tbody.innerHTML='';
+  ROSTER.forEach((r,name)=>{
     const tr=document.createElement('tr');
-    tr.innerHTML = `<td>${r.emp}</td><td>${r.dept||'—'}</td><td>${r.type||'—'}</td>
-                    <td>${r.s.toLocaleDateString()}</td><td>${r.e.toLocaleDateString()}</td><td>${r.days||0}</td>`;
+    tr.innerHTML=`<td>${name}</td><td>${r.dept}</td><td>${r.status}</td><td>${r.vac}</td>`;
     tbody.appendChild(tr);
   });
-
-  // KPIs
-  document.getElementById('kpiRequests').textContent = rows.length;
-  document.getElementById('kpiPeople').textContent   = (new Set(rows.map(r=>r.emp))).size;
-  document.getElementById('kpiDays').textContent     = rows.reduce((a,r)=>a+(r.days||0),0);
-
-  const activeInfo = INFO_RAW.filter(r => String(pick(r,['Employee Status','Status'])||'').toLowerCase()==='active');
-  const sum = (fieldKeys) => activeInfo.reduce((a,r)=> a + num(pick(r, fieldKeys)), 0);
-  document.getElementById('kpiSick').textContent   = Math.round(sum(['Sick Available','Sick Avail'])*10)/10;
-  document.getElementById('kpiUnpaid').textContent = Math.round(sum(['Unpaid Available','Unpaid Avail'])*10)/10;
-  document.getElementById('kpiVac').textContent    = Math.round(sum(['Vacation Available','Vacation Avail'])*10)/10;
 }
 
-// Events
-document.getElementById('refreshBtn').addEventListener('click', init);
-document.getElementById('rng7').addEventListener('click', ()=>{
-  const t=new Date(); document.getElementById('dateFrom').value=fmtDateInput(t);
-  document.getElementById('dateTo').value=fmtDateInput(addDays(t,7)); refresh();
-});
-document.getElementById('rng30').addEventListener('click', ()=>{
-  const t=new Date(); document.getElementById('dateFrom').value=fmtDateInput(t);
-  document.getElementById('dateTo').value=fmtDateInput(addDays(t,30)); refresh();
-});
+refreshBtn.addEventListener('click',init);
+[dateFrom,dateTo,fType,fSearch].forEach(el=>el.addEventListener('change',render));
+rngToday.addEventListener('click',()=>{const t=new Date();dateFrom.value=dayISO(t);dateTo.value=dayISO(t);render();});
+rng7.addEventListener('click',()=>{const t=new Date();dateFrom.value=dayISO(t);dateTo.value=dayISO(addDays(t,7));render();});
+rng30.addEventListener('click',()=>{const t=new Date();dateFrom.value=dayISO(t);dateTo.value=dayISO(addDays(t,30));render();});
+rngMonth.addEventListener('click',()=>{const t=new Date();dateFrom.value=dayISO(new Date(t.getFullYear(),t.getMonth(),1));dateTo.value=dayISO(new Date(t.getFullYear(),t.getMonth()+1,0));render();});
 
 init();
 </script>
