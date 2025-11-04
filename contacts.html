@@ -80,8 +80,8 @@
   </div>
 
   <script>
-    // CHANGE THIS LINE to match where you upload the CSV in SharePoint
-    const CSV_URL = "/sites/PeopleTeam/Shared%20Documents/HH_Contacts_2025.csv";
+    // CHANGE THIS to local file for GitHub Pages hosting
+    const CSV_URL = "./HH_Contacts_2025.csv";
     function parseCSV(text) {
       const rows = []; let i = 0, cur = [], val = '', inQuotes = false;
       function pushVal(){ cur.push(val); val=''; }
