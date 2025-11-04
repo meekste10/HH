@@ -25,7 +25,8 @@
   .toolbar input,.toolbar select,.toolbar button{font-size:14px;border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;background:#fff}
   .toolbar button{cursor:pointer}
   label.chk{display:inline-flex;gap:6px;align-items:center;border:1px solid #d1d5db;border-radius:999px;padding:6px 10px;background:#fff}
-  canvas{width:100%;height:300px}
+  /* shorter charts overall */
+  canvas{width:100%;height:240px}
   .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:460px}
   table{width:100%;border-collapse:collapse;min-width:760px;font-size:14px}
   th,td{padding:10px 8px;border-bottom:1px solid #eee;text-align:left}
@@ -65,19 +66,19 @@
     </div>
   </div>
 
-  <!-- KPIs -->
+  <!-- KPIs (labels will update to "YTD <year>") -->
   <div class="row grid-4">
-    <div class="card kpi"><div class="label">Net Income (latest)</div><div class="big" id="kpiNI">$0</div></div>
-    <div class="card kpi"><div class="label">Gross Revenue (latest)</div><div class="big" id="kpiGR">$0</div></div>
-    <div class="card kpi"><div class="label">Avg Employees (latest)</div><div class="big" id="kpiEmp">0</div></div>
-    <div class="card kpi"><div class="label">Efficiency (latest)</div><div class="big" id="kpiEff">0%</div></div>
+    <div class="card kpi"><div class="label" id="kpiNILabel">Net Income (YTD —)</div><div class="big" id="kpiNI">$0</div></div>
+    <div class="card kpi"><div class="label" id="kpiGRLabel">Gross Revenue (YTD —)</div><div class="big" id="kpiGR">$0</div></div>
+    <div class="card kpi"><div class="label" id="kpiEmpLabel">Avg Employees (YTD —)</div><div class="big" id="kpiEmp">0</div></div>
+    <div class="card kpi"><div class="label" id="kpiEffLabel">Efficiency (YTD —)</div><div class="big" id="kpiEff">0%</div></div>
   </div>
 
   <!-- Charts + Stats -->
   <div class="row grid-3" style="margin-top:12px">
     <div class="card" style="grid-column: span 2;">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 style="margin:0">Trend (toggle multiple)</h3>
+        <h3 style="margin:0">Trend</h3>
         <span class="muted" id="trendCaption"></span>
       </div>
       <canvas id="trend"></canvas>
@@ -102,14 +103,14 @@
         <div class="kpi"><div class="label">Median</div><div class="big" id="statMedian">—</div></div>
         <div class="kpi"><div class="label">Max</div><div class="big" id="statMax">—</div></div>
         <div class="kpi"><div class="label">Min</div><div class="big" id="statMin">—</div></div>
-        <div class="kpi"><div class="label">CAGR</div><div class="big" id="statCAGR">—</div></div>
-        <div class="kpi"><div class="label">Δ Last Year</div><div class="big" id="statDelta">—</div></div>
+        <div class="kpi"><div class="label">CAGR <span class="muted" id="statCAGRNote">— compound annual growth rate over the selected years</span></div><div class="big" id="statCAGR">—</div></div>
+        <div class="kpi"><div class="label">Δ vs Prior Year</div><div class="big" id="statDelta">—</div></div>
       </div>
       <div class="footer" id="statRangeNote"></div>
     </div>
   </div>
 
-  <!-- Efficiency line -->
+  <!-- Efficiency line (shorter + fewer ticks) -->
   <div class="card" style="margin-top:12px">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <h3 style="margin:0">Efficiency %</h3>
@@ -224,6 +225,10 @@
   const kpiGR=document.getElementById('kpiGR');
   const kpiEmp=document.getElementById('kpiEmp');
   const kpiEff=document.getElementById('kpiEff');
+  const kpiNILabel=document.getElementById('kpiNILabel');
+  const kpiGRLabel=document.getElementById('kpiGRLabel');
+  const kpiEmpLabel=document.getElementById('kpiEmpLabel');
+  const kpiEffLabel=document.getElementById('kpiEffLabel');
 
   const trendCaption=document.getElementById('trendCaption');
   const effCaption=document.getElementById('effCaption');
@@ -246,9 +251,22 @@
     return DATA.filter(r=>r.Year>=a && r.Year<=b);
   }
 
+  function updateKpiLabels(year){
+    const tag = `YTD ${year ?? '—'}`;
+    kpiNILabel.textContent = `Net Income (${tag})`;
+    kpiGRLabel.textContent = `Gross Revenue (${tag})`;
+    kpiEmpLabel.textContent = `Avg Employees (${tag})`;
+    kpiEffLabel.textContent = `Efficiency (${tag})`;
+  }
+
   function updateKPIs(rows){
-    if (!rows.length) { kpiNI.textContent=kpiGR.textContent=kpiEmp.textContent=kpiEff.textContent='—'; return; }
+    if (!rows.length) {
+      updateKpiLabels(null);
+      kpiNI.textContent=kpiGR.textContent=kpiEmp.textContent=kpiEff.textContent='—';
+      return;
+    }
     const latest = rows[rows.length-1];
+    updateKpiLabels(latest.Year);
     kpiNI.textContent  = fmtMoney1(latest.NetIncome);
     kpiGR.textContent  = fmtMoney1(latest.GrossRevenue);
     kpiEmp.textContent = (latest.Employees??'—').toString();
@@ -273,7 +291,7 @@
     });
   }
 
-  // ---- Trend chart (multi metric, dual axes) ----
+  // ---- Trend chart (hide right axis labels) ----
   function renderTrend(rows){
     const labels = rows.map(r=>r.Year);
 
@@ -293,16 +311,19 @@
         plugins:{ legend:{position:'bottom'} },
         scales:{
           y:{ type:'linear', position:'left', ticks:{ callback:v=>fmtMoney(v) } },
-          y1:{ type:'linear', position:'right', grid:{drawOnChartArea:false}, ticks:{ callback:v=>fmtMoney(v) } }
+          y1:{ type:'linear', position:'right',
+               grid:{drawOnChartArea:false},
+               ticks:{ display:false }, // hide labels
+               title:{ display:false } }
         }
       }
     });
-    trendCaption.textContent = `${labels[0]}–${labels[labels.length-1]} • ${ds.length||'0'} metric(s)`;
+    trendCaption.textContent = `${labels[0]}–${labels[labels.length-1]}`;
   }
 
-  // ---- Stats box for selected metric ----
+  // ---- Stats box for selected metric (with year on max/min) ----
   function updateStats(rows){
-    const key = statMetric.value; // NetIncome|GrossRevenue|NIperEmp|GRperEmp
+    const key = statMetric.value;
     const friendly = {
       NetIncome:'Net Income',
       GrossRevenue:'Gross Revenue',
@@ -313,13 +334,15 @@
     const vals = rows.map(r=>r[key]).filter(v=>v!=null);
     if (!vals.length){
       statAvg.textContent=statMedian.textContent=statMax.textContent=statMin.textContent=statCAGR.textContent=statDelta.textContent='—';
-      statRangeNote.textContent = `No data in range for ${friendly}.`;
+      statRangeNote.textContent = `${friendly}`;
       return;
     }
     const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
     const med = median(vals);
     const max = Math.max(...vals);
     const min = Math.min(...vals);
+    const maxYear = rows[vals.indexOf(max)]?.Year ?? '';
+    const minYear = rows[vals.indexOf(min)]?.Year ?? '';
 
     // CAGR (only if first & last are > 0 and at least 2 years)
     let cagr = null;
@@ -328,7 +351,6 @@
       cagr = Math.pow(vals.at(-1)/vals[0], 1/years)-1;
     }
 
-    // Last-year delta (vs previous point)
     let delta = null;
     if (vals.length>=2) delta = vals.at(-1) - vals.at(-2);
 
@@ -336,15 +358,16 @@
     const F = moneyish ? fmtMoney1 : (n=>n);
     statAvg.textContent   = F(avg);
     statMedian.textContent= F(med);
-    statMax.textContent   = F(max);
-    statMin.textContent   = F(min);
+    statMax.textContent   = `${F(max)} ${maxYear ? '• '+maxYear : ''}`;
+    statMin.textContent   = `${F(min)} ${minYear ? '• '+minYear : ''}`;
     statCAGR.textContent  = cagr==null ? '—' : (cagr*100).toFixed(2)+'%';
     statDelta.textContent = delta==null ? '—' : (delta>=0?'+':'') + F(delta);
 
     const yrs = rows.map(r=>r.Year);
-    statRangeNote.textContent = `${friendly} • ${yrs[0]}–${yrs.at(-1)} (${vals.length} pt${vals.length>1?'s':''})`;
+    statRangeNote.textContent = `${friendly} • ${yrs[0]}–${yrs.at(-1)}`;
   }
 
+  // ---- Efficiency line (shorter & fewer ticks) ----
   function renderEfficiency(rows){
     const labels = rows.map(r=>r.Year);
     if (effChart) effChart.destroy();
@@ -353,7 +376,11 @@
       type:'line',
       data:{ labels, datasets:[{ label:'Efficiency %', data: effs, tension:.2, fill:false }] },
       options:{ responsive:true, plugins:{ legend:{display:false} },
-        scales:{ y:{ beginAtZero:true, ticks:{ callback:v=> v+'%' } } } }
+        scales:{ y:{
+          beginAtZero:true,
+          suggestedMax: Math.max(10, Math.ceil((Math.max(...effs,0)+1)/2)*2), // keep compact
+          ticks:{ stepSize:2, maxTicksLimit:6, callback:v=> v+'%' }
+        } } }
     });
     effCaption.textContent = `${labels[0]}–${labels[labels.length-1]} (Net Income ÷ Revenue)`;
   }
@@ -415,10 +442,8 @@
   // ---------- BOOT ----------
   (async function init(){
     DATA = await loadPPP();
-    // init year bounds
     yrStart.value = DATA[0]?.Year || '';
     yrEnd.value = DATA.at(-1)?.Year || '';
-    // defaults for stats metric
     statMetric.value = 'NetIncome';
     refresh();
   })();
