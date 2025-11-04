@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holland Homes • PTO Dashboard</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<style>
+  :root { --brand:#184A30; --ink:#1b1b1b; --muted:#6b7280; --bg:#f7f7f7; --card:#fff; --line:#e5e7eb; }
+  * { box-sizing:border-box; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; }
+  body { margin:0; background:var(--bg); color:var(--ink); }
+  header { background:var(--brand); color:#fff; padding:14px 18px; }
+  header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+  .wrap { max-width:1200px; margin:0 auto; padding:16px; }
+  .row { display:grid; gap:12px; }
+  .grid-6 { grid-template-columns:repeat(6,1fr); }
+  .grid-3 { grid-template-columns:repeat(3,1fr); }
+  .grid-2 { grid-template-columns:repeat(2,1fr); }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .kpi { display:flex; align-items:baseline; gap:8px; }
+  .kpi .big { font-size:26px; font-weight:700; }
+  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.2px; }
+  .toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .toolbar input,.toolbar select,.toolbar button { font-size:14px; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
+  .btn { cursor:pointer; }
+  .footer { color:var(--muted); font-size:12px; margin-top:8px; }
+  canvas { width:100%; height:240px; }
+  .table-wrap { overflow:auto; border:1px solid #e5e7eb; border-radius:12px; max-height:400px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; min-width:800px; }
+  th,td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
+  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; position:sticky; top:0; background:#fff; }
+  @media (max-width:900px){ .grid-6,.grid-3,.grid-2{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header><h1>Holland Homes — PTO Dashboard</h1></header>
+
+<div class="wrap">
+  <div class="toolbar card" style="justify-content:space-between;">
+    <div class="toolbar">
+      <label>From: <input id="dateFrom" type="date" /></label>
+      <label>To: <input id="dateTo" type="date" /></label>
+      <button class="btn" id="rng7">Next 7</button>
+      <button class="btn" id="rng30">Next 30</button>
+      <label>Type:<select id="fType"><option value="">All</option><option>Vacation</option><option>Sick</option><option>Unpaid</option></select></label>
+    </div>
+    <div class="toolbar">
+      <button id="refreshBtn" class="btn">Reload Data</button>
+      <span class="footer">From CSVs • <span id="asOf"></span></span>
+    </div>
+  </div>
+
+  <div class="row grid-6">
+    <div class="card kpi"><span class="big" id="kpiRequests">0</span><span class="label">Requests</span></div>
+    <div class="card kpi"><span class="big" id="kpiPeople">0</span><span class="label">Employees</span></div>
+    <div class="card kpi"><span class="big" id="kpiDays">0</span><span class="label">Person-Days</span></div>
+    <div class="card kpi"><span class="big" id="kpiSick">0</span><span class="label">Sick Avail</span></div>
+    <div class="card kpi"><span class="big" id="kpiUnpaid">0</span><span class="label">Unpaid Avail</span></div>
+    <div class="card kpi"><span class="big" id="kpiVac">0</span><span class="label">Vacation Avail</span></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <h3>Upcoming Requests</h3>
+    <div class="table-wrap">
+      <table id="reqTable">
+        <thead><tr><th>Employee</th><th>Department</th><th>Type</th><th>Start</th><th>End</th><th>Days</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+const CSV_REQ='./PTO Requests.csv';
+const CSV_REF='./Employee Reference.csv';
+const CSV_INFO='./PTO Employee Info.csv';
+const MS_DAY=86400000;
+
+function fmtDate(d){ return d.toISOString().slice(0,10); }
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function dayStart(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function parseDate(s){if(!s)return null;const [m,d2,y]=s.split('/').map(x=>+x);return new Date(y,m-1,d2);}
+function overlap(r,rs,re){const s=parseDate(r.s),e=parseDate(r.e);if(!s||!e)return 0;if(e<rs||s>re)return 0;const a=s<rs?rs:s,b=e>re?re:e;return Math.floor((b-a)/MS_DAY)+1;}
+function num(v){return parseFloat(String(v).replace(/[^0-9.-]/g,''))||0;}
+
+async function loadCSV(url){
+  const res=await fetch(url+'?v='+Date.now());
+  const text=await res.text();
+  return new Promise(resolve=>Papa.parse(text,{header:true,skipEmptyLines:true,complete:o=>resolve(o.data)}));
+}
+
+let REQ=[],REF=[],INFO=[];
+
+async function init(){
+  REQ=await loadCSV(CSV_REQ);
+  REF=await loadCSV(CSV_REF);
+  INFO=await loadCSV(CSV_INFO);
+  document.getElementById('asOf').textContent=new Date().toLocaleString();
+  refresh();
+}
+
+function refresh(){
+  const from=parseDate(document.getElementById('dateFrom').value)||new Date();
+  const to=parseDate(document.getElementById('dateTo').value)||addDays(from,7);
+  const type=document.getElementById('fType').value;
+  const rows=REQ.filter(r=>{
+    const t=r['PTO Request Type']||''; if(type&&t!==type)return false;
+    const s=parseDate(r['PTO Request Start Date']); const e=parseDate(r['PTO Request End Date']);
+    return s&&e&&e>=from&&s<=to;
+  }).map(r=>({
+    emp:r['Employee Name'],dept:r['Department'],type:r['PTO Request Type'],
+    s:r['PTO Request Start Date'],e:r['PTO Request End Date'],days:r['PTO Request Total Days']
+  }));
+  const tbl=document.querySelector('#reqTable tbody');
+  tbl.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.emp}</td><td>${r.dept}</td><td>${r.type}</td><td>${r.s}</td><td>${r.e}</td><td>${r.days}</td>`;
+    tbl.appendChild(tr);
+  });
+  document.getElementById('kpiRequests').textContent=rows.length;
+  const uniq=new Set(rows.map(r=>r.emp)); document.getElementById('kpiPeople').textContent=uniq.size;
+  document.getElementById('kpiDays').textContent=rows.reduce((a,b)=>a+num(b.days),0);
+  const act=INFO.filter(r=>(r['Employee Status']||'').toLowerCase()==='active');
+  document.getElementById('kpiSick').textContent=act.reduce((a,b)=>a+num(b['Sick Available']),0);
+  document.getElementById('kpiUnpaid').textContent=act.reduce((a,b)=>a+num(b['Unpaid Available']),0);
+  document.getElementById('kpiVac').textContent=act.reduce((a,b)=>a+num(b['Vacation Available']),0);
+}
+
+document.getElementById('refreshBtn').addEventListener('click',init);
+document.getElementById('rng7').addEventListener('click',()=>{const t=new Date();document.getElementById('dateFrom').value=fmtDate(t);document.getElementById('dateTo').value=fmtDate(addDays(t,7));refresh();});
+document.getElementById('rng30').addEventListener('click',()=>{const t=new Date();document.getElementById('dateFrom').value=fmtDate(t);document.getElementById('dateTo').value=fmtDate(addDays(t,30));refresh();});
+init();
+</script>
+</body>
+</html>
