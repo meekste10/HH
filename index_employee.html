@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holland Homes • Employee Dashboard</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<style>
+  :root { --brand:#184A30; --ink:#1c1c1c; --muted:#6b7280; --bg:#f7f7f7; --card:#ffffff; --line:#e5e7eb; }
+  * { box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; }
+  body { margin:0; background:var(--bg); color:var(--ink); }
+  header { background:var(--brand); color:#fff; padding:14px 18px; }
+  header .bar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  header h1 { margin:0; font-size:18px; letter-spacing:.2px; }
+  nav a { color:#cfe7dc; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,.15); }
+  nav a:hover { background:rgba(255,255,255,.08); }
+  .wrap { max-width:1200px; margin:0 auto; padding:16px; }
+  .row { display:grid; gap:12px; }
+  .grid-2 { grid-template-columns: 360px 1fr; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .toolbar input, .toolbar select, .toolbar button, .toolbar label { font-size:14px; }
+  .toolbar input, .toolbar select, .toolbar button { border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; background:#fff; }
+  .btn { cursor:pointer; }
+  .kpi { display:flex; flex-direction:column; gap:4px; }
+  .kpi .big { font-size:22px; font-weight:800; }
+  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.25px; }
+  .pill { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; background:#fafafa; color:#374151; }
+  .muted { color:var(--muted); }
+  .footer { color:var(--muted); font-size:12px; margin-top:8px; }
+  .split { display:grid; gap:12px; grid-template-columns: 360px 1fr; }
+  @media (max-width: 980px){ .split { grid-template-columns: 1fr; } }
+  .avatar { width:64px; height:64px; border-radius:12px; background:#eef2ff; display:grid; place-items:center; font-weight:800; color:#374151; font-size:22px; }
+  .profile { display:flex; gap:12px; align-items: center; }
+  .meta { font-size:13px; color:#374151; }
+  .meta div { margin:2px 0; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+  .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:12px; max-height:420px; }
+  table { width:100%; border-collapse:collapse; min-width:720px; font-size:14px; }
+  th, td { padding:10px 8px; border-bottom:1px solid #eee; text-align:left; }
+  th { font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; position: sticky; top: 0; background: #fff; z-index: 1; }
+  .gantt { overflow:auto; border:1px solid var(--line); border-radius:12px; padding:8px; }
+  .gantt-grid { position:relative; min-width:720px; }
+  .gantt-row { display:flex; align-items:center; border-bottom:1px dashed #eee; padding:6px 0; position:relative; height:28px; }
+  .gantt-name { width:140px; flex:0 0 140px; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gantt-lane { position:relative; height:8px; flex:1; background:linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px) 0 0/14px 100% no-repeat; border-radius:8px; }
+  .bar { position:absolute; top:-2px; height:12px; border-radius:8px; background:#d1fae5; border:1px solid #10b981; }
+  .legend { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .swatch { width:14px; height:12px; border-radius:3px; border:1px solid #d1d5db; display:inline-block; }
+  .sw-vac { background:#dcfce7; border-color:#16a34a; }
+  .sw-sick { background:#fee2e2; border-color:#ef4444; }
+  .sw-unp { background:#e0e7ff; border-color:#6366f1; }
+  canvas { width:100%; height:220px; }
+  .help li { margin:6px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>Holland Homes — Employee Dashboard</h1>
+    <nav class="toolbar">
+      <a href="./index_contacts.html">Contacts</a>
+      <a href="./ppp.html">PPP</a>
+      <a href="./index_pto.html">PTO</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- Picker & actions -->
+  <div class="card toolbar" style="justify-content:space-between;">
+    <div class="toolbar">
+      <label>Employee:
+        <select id="empSelect">
+          <option value="">— Choose an employee —</option>
+        </select>
+      </label>
+      <button id="btnClear" class="btn">Clear</button>
+      <span class="footer">Sources: PTO Requests.csv • Employee Reference.csv • PTO Employee Info.csv</span>
+    </div>
+    <div class="toolbar">
+      <button id="btnExport" class="btn">Export this view (CSV)</button>
+      <button id="btnPrint" class="btn">Print</button>
+    </div>
+  </div>
+
+  <div class="split">
+    <!-- Left column -->
+    <div class="row grid-1">
+      <div class="card">
+        <div class="profile">
+          <div class="avatar" id="avatar">?</div>
+          <div>
+            <div style="font-weight:800; font-size:18px;" id="empName">No employee selected</div>
+            <div class="meta" id="empMeta">—</div>
+            <div class="chips" id="empChips"></div>
+            <div class="toolbar" id="contactLinks" style="margin-top:6px;"></div>
+          </div>
+        </div>
+        <div class="row grid-2" style="margin-top:10px">
+          <div class="kpi"><div class="label">Days Since Last Vacation</div><div class="big" id="kpiSince">—</div></div>
+          <div class="kpi"><div class="label">Next PTO</div><div class="big" id="kpiNext">—</div></div>
+          <div class="kpi"><div class="label">Vacation Avail (days)</div><div class="big" id="kpiVac">—</div></div>
+          <div class="kpi"><div class="label">Sick / Unpaid Avail (days)</div><div class="big" id="kpiSickUnp">—</div></div>
+        </div>
+      </div>
+
+      <!-- Quick Links card -->
+      <div class="card">
+        <h3 style="margin:0 0 6px;">Quick Links</h3>
+        <ul id="quickLinks" style="margin:0;padding-left:18px;"></ul>
+        <div class="footer">Edit the <code>RESOURCES</code> array in this file to change these links.</div>
+      </div>
+
+      <!-- Draft PTO form -->
+      <div class="card">
+        <h3 style="margin:0 0 6px">Draft PTO Request</h3>
+        <div class="row grid-2">
+          <label>Type
+            <select id="formType">
+              <option>Vacation</option><option>Sick</option><option>Unpaid</option>
+            </select>
+          </label>
+          <label>Start Date <input type="date" id="formStart"></label>
+          <label>End Date <input type="date" id="formEnd"></label>
+          <label>Half-Day?
+            <select id="formHalf">
+              <option value="">No</option>
+              <option value="AM">Start AM</option>
+              <option value="PM">End PM</option>
+            </select>
+          </label>
+          <label style="grid-column:1/-1">Notes <input type="text" id="formNotes" placeholder="Optional notes for manager / People Team"></label>
+        </div>
+        <div class="toolbar" style="margin-top:8px;">
+          <button id="btnMakeCsv" class="btn">Download CSV row</button>
+          <button id="btnEmail" class="btn">Compose Email</button>
+          <span class="footer">Creates a CSV row or a pre-filled email (nothing is auto-submitted).</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 0 6px;">How to use</h3>
+        <ul class="help">
+          <li>Open this page with <code>?emp=First%20Last</code> to auto-load someone (case-insensitive).</li>
+          <li>“Open in Contacts” jumps to the Contacts dashboard filtered to this person.</li>
+          <li>Update “Quick Links” below to surface PDFs, SharePoint docs, or Microsoft Forms.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="row grid-1">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0">Last 12 Months — PTO by Type</h3>
+          <div class="legend">
+            <span class="swatch sw-vac"></span><span class="muted">Vacation</span>
+            <span class="swatch sw-sick"></span><span class="muted">Sick</span>
+            <span class="swatch sw-unp"></span><span class="muted">Unpaid</span>
+          </div>
+        </div>
+        <canvas id="miniChart"></canvas>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3 style="margin:0">Timeline (Next 6 Months)</h3>
+          <span class="muted" id="tlNote"></span>
+        </div>
+        <div class="gantt"><div class="gantt-grid" id="ganttGrid"></div></div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 0 6px;">PTO History</h3>
+        <div class="table-wrap">
+          <table id="tbl">
+            <thead>
+              <tr>
+                <th>Type</th><th>Start</th><th>End</th><th>Half-Day</th><th>Days</th><th>Department</th><th>Manager</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="footer" id="histNote"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  // ========= CONFIG / LINKS =========
+  const CSV_REQ  = './PTO Requests.csv';
+  const CSV_REF  = './Employee Reference.csv';
+  const CSV_INFO = './PTO Employee Info.csv';
+
+  // Edit these to surface PDFs / Forms / SharePoint links
+  const RESOURCES = [
+    {label:'PTO Policy (PDF)', url:'https://contoso.sharepoint.com/sites/PeopleTeam/Shared%20Documents/PTO_Policy.pdf'},
+    {label:'Submit Official PTO Request (Microsoft Form)', url:'https://forms.office.com/your-form-id'},
+    {label:'Employee Handbook (PDF)', url:'https://contoso.sharepoint.com/sites/PeopleTeam/Shared%20Documents/Employee_Handbook.pdf'}
+  ];
+
+  // ========= UTIL =========
+  const MS_DAY = 86400000;
+  const L = s => String(s||'').toLowerCase().trim();
+  const dayStart = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const addDays = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+  const dayISO = d => dayStart(d).toISOString().slice(0,10);
+  function parseDate(d){
+    if(!d) return null;
+    if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(d)){
+      const [m,dd,yy]=d.split('/').map(x=>parseInt(x,10));
+      const y = yy < 100 ? 2000+yy : yy;
+      return new Date(y,m-1,dd);
+    }
+    const t=new Date(d); return isNaN(t)?null:t;
+  }
+  const cleanKey = s => String(s||'').replace(/\uFEFF/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+  function pick(row, candidates){
+    const map = new Map(Object.keys(row).map(k => [cleanKey(k), k]));
+    for (const wanted of candidates){
+      const k = map.get(cleanKey(wanted));
+      if (k !== undefined) return row[k];
+    }
+    return undefined;
+  }
+  function normName(s){
+    const t = String(s||'').trim();
+    if (!t) return '';
+    const m = /^([^,]+),\s*(.+)$/.exec(t);
+    if (m) return (m[2] + ' ' + m[1]).replace(/\s+/g,' ').trim();
+    return t.replace(/\s+/g,' ').trim();
+  }
+  function initials(name){
+    const parts=String(name||'').trim().split(/\s+/);
+    return ((parts[0]||'?')[0]||'?').toUpperCase() + ((parts[1]||'')[0]||'').toUpperCase();
+  }
+  function isVacation(t){ return /vac/i.test(String(t||'')); }
+  function isSick(t){ return /sick/i.test(String(t||'')); }
+  function isUnpaid(t){ return /unpaid|un\-?paid|UP/i.test(String(t||'')); }
+  function overlapDaysRange(s,e,rs,re,sh,eh){
+    if(!s||!e) return 0;
+    const S=dayStart(s), E=dayStart(e), R1=dayStart(rs), R2=dayStart(re);
+    if(E<R1 || S>R2) return 0;
+    const start=S<R1?R1:S, end=E>R2?R2:E;
+    let days = Math.floor((end - start)/MS_DAY) + 1;
+    const AMPM = t => (String(t||'').toUpperCase()==='AM' || String(t||'').toUpperCase()==='PM');
+    if(dayISO(start)===dayISO(S) && AMPM(sh)) days -= 0.5;
+    if(dayISO(end)  ===dayISO(E) && AMPM(eh)) days -= 0.5;
+    return Math.max(0, days);
+  }
+  function toCSV(rows){
+    if(!rows.length) return '';
+    const headers=Object.keys(rows[0]);
+    const esc=v => '"'+String(v??'').replace(/"/g,'""')+'"';
+    return [headers.join(','), ...rows.map(r=>headers.map(h=>esc(r[h])).join(','))].join('\n');
+  }
+
+  async function loadCSV(url){
+    const res = await fetch(url+'?v='+Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('fetch failed '+url);
+    const text = await res.text();
+    return new Promise(resolve => Papa.parse(text, {header:true, skipEmptyLines:true, complete: out=>resolve(out.data)}));
+  }
+
+  // ========= STATE =========
+  let REQ_RAW=[], REF_RAW=[], INFO_RAW=[];
+  let ROSTER=new Map(); // name -> merged attributes
+  let REQ=[];           // normalized requests
+  let miniChart;
+
+  // ========= DOM =========
+  const empSelect=document.getElementById('empSelect');
+  const btnClear=document.getElementById('btnClear');
+  const btnExport=document.getElementById('btnExport');
+  const btnPrint=document.getElementById('btnPrint');
+
+  const avatar=document.getElementById('avatar');
+  const empName=document.getElementById('empName');
+  const empMeta=document.getElementById('empMeta');
+  const empChips=document.getElementById('empChips');
+  const contactLinks=document.getElementById('contactLinks');
+
+  const kpiSince=document.getElementById('kpiSince');
+  const kpiNext=document.getElementById('kpiNext');
+  const kpiVac=document.getElementById('kpiVac');
+  const kpiSickUnp=document.getElementById('kpiSickUnp');
+
+  const miniChartEl=document.getElementById('miniChart');
+  const ganttGrid=document.getElementById('ganttGrid');
+  const tlNote=document.getElementById('tlNote');
+  const tblBody=document.querySelector('#tbl tbody');
+  const histNote=document.getElementById('histNote');
+
+  const formType=document.getElementById('formType');
+  const formStart=document.getElementById('formStart');
+  const formEnd=document.getElementById('formEnd');
+  const formHalf=document.getElementById('formHalf');
+  const formNotes=document.getElementById('formNotes');
+  const btnMakeCsv=document.getElementById('btnMakeCsv');
+  const btnEmail=document.getElementById('btnEmail');
+
+  const quickLinks=document.getElementById('quickLinks');
+
+  // ========= LOAD + MERGE =========
+  async function boot(){
+    // render Quick Links
+    quickLinks.innerHTML = RESOURCES.map(r=>`<li><a href="${r.url}" target="_blank" rel="noopener">${r.label}</a></li>`).join('');
+
+    REQ_RAW  = await loadCSV(CSV_REQ);
+    REF_RAW  = await loadCSV(CSV_REF);
+    INFO_RAW = await loadCSV(CSV_INFO);
+
+    // build roster (REF ⊕ INFO)
+    const byName = new Map();
+    REF_RAW.forEach(r=>{
+      const nm = normName(pick(r, ['Name','NAME','Employee Name','Employee']));
+      if(!nm) return;
+      byName.set(nm, Object.assign({NAME:nm}, r));
+    });
+    INFO_RAW.forEach(r=>{
+      const nm = normName(pick(r, ['NAME','Name','Employee']));
+      if(!nm) return;
+      const base = byName.get(nm) || {NAME:nm};
+      byName.set(nm, Object.assign(base, r));
+    });
+    ROSTER = new Map([...byName.values()].map(r=>{
+      const name = normName(pick(r, ['NAME','Name','Employee']));
+      const dept = (pick(r, ['Department','Team']) || '').toString().trim();
+      const mgr  = (pick(r, ['Direct Report','Manager']) || '').toString().trim();
+      const status = (pick(r, ['Employee Status','Status']) || '').toString().trim();
+      const tenure = (pick(r, ['Tenure (in years)','Tenure']) || '').toString().trim();
+      const age = pick(r,['Age']);
+      const vacAvail = pick(r,['Vacation Available','Vacation Avail (days)']);
+      const sickAvail= pick(r,['Sick Available']);
+      const unpaidAvail=pick(r,['Unpaid Available']);
+      const email = pick(r, ['Email','Email Address','E-mail']) || '';
+      return [name, {name,dept,mgr,status,tenure,age,vacAvail,sickAvail,unpaidAvail,email,raw:r}];
+    }));
+
+    // normalize requests
+    REQ = REQ_RAW.map(r=>{
+      const emp  = normName(pick(r, ['Employee Name','Employee']));
+      const type = (pick(r, ['PTO Request Type','Type']) || '').toString().trim();
+      const s    = parseDate(pick(r, ['PTO Request Start Date','Start']));
+      const e    = parseDate(pick(r, ['PTO Request End Date','End']));
+      const sh   = pick(r, ['Start AM/PM']) || '';
+      const eh   = pick(r, ['End AM/PM'])   || '';
+      const dept = (pick(r, ['Department','Team']) || ROSTER.get(emp)?.dept || '').toString().trim();
+      const mgr  = (pick(r, ['Direct Report','Manager']) || ROSTER.get(emp)?.mgr  || '').toString().trim();
+      return {emp,type,s,e,sh,eh,dept,mgr,raw:r};
+    }).filter(x=>x.emp && x.s && x.e);
+
+    // fill picker
+    const names=[...ROSTER.keys()].sort((a,b)=>a.localeCompare(b));
+    empSelect.innerHTML = '<option value="">— Choose an employee —</option>' + names.map(n=>`<option>${n}</option>`).join('');
+
+    // deep-link ?emp=
+    const params = new URLSearchParams(location.search);
+    const qEmp = params.get('emp');
+    if (qEmp){
+      const target = names.find(n=> L(n)===L(decodeURIComponent(qEmp)));
+      if (target){
+        empSelect.value = target;
+        setProfile(target, {pushUrl:false});
+      }
+    }
+  }
+
+  // ========= RENDER =========
+  function setProfile(name, opts={pushUrl:true}){
+    if(opts.pushUrl){
+      if(name) history.replaceState(null,'',`?emp=${encodeURIComponent(name)}`);
+      else history.replaceState(null,'',location.pathname);
+    }
+
+    if(!name){
+      avatar.textContent='?';
+      empName.textContent='No employee selected';
+      empMeta.textContent='—';
+      empChips.innerHTML='';
+      contactLinks.innerHTML='';
+      kpiSince.textContent=kpiNext.textContent=kpiVac.textContent=kpiSickUnp.textContent='—';
+      renderMini([], name);
+      renderTimeline([], name);
+      renderHistory([], name);
+      return;
+    }
+    const m = ROSTER.get(name)||{};
+    avatar.textContent = initials(name);
+    empName.textContent = name;
+    empMeta.innerHTML = `<div><span class="pill">${m.dept||'—'}</span> <span class="muted">Manager:</span> ${m.mgr||'—'} <span class="muted">Status:</span> ${m.status||'—'}</div>`;
+    empChips.innerHTML = '';
+    if(m.tenure) empChips.insertAdjacentHTML('beforeend', `<span class="pill">Tenure: ${m.tenure}</span>`);
+    if(m.age!=null && m.age!=='') empChips.insertAdjacentHTML('beforeend', `<span class="pill">Age: ${m.age}</span>`);
+    kpiVac.textContent = String(m.vacAvail??'—');
+    kpiSickUnp.textContent = `${m.sickAvail??'—'} / ${m.unpaidAvail??'—'}`;
+
+    // “Open in Contacts” and “Email”
+    const contactsHref = `./index_contacts.html?q=${encodeURIComponent(name)}`;
+    const emailHref = m.email ? `mailto:${encodeURIComponent(m.email)}` : '';
+    contactLinks.innerHTML = `
+      <a class="btn" href="${contactsHref}">Open in Contacts</a>
+      ${m.email ? `<a class="btn" href="${emailHref}">Email ${name.split(' ')[0]}</a>` : ''}`;
+
+    // compute last/next vacation
+    const today = dayStart(new Date());
+    const mine = REQ.filter(r=>r.emp===name);
+    let last=null,next=null;
+    mine.forEach(r=>{
+      const S=dayStart(r.s), E=dayStart(r.e);
+      if(isVacation(r.type)){
+        if(E<=today){ if(!last || E>last) last=E; }
+        if(S>=today){ if(!next || S<next) next=S; }
+      }
+    });
+    kpiSince.textContent = last ? Math.floor((today - last)/MS_DAY) : '—';
+    kpiNext.textContent  = next ? next.toLocaleDateString() : '—';
+
+    renderMini(mine, name);
+    renderTimeline(mine, name);
+    renderHistory(mine, name);
+  }
+
+  function renderMini(rows, name){
+    // last 12 months buckets by type
+    const today = dayStart(new Date());
+    const start = addDays(today, -365);
+    const months = [];
+    const idx = new Map();
+    for(let d=new Date(start.getFullYear(), start.getMonth(), 1); d<=today; d=new Date(d.getFullYear(), d.getMonth()+1, 1)){
+      const key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      idx.set(key, months.length);
+      months.push(key);
+    }
+    const vac = new Array(months.length).fill(0);
+    const sic = new Array(months.length).fill(0);
+    const unp = new Array(months.length).fill(0);
+
+    rows.forEach(r=>{
+      for(let d=new Date(r.s); d<=r.e; d=addDays(d,1)){
+        if(d < start || d > today) continue;
+        const key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+        const i = idx.get(key); if(i==null) continue;
+        if(isVacation(r.type)) vac[i]+=1;
+        else if(isSick(r.type)) sic[i]+=1;
+        else if(isUnpaid(r.type)) unp[i]+=1;
+      }
+    });
+
+    const labels = months.map(k=>k.replace('-','/'));
+    if(miniChart) miniChart.destroy();
+    miniChart = new Chart(miniChartEl, {
+      type:'bar',
+      data:{
+        labels,
+        datasets:[
+          {label:'Vacation', data:vac,   backgroundColor:'#dcfce7', borderColor:'#16a34a'},
+          {label:'Sick',     data:sic,   backgroundColor:'#fee2e2', borderColor:'#ef4444'},
+          {label:'Unpaid',   data:unp,   backgroundColor:'#e0e7ff', borderColor:'#6366f1'},
+        ]
+      },
+      options:{
+        responsive:true,
+        plugins:{ legend:{ position:'bottom' } },
+        scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } } }
+      }
+    });
+  }
+
+  function renderTimeline(rows, name){
+    const today = dayStart(new Date());
+    const windowStart = today;
+    const windowEnd   = addDays(today, 180);
+    const span=Math.max(1, Math.floor((windowEnd-windowStart)/MS_DAY)+1);
+
+    tlNote.textContent = `${windowStart.toLocaleDateString()} → ${windowEnd.toLocaleDateString()}`;
+    ganttGrid.innerHTML='';
+    const mine = rows.filter(r=> r.e >= windowStart);
+    const color = r => isVacation(r.type)?'#d1fae5' : isSick(r.type)?'#fee2e2' : '#e0e7ff';
+    mine.sort((a,b)=> (a.s-b.s) || (a.e-b.e)).slice(0,60).forEach(r=>{
+      const row=document.createElement('div'); row.className='gantt-row';
+      const nameCell=document.createElement('div'); nameCell.className='gantt-name'; nameCell.textContent=r.type;
+      const lane=document.createElement('div'); lane.className='gantt-lane';
+
+      const start = dayStart(r.s)<windowStart ? windowStart : r.s;
+      const end   = dayStart(r.e)>windowEnd ? windowEnd : r.e;
+      const offset = Math.max(0, Math.floor((dayStart(start)-dayStart(windowStart))/MS_DAY));
+      const len = Math.max(0.2, overlapDaysRange(r.s, r.e, windowStart, windowEnd, r.sh, r.eh));
+      const leftPct = (offset/span)*100, widthPct=(len/span)*100;
+      const bar=document.createElement('div'); bar.className='bar'; bar.style.left=leftPct+'%'; bar.style.width=widthPct+'%';
+      bar.style.background = color(r);
+      bar.title = `${r.type}: ${dayISO(r.s)} → ${dayISO(r.e)} (${len}d)`;
+      lane.appendChild(bar);
+
+      row.appendChild(nameCell); row.appendChild(lane); ganttGrid.appendChild(row);
+    });
+  }
+
+  function renderHistory(rows, name){
+    const tbody = tblBody; tbody.innerHTML='';
+    const fmt = d => d? new Date(d).toLocaleDateString() : '—';
+    const totals = {vac:0,sick:0,unp:0};
+    const today = new Date();
+    rows.sort((a,b)=> (b.s-a.s) || (b.e-a.e)).forEach(r=>{
+      const days = overlapDaysRange(r.s, r.e, new Date(2000,0,1), today, r.sh, r.eh);
+      if(isVacation(r.type)) totals.vac += days; else if(isSick(r.type)) totals.sick += days; else if(isUnpaid(r.type)) totals.unp += days;
+      const tr=document.createElement('tr');
+      tr.innerHTML = `<td>${r.type}</td><td>${fmt(r.s)}</td><td>${fmt(r.e)}</td><td>${(r.sh||r.eh)?(r.sh||r.eh):''}</td><td>${days}</td><td>${r.dept||''}</td><td>${r.mgr||''}</td>`;
+      tbody.appendChild(tr);
+    });
+    histNote.textContent = `Totals • Vacation: ${totals.vac}d • Sick: ${totals.sick}d • Unpaid: ${totals.unp}d`;
+  }
+
+  // ========= ACTIONS =========
+  empSelect.addEventListener('change', ()=> setProfile(empSelect.value));
+  btnClear.addEventListener('click', ()=>{ empSelect.value=''; setProfile(''); });
+
+  btnExport.addEventListener('click', ()=>{
+    const name = empSelect.value; if(!name) return alert('Pick an employee first.');
+    const m = ROSTER.get(name)||{};
+    const mine = REQ.filter(r=>r.emp===name);
+    const rows = mine.map(r=>({
+      Employee:name, Department:r.dept, Manager:r.mgr,
+      Type:r.type, Start:dayISO(r.s), End:dayISO(r.e), HalfDay:(r.sh||r.eh)||'',
+    }));
+    const info = {Employee:name, Department:m.dept||'', Manager:m.mgr||'', Status:m.status||'', Tenure:m.tenure||'', 'Vacation Avail (days)':m.vacAvail??'', 'Sick Available':m.sickAvail??'', 'Unpaid Available':m.unpaidAvail??''};
+    const csv = toCSV([info, ...rows]);
+    const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=`${name.replace(/\s+/g,'_')}_dashboard.csv`; a.click(); URL.revokeObjectURL(url);
+  });
+
+  btnPrint.addEventListener('click', ()=> window.print());
+
+  btnMakeCsv.addEventListener('click', ()=>{
+    const name = empSelect.value; if(!name) return alert('Pick an employee first.');
+    const row = {
+      'Employee Name':name,
+      'PTO Request Type': formType.value,
+      'PTO Request Start Date': formStart.value,
+      'PTO Request End Date': formEnd.value,
+      'Start AM/PM': formHalf.value==='AM'?'AM':'',
+      'End AM/PM': formHalf.value==='PM'?'PM':'',
+      'Notes': formNotes.value
+    };
+    const csv = toCSV([row]);
+    const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=`PTO_Request_${name.replace(/\s+/g,'_')}.csv`; a.click(); URL.revokeObjectURL(url);
+  });
+
+  btnEmail.addEventListener('click', ()=>{
+    const name = empSelect.value; if(!name) return alert('Pick an employee first.');
+    const m = ROSTER.get(name)||{};
+    const to = encodeURIComponent(m.mgr ? `${m.mgr}@example.com` : 'people-team@example.com'); // adjust domain
+    const sub = encodeURIComponent(`PTO Request — ${name}`);
+    const body = encodeURIComponent(
+`Employee: ${name}
+Type: ${formType.value}
+Start: ${formStart.value} ${formHalf.value==='AM'?'(AM half-day)':''}
+End:   ${formEnd.value} ${formHalf.value==='PM'?'(PM half-day)':''}
+Notes: ${formNotes.value}
+
+(Generated from Employee Dashboard)`
+    );
+    window.location.href = `mailto:${to}?subject=${sub}&body=${body}`;
+  });
+
+  // ========= BOOT =========
+  (async function init(){
+    try{
+      await boot();
+    }catch(e){
+      console.error(e);
+      alert('Could not load CSVs. Ensure this file sits with the three CSVs.');
+    }
+  })();
+</script>
+</body>
+</html>
