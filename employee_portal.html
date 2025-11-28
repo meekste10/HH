@@ -19,13 +19,19 @@
       padding: 24px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.07);
-      max-width: 420px;
-      margin: 0 auto 40px auto;
+      max-width: 800px;
+      margin: 0 auto 24px auto;
     }
 
     h2 {
       margin-top: 0;
       font-size: 22px;
+      font-weight: 600;
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 18px;
       font-weight: 600;
     }
 
@@ -36,6 +42,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 15px;
+      box-sizing: border-box;
     }
 
     button {
@@ -56,7 +63,7 @@
 
     #dashboard {
       display: none;
-      max-width: 550px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
@@ -70,7 +77,66 @@
     .sub {
       font-size: 15px;
       color: #666;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
+    }
+
+    #loginError, #loadErrorDetails {
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    #loginError {
+      color: #c62828;
+      display: none;
+    }
+
+    #loadErrorDetails {
+      color: #888;
+      display: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .metric-label {
+      color: #555;
+    }
+
+    .metric-value {
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    th, td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .tagline {
+      font-size: 14px;
+      color: #777;
     }
   </style>
 </head>
@@ -89,11 +155,10 @@
     <label for="passcodeInput">Enter your 4-digit passcode</label>
     <input id="passcodeInput" type="password" maxlength="4" placeholder="0000" />
 
-    <button id="loginBtn">Log In</button>
+    <button id="loginBtn" type="button">Log In</button>
 
-    <p id="loginError" style="color:#c62828; font-size:14px; display:none;">
-      Incorrect passcode. Please try again.
-    </p>
+    <p id="loginError"></p>
+    <p id="loadErrorDetails"></p>
   </div>
 
 
@@ -102,29 +167,225 @@
     <div class="card">
       <div class="welcome" id="welcomeName"></div>
       <div class="sub" id="welcomeDept"></div>
-
-      <p style="font-size:15px; line-height:1.4;">
-        This is your starting point.<br />
-        After this, we'll plug in:
-        <ul style="margin-top:10px;">
-          <li>Your PTO summary</li>
-          <li>PTO request demo</li>
-          <li>Team PTO outlook</li>
-          <li>Policy & document tiles</li>
-          <li>Team contact directory</li>
-        </ul>
+      <p class="tagline">
+        This is your prototype HH employee portal. Data shown here is a snapshot for exploration and planning,
+        not a live HR system.
       </p>
+    </div>
+
+    <div class="grid">
+      <!-- PTO Summary -->
+      <div class="card" id="ptoCard">
+        <h3>Your PTO Snapshot</h3>
+        <div id="ptoSummary">
+          <p style="font-size:14px; color:#777;">Loading PTO info...</p>
+        </div>
+      </div>
+
+      <!-- Team Contacts -->
+      <div class="card" id="contactsCard">
+        <h3>Your Team Contacts</h3>
+        <div id="contactsSummary">
+          <p style="font-size:14px; color:#777;">Loading team contacts...</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     let employees = [];
+    let ptoInfo = [];
+    let contacts = [];
     let currentUser = null;
 
-    // Load employees.json and populate dropdown
-    async function loadEmployees() {
-      const res = await fetch('employees.json');
-      employees = await res.json();
+    async function loadAllData() {
+      const loginError = document.getElementById('loginError');
+      const loadErrorDetails = document.getElementById('loadErrorDetails');
+      const empSelect = document.getElementById('empSelect');
 
+      try {
+        const [empRes, ptoRes, contactsRes] = await Promise.all([
+          fetch('employees.json'),
+          fetch('pto_employee_info.json'),
+          fetch('contacts.json')
+        ]);
+
+        if (!empRes.ok) throw new Error('employees.json HTTP ' + empRes.status);
+        if (!ptoRes.ok) throw new Error('pto_employee_info.json HTTP ' + ptoRes.status);
+        if (!contactsRes.ok) throw new Error('contacts.json HTTP ' + contactsRes.status);
+
+        employees = await empRes.json();
+        ptoInfo = await ptoRes.json();
+        contacts = await contactsRes.json();
+
+        if (!Array.isArray(employees) || employees.length === 0) {
+          throw new Error('employees.json is empty or not an array');
+        }
+
+        empSelect.innerHTML = '<option value="">Select your name...</option>';
+        employees.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+        employees.forEach(emp => {
+          const opt = document.createElement('option');
+          opt.value = emp.empId;
+          opt.textContent = emp.name + (emp.department ? ' – ' + emp.department : '');
+          empSelect.appendChild(opt);
+        });
+
+        loginError.style.display = 'none';
+        loginError.textContent = '';
+        loadErrorDetails.style.display = 'none';
+        loadErrorDetails.textContent = '';
+
+      } catch (err) {
+        console.error('Error loading JSON data:', err);
+        empSelect.innerHTML = '<option value="">Could not load employees</option>';
+        loginError.textContent = 'Could not load portal data. Check JSON files and how this page is being served.';
+        loginError.style.display = 'block';
+        loadErrorDetails.textContent = String(err.message || err);
+        loadErrorDetails.style.display = 'block';
+      }
+    }
+
+    function setupLogin() {
+      const loginBtn = document.getElementById('loginBtn');
       const dropdown = document.getElementById('empSelect');
-      dropdown.inner
+      const passcodeInput = document.getElementById('passcodeInput');
+      const loginError = document.getElementById('loginError');
+
+      loginBtn.addEventListener('click', () => {
+        loginError.style.display = 'none';
+        loginError.textContent = '';
+
+        const selectedId = dropdown.value;
+        const passcode = passcodeInput.value.trim();
+
+        if (!selectedId || !passcode) {
+          loginError.textContent = 'Please select your name and enter your passcode.';
+          loginError.style.display = 'block';
+          return;
+        }
+
+        const user = employees.find(e => e.empId === selectedId);
+
+        if (!user || (user.passcode && user.passcode !== passcode)) {
+          loginError.textContent = 'Incorrect passcode. Please try again.';
+          loginError.style.display = 'block';
+          return;
+        }
+
+        currentUser = user;
+        showDashboard();
+      });
+
+      passcodeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          loginBtn.click();
+        }
+      });
+    }
+
+    function findPtoRecord(empId) {
+      if (!Array.isArray(ptoInfo)) return null;
+      return ptoInfo.find(r => r.empId === empId || r.name?.includes(empId));
+    }
+
+    function renderPtoSummary() {
+      const container = document.getElementById('ptoSummary');
+      const record = findPtoRecord(currentUser.empId);
+
+      if (!record) {
+        container.innerHTML = '<p style="font-size:14px; color:#777;">No PTO data found for your profile.</p>';
+        return;
+      }
+
+      const b = record.balances || {};
+      container.innerHTML = `
+        <div class="metric-row">
+          <span class="metric-label">Vacation Available</span>
+          <span class="metric-value">${(b.vacationAvailable ?? 0).toFixed(2)} days</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Sick Available</span>
+          <span class="metric-value">${(b.sickAvailable ?? 0).toFixed(2)} days</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Unpaid Available</span>
+          <span class="metric-value">${(b.unpaidAvailable ?? 0).toFixed(2)} days</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #eee; margin:12px 0;">
+        <p style="font-size:13px; color:#777; margin:0;">
+          Totals shown here are based on the latest snapshot loaded into this demo portal.
+        </p>
+      `;
+    }
+
+    function renderContacts() {
+      const container = document.getElementById('contactsSummary');
+      if (!Array.isArray(contacts) || contacts.length === 0) {
+        container.innerHTML = '<p style="font-size:14px; color:#777;">No contacts available.</p>';
+        return;
+      }
+
+      const dept = currentUser.department;
+      const team = contacts.filter(c => c.department === dept);
+
+      if (team.length === 0) {
+        container.innerHTML = '<p style="font-size:14px; color:#777;">No contact records found for your department yet.</p>';
+        return;
+      }
+
+      let rows = team.map(c => `
+        <tr>
+          <td>${c.name || ''}</td>
+          <td>${c.email || ''}</td>
+          <td>${c.workNumber || ''}</td>
+          <td>${c.region || ''}</td>
+        </tr>
+      `).join('');
+
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Work #</th>
+              <th>Region</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function showDashboard() {
+      const loginCard = document.getElementById('loginCard');
+      const dashboard = document.getElementById('dashboard');
+      const welcomeName = document.getElementById('welcomeName');
+      const welcomeDept = document.getElementById('welcomeDept');
+
+      loginCard.style.display = 'none';
+      dashboard.style.display = 'block';
+
+      welcomeName.textContent = `Welcome, ${currentUser.name}`;
+      const dept = currentUser.department || '';
+      const dr = currentUser.directReport || '';
+      welcomeDept.textContent = dept
+        ? (dr ? `${dept} · Reports to ${dr}` : dept)
+        : '';
+
+      renderPtoSummary();
+      renderContacts();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadAllData();
+      setupLogin();
+    });
+  </script>
+
+</body>
+</html>
