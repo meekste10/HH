@@ -1,0 +1,6284 @@
+[
+  {
+    "id": "171",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Vacation",
+    "startDate": "3/2/26",
+    "startHalf": "AM",
+    "endDate": "3/6/26",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2026",
+      "weekOfYear": "10"
+    }
+  },
+  {
+    "id": "164",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "1/2/26",
+    "startHalf": "AM",
+    "endDate": "1/2/26",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2026",
+      "weekOfYear": "1"
+    }
+  },
+  {
+    "id": "224",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "1/2/26",
+    "startHalf": "AM",
+    "endDate": "1/2/26",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2026",
+      "weekOfYear": "1"
+    }
+  },
+  {
+    "id": "163",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "12/31/25",
+    "startHalf": "AM",
+    "endDate": "12/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "214",
+    "empId": "ChrisR",
+    "name": "Chris Rogers",
+    "type": "Vacation",
+    "startDate": "12/31/25",
+    "startHalf": "AM",
+    "endDate": "12/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "222",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "12/31/25",
+    "startHalf": "AM",
+    "endDate": "12/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "223",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "12/31/25",
+    "startHalf": "AM",
+    "endDate": "12/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "213",
+    "empId": "ChrisR",
+    "name": "Chris Rogers",
+    "type": "Vacation",
+    "startDate": "12/30/25",
+    "startHalf": "AM",
+    "endDate": "12/30/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "221",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "12/30/25",
+    "startHalf": "AM",
+    "endDate": "12/30/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "212",
+    "empId": "ChrisR",
+    "name": "Chris Rogers",
+    "type": "Vacation",
+    "startDate": "12/29/25",
+    "startHalf": "AM",
+    "endDate": "12/29/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "212",
+    "empId": "ChrisR",
+    "name": "Chris Rogers",
+    "type": "Vacation",
+    "startDate": "12/29/25",
+    "startHalf": "AM",
+    "endDate": "12/29/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Vacation",
+    "startDate": "12/29/25",
+    "startHalf": "AM",
+    "endDate": "1/2/26",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "53"
+    }
+  },
+  {
+    "id": "162",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "12/26/25",
+    "startHalf": "AM",
+    "endDate": "12/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "190",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Vacation",
+    "startDate": "12/26/25",
+    "startHalf": "AM",
+    "endDate": "12/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Vacation",
+    "startDate": "12/26/25",
+    "startHalf": "AM",
+    "endDate": "12/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "211",
+    "empId": "ChrisR",
+    "name": "Chris Rogers",
+    "type": "Vacation",
+    "startDate": "12/26/25",
+    "startHalf": "AM",
+    "endDate": "12/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "218",
+    "empId": "EvanO",
+    "name": "Evan Oliver",
+    "type": "Vacation",
+    "startDate": "12/26/25",
+    "startHalf": "AM",
+    "endDate": "12/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "220",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "12/26/25",
+    "startHalf": "AM",
+    "endDate": "12/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "217",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Vacation",
+    "startDate": "12/23/25",
+    "startHalf": "AM",
+    "endDate": "12/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Vacation",
+    "startDate": "12/22/25",
+    "startHalf": "AM",
+    "endDate": "12/23/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "216",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Vacation",
+    "startDate": "12/22/25",
+    "startHalf": "AM",
+    "endDate": "12/22/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "52"
+    }
+  },
+  {
+    "id": "176",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Vacation",
+    "startDate": "12/11/25",
+    "startHalf": "AM",
+    "endDate": "12/12/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "12",
+      "requestYear": "2025",
+      "weekOfYear": "50"
+    }
+  },
+  {
+    "id": "98",
+    "empId": "FaithR",
+    "name": "Faith Rudolph",
+    "type": "Vacation",
+    "startDate": "11/28/25",
+    "startHalf": "AM",
+    "endDate": "11/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Evan Kelly",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "161",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "11/28/25",
+    "startHalf": "AM",
+    "endDate": "11/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "188",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Vacation",
+    "startDate": "11/28/25",
+    "startHalf": "AM",
+    "endDate": "11/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "193",
+    "empId": "PiersonH",
+    "name": "Pierson Hipp",
+    "type": "Vacation",
+    "startDate": "11/28/25",
+    "startHalf": "AM",
+    "endDate": "11/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "210",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Vacation",
+    "startDate": "11/28/25",
+    "startHalf": "AM",
+    "endDate": "11/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "219",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "11/28/25",
+    "startHalf": "AM",
+    "endDate": "11/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "231",
+    "empId": "BradenH",
+    "name": "Braden Hughes",
+    "type": "Vacation",
+    "startDate": "11/28/25",
+    "startHalf": "AM",
+    "endDate": "11/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "229",
+    "empId": "BradenH",
+    "name": "Braden Hughes",
+    "type": "Vacation",
+    "startDate": "11/27/25",
+    "startHalf": "AM",
+    "endDate": "11/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "177",
+    "empId": "MatthewV",
+    "name": "Matthew Vaughn",
+    "type": "Vacation",
+    "startDate": "11/26/25",
+    "startHalf": "AM",
+    "endDate": "11/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "209",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Vacation",
+    "startDate": "11/26/25",
+    "startHalf": "AM",
+    "endDate": "11/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "228",
+    "empId": "BradenH",
+    "name": "Braden Hughes",
+    "type": "Vacation",
+    "startDate": "11/26/25",
+    "startHalf": "AM",
+    "endDate": "11/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Vacation",
+    "startDate": "11/25/25",
+    "startHalf": "AM",
+    "endDate": "11/26/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "97",
+    "empId": "FaithR",
+    "name": "Faith Rudolph",
+    "type": "Vacation",
+    "startDate": "11/24/25",
+    "startHalf": "AM",
+    "endDate": "11/26/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "People",
+    "directReport": "Evan Kelly",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "48"
+    }
+  },
+  {
+    "id": "205",
+    "empId": "JustinC",
+    "name": "Justin Cabral",
+    "type": "Vacation",
+    "startDate": "11/21/25",
+    "startHalf": "AM",
+    "endDate": "11/21/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "47"
+    }
+  },
+  {
+    "id": "167",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "11/14/25",
+    "startHalf": "AM",
+    "endDate": "11/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "46"
+    }
+  },
+  {
+    "id": "192",
+    "empId": "PiersonH",
+    "name": "Pierson Hipp",
+    "type": "Vacation",
+    "startDate": "11/14/25",
+    "startHalf": "AM",
+    "endDate": "11/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "46"
+    }
+  },
+  {
+    "id": "191",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Vacation",
+    "startDate": "11/7/25",
+    "startHalf": "AM",
+    "endDate": "11/7/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "45"
+    }
+  },
+  {
+    "id": "9.7",
+    "empId": "DanielH",
+    "name": "Daniel Holland",
+    "type": "Vacation",
+    "startDate": "11/6/25",
+    "startHalf": "AM",
+    "endDate": "11/7/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "11",
+      "requestYear": "2025",
+      "weekOfYear": "45"
+    }
+  },
+  {
+    "id": "158",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Vacation",
+    "startDate": "10/31/25",
+    "startHalf": "AM",
+    "endDate": "10/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "226",
+    "empId": "HunterF",
+    "name": "Hunter Finklea",
+    "type": "Vacation",
+    "startDate": "10/31/25",
+    "startHalf": "AM",
+    "endDate": "10/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "226",
+    "empId": "HunterF",
+    "name": "Hunter Finklea",
+    "type": "Vacation",
+    "startDate": "10/31/25",
+    "startHalf": "AM",
+    "endDate": "10/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "225",
+    "empId": "HunterF",
+    "name": "Hunter Finklea",
+    "type": "Vacation",
+    "startDate": "10/30/25",
+    "startHalf": "AM",
+    "endDate": "10/30/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "9.97",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "10/27/25",
+    "startHalf": "AM",
+    "endDate": "10/31/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "66",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Vacation",
+    "startDate": "10/27/25",
+    "startHalf": "AM",
+    "endDate": "10/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "232",
+    "empId": "ClayG",
+    "name": "Clay Giles",
+    "type": "Sick",
+    "startDate": "10/27/25",
+    "startHalf": "AM",
+    "endDate": "10/28/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "227",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Sick",
+    "startDate": "10/27/25",
+    "startHalf": "PM",
+    "endDate": "10/27/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "44"
+    }
+  },
+  {
+    "id": "65",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Vacation",
+    "startDate": "10/24/25",
+    "startHalf": "AM",
+    "endDate": "10/24/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "43"
+    }
+  },
+  {
+    "id": "130",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "10/24/25",
+    "startHalf": "AM",
+    "endDate": "10/24/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "43"
+    }
+  },
+  {
+    "id": "",
+    "empId": "JulieB",
+    "name": "Julie Brittle",
+    "type": "Vacation",
+    "startDate": "10/23/25",
+    "startHalf": "AM",
+    "endDate": "10/25/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "43"
+    }
+  },
+  {
+    "id": "9.96",
+    "empId": "MatthewV",
+    "name": "Matthew Vaughn",
+    "type": "Vacation",
+    "startDate": "10/20/25",
+    "startHalf": "AM",
+    "endDate": "10/24/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "43"
+    }
+  },
+  {
+    "id": "9.95",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "10/17/25",
+    "startHalf": "AM",
+    "endDate": "10/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "171.5",
+    "empId": "ChrisS",
+    "name": "Chris Seals",
+    "type": "Vacation",
+    "startDate": "10/17/25",
+    "startHalf": "AM",
+    "endDate": "10/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "204",
+    "empId": "ChrisM",
+    "name": "Chris Maxwell",
+    "type": "Vacation",
+    "startDate": "10/17/25",
+    "startHalf": "AM",
+    "endDate": "10/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Sick",
+    "startDate": "10/17/25",
+    "startHalf": "AM",
+    "endDate": "10/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "137",
+    "empId": "MariaS",
+    "name": "Maria Smith",
+    "type": "Vacation",
+    "startDate": "10/16/25",
+    "startHalf": "AM",
+    "endDate": "10/17/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "197",
+    "empId": "ColbyS",
+    "name": "Colby Swindall",
+    "type": "Vacation",
+    "startDate": "10/16/25",
+    "startHalf": "AM",
+    "endDate": "10/17/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "203",
+    "empId": "ChrisM",
+    "name": "Chris Maxwell",
+    "type": "Vacation",
+    "startDate": "10/16/25",
+    "startHalf": "AM",
+    "endDate": "10/16/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "215",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Sick",
+    "startDate": "10/16/25",
+    "startHalf": "AM",
+    "endDate": "10/16/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "202",
+    "empId": "ChrisM",
+    "name": "Chris Maxwell",
+    "type": "Vacation",
+    "startDate": "10/15/25",
+    "startHalf": "AM",
+    "endDate": "10/15/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "196",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Vacation",
+    "startDate": "10/14/25",
+    "startHalf": "AM",
+    "endDate": "10/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "201",
+    "empId": "ChrisM",
+    "name": "Chris Maxwell",
+    "type": "Vacation",
+    "startDate": "10/14/25",
+    "startHalf": "AM",
+    "endDate": "10/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "195",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Vacation",
+    "startDate": "10/13/25",
+    "startHalf": "AM",
+    "endDate": "10/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Vacation",
+    "startDate": "10/13/25",
+    "startHalf": "AM",
+    "endDate": "10/15/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Sick",
+    "startDate": "10/13/25",
+    "startHalf": "AM",
+    "endDate": "10/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "42"
+    }
+  },
+  {
+    "id": "187",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Vacation",
+    "startDate": "10/10/25",
+    "startHalf": "AM",
+    "endDate": "10/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "41"
+    }
+  },
+  {
+    "id": "194",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Vacation",
+    "startDate": "10/10/25",
+    "startHalf": "AM",
+    "endDate": "10/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "41"
+    }
+  },
+  {
+    "id": "199",
+    "empId": "FaithR",
+    "name": "Faith Rudolph",
+    "type": "Sick",
+    "startDate": "10/10/25",
+    "startHalf": "AM",
+    "endDate": "10/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Evan Kelly",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "41"
+    }
+  },
+  {
+    "id": "",
+    "empId": "AddisonJ",
+    "name": "Addison Jones",
+    "type": "Vacation",
+    "startDate": "10/10/25",
+    "startHalf": "AM",
+    "endDate": "10/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "41"
+    }
+  },
+  {
+    "id": "200",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Vacation",
+    "startDate": "10/10/25",
+    "startHalf": "AM",
+    "endDate": "10/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "41"
+    }
+  },
+  {
+    "id": "151",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "10/9/25",
+    "startHalf": "AM",
+    "endDate": "10/10/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "41"
+    }
+  },
+  {
+    "id": "",
+    "empId": "EricaW",
+    "name": "Erica Williams",
+    "type": "Vacation",
+    "startDate": "10/6/25",
+    "startHalf": "AM",
+    "endDate": "10/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "41"
+    }
+  },
+  {
+    "id": "",
+    "empId": "JulieB",
+    "name": "Julie Brittle",
+    "type": "Vacation",
+    "startDate": "10/4/25",
+    "startHalf": "AM",
+    "endDate": "10/4/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "",
+    "empId": "EricaW",
+    "name": "Erica Williams",
+    "type": "Vacation",
+    "startDate": "10/3/25",
+    "startHalf": "AM",
+    "endDate": "10/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "186",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Vacation",
+    "startDate": "10/3/25",
+    "startHalf": "AM",
+    "endDate": "10/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "189",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Vacation",
+    "startDate": "10/3/25",
+    "startHalf": "AM",
+    "endDate": "10/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "",
+    "empId": "AddisonJ",
+    "name": "Addison Jones",
+    "type": "Vacation",
+    "startDate": "10/3/25",
+    "startHalf": "AM",
+    "endDate": "10/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "166",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "10/2/25",
+    "startHalf": "AM",
+    "endDate": "10/3/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "183",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "10/2/25",
+    "startHalf": "AM",
+    "endDate": "10/2/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "182",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "10/1/25",
+    "startHalf": "AM",
+    "endDate": "10/1/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "10",
+      "requestYear": "2025",
+      "weekOfYear": "40"
+    }
+  },
+  {
+    "id": "181",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "9/27/25",
+    "startHalf": "AM",
+    "endDate": "9/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "39"
+    }
+  },
+  {
+    "id": "",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Vacation",
+    "startDate": "9/26/25",
+    "startHalf": "AM",
+    "endDate": "9/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "39"
+    }
+  },
+  {
+    "id": "178",
+    "empId": "JulieB",
+    "name": "Julie Brittle",
+    "type": "Vacation",
+    "startDate": "9/26/25",
+    "startHalf": "AM",
+    "endDate": "9/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "39"
+    }
+  },
+  {
+    "id": "84",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Vacation",
+    "startDate": "9/24/25",
+    "startHalf": "AM",
+    "endDate": "9/24/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "39"
+    }
+  },
+  {
+    "id": "157",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Vacation",
+    "startDate": "9/19/25",
+    "startHalf": "AM",
+    "endDate": "9/19/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "38"
+    }
+  },
+  {
+    "id": "150",
+    "empId": "TeylerR",
+    "name": "Teyler Rudd",
+    "type": "Vacation",
+    "startDate": "9/18/25",
+    "startHalf": "AM",
+    "endDate": "9/19/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "38"
+    }
+  },
+  {
+    "id": "165",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "9/18/25",
+    "startHalf": "AM",
+    "endDate": "9/19/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "38"
+    }
+  },
+  {
+    "id": "186",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Vacation",
+    "startDate": "9/18/25",
+    "startHalf": "AM",
+    "endDate": "9/19/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "38"
+    }
+  },
+  {
+    "id": "9.94",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "9/15/25",
+    "startHalf": "AM",
+    "endDate": "9/19/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "38"
+    }
+  },
+  {
+    "id": "",
+    "empId": "MatthewV",
+    "name": "Matthew Vaughn",
+    "type": "Vacation",
+    "startDate": "9/15/25",
+    "startHalf": "AM",
+    "endDate": "9/15/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "38"
+    }
+  },
+  {
+    "id": "",
+    "empId": "ReidK",
+    "name": "Reid Kemp",
+    "type": "Sick",
+    "startDate": "9/15/25",
+    "startHalf": "AM",
+    "endDate": "9/15/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "38"
+    }
+  },
+  {
+    "id": "180",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "9/13/25",
+    "startHalf": "AM",
+    "endDate": "9/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "174",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Vacation",
+    "startDate": "9/12/25",
+    "startHalf": "AM",
+    "endDate": "9/12/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "179",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "9/12/25",
+    "startHalf": "AM",
+    "endDate": "9/12/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "187",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Vacation",
+    "startDate": "9/12/25",
+    "startHalf": "AM",
+    "endDate": "9/12/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "134",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "9/11/25",
+    "startHalf": "AM",
+    "endDate": "9/12/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "",
+    "empId": "MatthewV",
+    "name": "Matthew Vaughn",
+    "type": "Vacation",
+    "startDate": "9/11/25",
+    "startHalf": "AM",
+    "endDate": "9/12/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "",
+    "empId": "ChrisM",
+    "name": "Chris Maxwell",
+    "type": "Vacation",
+    "startDate": "9/10/25",
+    "startHalf": "AM",
+    "endDate": "9/11/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "169",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "9/8/25",
+    "startHalf": "AM",
+    "endDate": "9/8/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "185",
+    "empId": "MariaS",
+    "name": "Maria Smith",
+    "type": "Sick",
+    "startDate": "9/8/25",
+    "startHalf": "AM",
+    "endDate": "9/8/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "37"
+    }
+  },
+  {
+    "id": "168",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "9/5/25",
+    "startHalf": "AM",
+    "endDate": "9/5/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "36"
+    }
+  },
+  {
+    "id": "185",
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "type": "Sick",
+    "startDate": "9/5/25",
+    "startHalf": "PM",
+    "endDate": "9/5/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "36"
+    }
+  },
+  {
+    "id": "9.93",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Vacation",
+    "startDate": "9/2/25",
+    "startHalf": "AM",
+    "endDate": "9/5/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "36"
+    }
+  },
+  {
+    "id": "",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Vacation",
+    "startDate": "9/2/25",
+    "startHalf": "AM",
+    "endDate": "9/2/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "9",
+      "requestYear": "2025",
+      "weekOfYear": "36"
+    }
+  },
+  {
+    "id": "58",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "8/29/25",
+    "startHalf": "AM",
+    "endDate": "8/29/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "160",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Vacation",
+    "startDate": "8/29/25",
+    "startHalf": "AM",
+    "endDate": "8/29/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "",
+    "empId": "EricaW",
+    "name": "Erica Williams",
+    "type": "Vacation",
+    "startDate": "8/29/25",
+    "startHalf": "AM",
+    "endDate": "8/29/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "184",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Vacation",
+    "startDate": "8/29/25",
+    "startHalf": "AM",
+    "endDate": "8/29/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Sick",
+    "startDate": "8/28/25",
+    "startHalf": "AM",
+    "endDate": "8/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Sick",
+    "startDate": "8/27/25",
+    "startHalf": "AM",
+    "endDate": "8/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "9.6",
+    "empId": "DanielH",
+    "name": "Daniel Holland",
+    "type": "Vacation",
+    "startDate": "8/25/25",
+    "startHalf": "AM",
+    "endDate": "8/29/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "32",
+    "empId": "DavidF",
+    "name": "David Fontanez",
+    "type": "Vacation",
+    "startDate": "8/25/25",
+    "startHalf": "AM",
+    "endDate": "8/29/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Vacation",
+    "startDate": "8/25/25",
+    "startHalf": "AM",
+    "endDate": "8/28/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "175",
+    "empId": "TylerJ",
+    "name": "Tyler Johansen",
+    "type": "Sick",
+    "startDate": "8/25/25",
+    "startHalf": "AM",
+    "endDate": "8/25/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Sick",
+    "startDate": "8/25/25",
+    "startHalf": "AM",
+    "endDate": "8/25/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "35"
+    }
+  },
+  {
+    "id": "172",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Vacation",
+    "startDate": "8/20/25",
+    "startHalf": "AM",
+    "endDate": "8/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "34"
+    }
+  },
+  {
+    "id": "",
+    "empId": "ChrisM",
+    "name": "Chris Maxwell",
+    "type": "Sick",
+    "startDate": "8/15/25",
+    "startHalf": "AM",
+    "endDate": "8/15/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "33"
+    }
+  },
+  {
+    "id": "143",
+    "empId": "FaithR",
+    "name": "Faith Rudolph",
+    "type": "Sick",
+    "startDate": "8/12/25",
+    "startHalf": "AM",
+    "endDate": "8/12/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Evan Kelly",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "33"
+    }
+  },
+  {
+    "id": "172.2",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Sick",
+    "startDate": "8/11/25",
+    "startHalf": "AM",
+    "endDate": "8/11/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "33"
+    }
+  },
+  {
+    "id": "173",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Sick",
+    "startDate": "8/11/25",
+    "startHalf": "AM",
+    "endDate": "8/11/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "33"
+    }
+  },
+  {
+    "id": "149",
+    "empId": "TeylerR",
+    "name": "Teyler Rudd",
+    "type": "Vacation",
+    "startDate": "8/8/25",
+    "startHalf": "AM",
+    "endDate": "8/8/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "32"
+    }
+  },
+  {
+    "id": "131",
+    "empId": "JustinC",
+    "name": "Justin Cabral",
+    "type": "Vacation",
+    "startDate": "8/7/25",
+    "startHalf": "AM",
+    "endDate": "8/8/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "32"
+    }
+  },
+  {
+    "id": "148",
+    "empId": "FaithR",
+    "name": "Faith Rudolph",
+    "type": "Vacation",
+    "startDate": "8/4/25",
+    "startHalf": "AM",
+    "endDate": "8/4/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Evan Kelly",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "32"
+    }
+  },
+  {
+    "id": "159",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Vacation",
+    "startDate": "8/4/25",
+    "startHalf": "AM",
+    "endDate": "8/4/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "32"
+    }
+  },
+  {
+    "id": "172.1",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Sick",
+    "startDate": "8/4/25",
+    "startHalf": "AM",
+    "endDate": "8/4/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "32"
+    }
+  },
+  {
+    "id": "",
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "type": "Sick",
+    "startDate": "8/4/25",
+    "startHalf": "AM",
+    "endDate": "8/4/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "32"
+    }
+  },
+  {
+    "id": "140",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "8/1/25",
+    "startHalf": "AM",
+    "endDate": "8/1/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "31"
+    }
+  },
+  {
+    "id": "147",
+    "empId": "FaithR",
+    "name": "Faith Rudolph",
+    "type": "Vacation",
+    "startDate": "8/1/25",
+    "startHalf": "AM",
+    "endDate": "8/1/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Evan Kelly",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "31"
+    }
+  },
+  {
+    "id": "170.5",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Sick",
+    "startDate": "8/1/25",
+    "startHalf": "AM",
+    "endDate": "8/1/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "8",
+      "requestYear": "2025",
+      "weekOfYear": "31"
+    }
+  },
+  {
+    "id": "135",
+    "empId": "MariaS",
+    "name": "Maria Smith",
+    "type": "Vacation",
+    "startDate": "7/31/25",
+    "startHalf": "AM",
+    "endDate": "8/1/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "31"
+    }
+  },
+  {
+    "id": "170",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Sick",
+    "startDate": "7/30/25",
+    "startHalf": "AM",
+    "endDate": "7/30/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "31"
+    }
+  },
+  {
+    "id": "164.1",
+    "empId": "ClayG",
+    "name": "Clay Giles",
+    "type": "Sick",
+    "startDate": "7/28/25",
+    "startHalf": "AM",
+    "endDate": "7/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "31"
+    }
+  },
+  {
+    "id": "164.2",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Sick",
+    "startDate": "7/28/25",
+    "startHalf": "AM",
+    "endDate": "7/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "31"
+    }
+  },
+  {
+    "id": "145",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Vacation",
+    "startDate": "7/25/25",
+    "startHalf": "AM",
+    "endDate": "7/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "146",
+    "empId": "EllieB",
+    "name": "Ellie Barron",
+    "type": "Vacation",
+    "startDate": "7/25/25",
+    "startHalf": "PM",
+    "endDate": "7/25/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "152",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Vacation",
+    "startDate": "7/25/25",
+    "startHalf": "AM",
+    "endDate": "7/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "153",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Vacation",
+    "startDate": "7/25/25",
+    "startHalf": "AM",
+    "endDate": "7/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "59",
+    "empId": "ColbyS",
+    "name": "Colby Swindall",
+    "type": "Vacation",
+    "startDate": "7/23/25",
+    "startHalf": "AM",
+    "endDate": "7/25/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "48",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Vacation",
+    "startDate": "7/21/25",
+    "startHalf": "AM",
+    "endDate": "7/25/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "139",
+    "empId": "ReidK",
+    "name": "Reid Kemp",
+    "type": "Vacation",
+    "startDate": "7/21/25",
+    "startHalf": "AM",
+    "endDate": "7/22/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "142",
+    "empId": "JacobW",
+    "name": "Jacob Williamson",
+    "type": "Vacation",
+    "startDate": "7/21/25",
+    "startHalf": "AM",
+    "endDate": "7/25/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "30"
+    }
+  },
+  {
+    "id": "138",
+    "empId": "ReidK",
+    "name": "Reid Kemp",
+    "type": "Vacation",
+    "startDate": "7/18/25",
+    "startHalf": "AM",
+    "endDate": "7/18/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "29"
+    }
+  },
+  {
+    "id": "141",
+    "empId": "JacobW",
+    "name": "Jacob Williamson",
+    "type": "Vacation",
+    "startDate": "7/18/25",
+    "startHalf": "AM",
+    "endDate": "7/18/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "29"
+    }
+  },
+  {
+    "id": "120",
+    "empId": "PiersonH",
+    "name": "Pierson Hipp",
+    "type": "Vacation",
+    "startDate": "7/16/25",
+    "startHalf": "AM",
+    "endDate": "7/18/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "29"
+    }
+  },
+  {
+    "id": "117",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "7/14/25",
+    "startHalf": "AM",
+    "endDate": "7/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "29"
+    }
+  },
+  {
+    "id": "156",
+    "empId": "HunterF",
+    "name": "Hunter Finklea",
+    "type": "Sick",
+    "startDate": "7/14/25",
+    "startHalf": "AM",
+    "endDate": "7/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "29"
+    }
+  },
+  {
+    "id": "150.5",
+    "empId": "WilsonR",
+    "name": "Wilson Ramos",
+    "type": "Sick",
+    "startDate": "7/13/25",
+    "startHalf": "AM",
+    "endDate": "7/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "29"
+    }
+  },
+  {
+    "id": "116",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "7/11/25",
+    "startHalf": "AM",
+    "endDate": "7/11/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "28"
+    }
+  },
+  {
+    "id": "129",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "7/11/25",
+    "startHalf": "AM",
+    "endDate": "7/11/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "28"
+    }
+  },
+  {
+    "id": "128",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "7/10/25",
+    "startHalf": "PM",
+    "endDate": "7/10/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "28"
+    }
+  },
+  {
+    "id": "127",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "7/9/25",
+    "startHalf": "PM",
+    "endDate": "7/9/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "28"
+    }
+  },
+  {
+    "id": "86",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "7/7/25",
+    "startHalf": "AM",
+    "endDate": "7/11/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "28"
+    }
+  },
+  {
+    "id": "144",
+    "empId": "TylerJ",
+    "name": "Tyler Johansen",
+    "type": "Sick",
+    "startDate": "7/7/25",
+    "startHalf": "AM",
+    "endDate": "7/7/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "28"
+    }
+  },
+  {
+    "id": "112",
+    "empId": "EllieB",
+    "name": "Ellie Barron",
+    "type": "Vacation",
+    "startDate": "7/3/25",
+    "startHalf": "PM",
+    "endDate": "7/3/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "27"
+    }
+  },
+  {
+    "id": "115",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Vacation",
+    "startDate": "7/3/25",
+    "startHalf": "AM",
+    "endDate": "7/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "27"
+    }
+  },
+  {
+    "id": "118",
+    "empId": "ColbyS",
+    "name": "Colby Swindall",
+    "type": "Vacation",
+    "startDate": "7/3/25",
+    "startHalf": "AM",
+    "endDate": "7/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "27"
+    }
+  },
+  {
+    "id": "122",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Vacation",
+    "startDate": "7/3/25",
+    "startHalf": "AM",
+    "endDate": "7/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "27"
+    }
+  },
+  {
+    "id": "132",
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "type": "Vacation",
+    "startDate": "7/3/25",
+    "startHalf": "AM",
+    "endDate": "7/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "27"
+    }
+  },
+  {
+    "id": "136",
+    "empId": "MariaS",
+    "name": "Maria Smith",
+    "type": "Vacation",
+    "startDate": "7/3/25",
+    "startHalf": "AM",
+    "endDate": "7/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "27"
+    }
+  },
+  {
+    "id": "9.92",
+    "empId": "EvanO",
+    "name": "Evan Oliver",
+    "type": "Vacation",
+    "startDate": "7/2/25",
+    "startHalf": "AM",
+    "endDate": "7/3/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "7",
+      "requestYear": "2025",
+      "weekOfYear": "27"
+    }
+  },
+  {
+    "id": "133",
+    "empId": "EricaW",
+    "name": "Erica Williams",
+    "type": "Sick",
+    "startDate": "6/27/25",
+    "startHalf": "AM",
+    "endDate": "6/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "26"
+    }
+  },
+  {
+    "id": "123",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Sick",
+    "startDate": "6/24/25",
+    "startHalf": "AM",
+    "endDate": "6/24/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "26"
+    }
+  },
+  {
+    "id": "80",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Vacation",
+    "startDate": "6/23/25",
+    "startHalf": "AM",
+    "endDate": "6/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "26"
+    }
+  },
+  {
+    "id": "108",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Vacation",
+    "startDate": "6/23/25",
+    "startHalf": "AM",
+    "endDate": "6/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "26"
+    }
+  },
+  {
+    "id": "124",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Sick",
+    "startDate": "6/23/25",
+    "startHalf": "AM",
+    "endDate": "6/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "26"
+    }
+  },
+  {
+    "id": "107",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Vacation",
+    "startDate": "6/19/25",
+    "startHalf": "AM",
+    "endDate": "6/20/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "25"
+    }
+  },
+  {
+    "id": "99",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Sick",
+    "startDate": "6/17/25",
+    "startHalf": "AM",
+    "endDate": "6/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "25"
+    }
+  },
+  {
+    "id": "9.9",
+    "empId": "ChrisS",
+    "name": "Chris Seals",
+    "type": "Vacation",
+    "startDate": "6/16/25",
+    "startHalf": "AM",
+    "endDate": "6/20/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "25"
+    }
+  },
+  {
+    "id": "67",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Vacation",
+    "startDate": "6/16/25",
+    "startHalf": "AM",
+    "endDate": "6/20/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "25"
+    }
+  },
+  {
+    "id": "79",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Vacation",
+    "startDate": "6/13/25",
+    "startHalf": "AM",
+    "endDate": "6/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "83",
+    "empId": "JenniferH",
+    "name": "Jennifer Hoelsher",
+    "type": "Vacation",
+    "startDate": "6/13/25",
+    "startHalf": "AM",
+    "endDate": "6/14/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Sales",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "87",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "6/13/25",
+    "startHalf": "AM",
+    "endDate": "6/16/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "93",
+    "empId": "EvanO",
+    "name": "Evan Oliver",
+    "type": "Vacation",
+    "startDate": "6/13/25",
+    "startHalf": "AM",
+    "endDate": "6/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "37",
+    "empId": "DavidF",
+    "name": "David Fontanez",
+    "type": "Vacation",
+    "startDate": "6/12/25",
+    "startHalf": "AM",
+    "endDate": "6/13/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "69",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Vacation",
+    "startDate": "6/12/25",
+    "startHalf": "AM",
+    "endDate": "6/12/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "76",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Vacation",
+    "startDate": "6/11/25",
+    "startHalf": "AM",
+    "endDate": "6/13/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "9.89",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Vacation",
+    "startDate": "6/10/25",
+    "startHalf": "AM",
+    "endDate": "6/13/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "85",
+    "empId": "EricaW",
+    "name": "Erica Williams",
+    "type": "Vacation",
+    "startDate": "6/10/25",
+    "startHalf": "PM",
+    "endDate": "6/11/25",
+    "endHalf": "PM",
+    "totalDays": 1.5,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "113",
+    "empId": "GerardoV",
+    "name": "Gerardo Velasquez",
+    "type": "Sick",
+    "startDate": "6/9/25",
+    "startHalf": "AM",
+    "endDate": "6/9/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "114",
+    "empId": "WilsonR",
+    "name": "Wilson Ramos",
+    "type": "Sick",
+    "startDate": "6/9/25",
+    "startHalf": "AM",
+    "endDate": "6/9/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "24"
+    }
+  },
+  {
+    "id": "103",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Sick",
+    "startDate": "6/6/25",
+    "startHalf": "AM",
+    "endDate": "6/6/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "106",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Sick",
+    "startDate": "6/6/25",
+    "startHalf": "AM",
+    "endDate": "6/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "109",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Sick",
+    "startDate": "6/6/25",
+    "startHalf": "AM",
+    "endDate": "6/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "68",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Vacation",
+    "startDate": "6/5/25",
+    "startHalf": "AM",
+    "endDate": "6/6/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "101",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Sick",
+    "startDate": "6/5/25",
+    "startHalf": "AM",
+    "endDate": "6/5/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "104",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Sick",
+    "startDate": "6/5/25",
+    "startHalf": "AM",
+    "endDate": "6/5/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "78",
+    "empId": "TylerJ",
+    "name": "Tyler Johansen",
+    "type": "Vacation",
+    "startDate": "6/4/25",
+    "startHalf": "AM",
+    "endDate": "6/6/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "100",
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "type": "Sick",
+    "startDate": "6/3/25",
+    "startHalf": "AM",
+    "endDate": "6/4/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "9.88",
+    "empId": "MatthewV",
+    "name": "Matthew Vaughn",
+    "type": "Vacation",
+    "startDate": "6/2/25",
+    "startHalf": "AM",
+    "endDate": "6/3/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "96",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Sick",
+    "startDate": "6/2/25",
+    "startHalf": "AM",
+    "endDate": "6/6/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "105",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Sick",
+    "startDate": "6/2/25",
+    "startHalf": "AM",
+    "endDate": "6/4/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "6",
+      "requestYear": "2025",
+      "weekOfYear": "23"
+    }
+  },
+  {
+    "id": "91",
+    "empId": "HunterF",
+    "name": "Hunter Finklea",
+    "type": "Sick",
+    "startDate": "5/30/25",
+    "startHalf": "AM",
+    "endDate": "5/30/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "22"
+    }
+  },
+  {
+    "id": "92",
+    "empId": "ColbyS",
+    "name": "Colby Swindall",
+    "type": "Sick",
+    "startDate": "5/30/25",
+    "startHalf": "AM",
+    "endDate": "5/30/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "22"
+    }
+  },
+  {
+    "id": "94",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Sick",
+    "startDate": "5/29/25",
+    "startHalf": "AM",
+    "endDate": "5/30/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "22"
+    }
+  },
+  {
+    "id": "88",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Sick",
+    "startDate": "5/28/25",
+    "startHalf": "AM",
+    "endDate": "5/28/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "22"
+    }
+  },
+  {
+    "id": "82",
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "type": "Sick",
+    "startDate": "5/27/25",
+    "startHalf": "AM",
+    "endDate": "5/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "22"
+    }
+  },
+  {
+    "id": "90",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Sick",
+    "startDate": "5/27/25",
+    "startHalf": "AM",
+    "endDate": "5/30/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "22"
+    }
+  },
+  {
+    "id": "9.87",
+    "empId": "ChrisS",
+    "name": "Chris Seals",
+    "type": "Vacation",
+    "startDate": "5/23/25",
+    "startHalf": "AM",
+    "endDate": "5/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "62",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Vacation",
+    "startDate": "5/23/25",
+    "startHalf": "AM",
+    "endDate": "5/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "75",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Vacation",
+    "startDate": "5/23/25",
+    "startHalf": "AM",
+    "endDate": "5/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "89",
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "type": "Sick",
+    "startDate": "5/23/25",
+    "startHalf": "AM",
+    "endDate": "5/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "9.86",
+    "empId": "ColbyS",
+    "name": "Colby Swindall",
+    "type": "Vacation",
+    "startDate": "5/22/25",
+    "startHalf": "AM",
+    "endDate": "5/23/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "72",
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "type": "Vacation",
+    "startDate": "5/22/25",
+    "startHalf": "AM",
+    "endDate": "5/22/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "82",
+    "empId": "MarvinF",
+    "name": "Marvin Francisco",
+    "type": "Sick",
+    "startDate": "5/20/25",
+    "startHalf": "AM",
+    "endDate": "5/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "81",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Sick",
+    "startDate": "5/20/25",
+    "startHalf": "AM",
+    "endDate": "5/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "9.84",
+    "empId": "ReidK",
+    "name": "Reid Kemp",
+    "type": "Vacation",
+    "startDate": "5/19/25",
+    "startHalf": "AM",
+    "endDate": "5/19/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "71",
+    "empId": "HunterF",
+    "name": "Hunter Finklea",
+    "type": "Vacation",
+    "startDate": "5/19/25",
+    "startHalf": "AM",
+    "endDate": "5/23/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Community Development",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "21"
+    }
+  },
+  {
+    "id": "9.83",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "5/16/25",
+    "startHalf": "AM",
+    "endDate": "5/16/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "20"
+    }
+  },
+  {
+    "id": "9.82",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Vacation",
+    "startDate": "5/16/25",
+    "startHalf": "AM",
+    "endDate": "5/16/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "20"
+    }
+  },
+  {
+    "id": "74",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Sick",
+    "startDate": "5/13/25",
+    "startHalf": "AM",
+    "endDate": "5/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "20"
+    }
+  },
+  {
+    "id": "110",
+    "empId": "ReidK",
+    "name": "Reid Kemp",
+    "type": "Sick",
+    "startDate": "5/13/25",
+    "startHalf": "AM",
+    "endDate": "5/13/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "20"
+    }
+  },
+  {
+    "id": "9.81",
+    "empId": "SpencerC",
+    "name": "Spencer Cothran",
+    "type": "Sick",
+    "startDate": "5/12/25",
+    "startHalf": "AM",
+    "endDate": "5/15/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "20"
+    }
+  },
+  {
+    "id": "73",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Sick",
+    "startDate": "5/12/25",
+    "startHalf": "AM",
+    "endDate": "5/12/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "20"
+    }
+  },
+  {
+    "id": "51",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "5/10/25",
+    "startHalf": "AM",
+    "endDate": "5/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "9.8",
+    "empId": "JustinC",
+    "name": "Justin Cabral",
+    "type": "Vacation",
+    "startDate": "5/9/25",
+    "startHalf": "AM",
+    "endDate": "5/9/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "9.79",
+    "empId": "SpencerC",
+    "name": "Spencer Cothran",
+    "type": "Sick",
+    "startDate": "5/9/25",
+    "startHalf": "AM",
+    "endDate": "5/9/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "9.78",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Vacation",
+    "startDate": "5/8/25",
+    "startHalf": "AM",
+    "endDate": "5/9/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "64",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Sick",
+    "startDate": "5/6/25",
+    "startHalf": "AM",
+    "endDate": "5/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "66.5",
+    "empId": "MariaS",
+    "name": "Maria Smith",
+    "type": "Sick",
+    "startDate": "5/6/25",
+    "startHalf": "AM",
+    "endDate": "5/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "70",
+    "empId": "ClayG",
+    "name": "Clay Giles",
+    "type": "Sick",
+    "startDate": "5/6/25",
+    "startHalf": "AM",
+    "endDate": "5/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "9.77",
+    "empId": "JeremiahB",
+    "name": "Jeremiah Bruce",
+    "type": "Vacation",
+    "startDate": "5/5/25",
+    "startHalf": "AM",
+    "endDate": "5/9/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "In-House Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "9.76",
+    "empId": "SpencerC",
+    "name": "Spencer Cothran",
+    "type": "Vacation",
+    "startDate": "5/5/25",
+    "startHalf": "AM",
+    "endDate": "5/8/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "39",
+    "empId": "DavidF",
+    "name": "David Fontanez",
+    "type": "Vacation",
+    "startDate": "5/5/25",
+    "startHalf": "AM",
+    "endDate": "5/5/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "63",
+    "empId": "EvanO",
+    "name": "Evan Oliver",
+    "type": "Sick",
+    "startDate": "5/5/25",
+    "startHalf": "AM",
+    "endDate": "5/5/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "19"
+    }
+  },
+  {
+    "id": "9.75",
+    "empId": "SpencerC",
+    "name": "Spencer Cothran",
+    "type": "Vacation",
+    "startDate": "5/2/25",
+    "startHalf": "AM",
+    "endDate": "5/2/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "9.74",
+    "empId": "EllieB",
+    "name": "Ellie Barron",
+    "type": "Vacation",
+    "startDate": "5/1/25",
+    "startHalf": "AM",
+    "endDate": "5/2/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "9.02",
+    "empId": "PiersonH",
+    "name": "Pierson Hipp",
+    "type": "Vacation",
+    "startDate": "5/1/25",
+    "startHalf": "AM",
+    "endDate": "5/2/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "9.04",
+    "empId": "ZacC",
+    "name": "Zac Crooks",
+    "type": "Vacation",
+    "startDate": "5/1/25",
+    "startHalf": "AM",
+    "endDate": "5/1/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Dancor",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "38",
+    "empId": "DavidF",
+    "name": "David Fontanez",
+    "type": "Vacation",
+    "startDate": "5/1/25",
+    "startHalf": "AM",
+    "endDate": "5/2/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "5",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "60.5",
+    "empId": "WilsonR",
+    "name": "Wilson Ramos",
+    "type": "Sick",
+    "startDate": "4/29/25",
+    "startHalf": "AM",
+    "endDate": "4/29/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "9.73",
+    "empId": "EllieB",
+    "name": "Ellie Barron",
+    "type": "Vacation",
+    "startDate": "4/28/25",
+    "startHalf": "AM",
+    "endDate": "4/30/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "9.03",
+    "empId": "ZacC",
+    "name": "Zac Crooks",
+    "type": "Vacation",
+    "startDate": "4/28/25",
+    "startHalf": "AM",
+    "endDate": "4/30/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Dancor",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "9.01",
+    "empId": "PiersonH",
+    "name": "Pierson Hipp",
+    "type": "Vacation",
+    "startDate": "4/28/25",
+    "startHalf": "AM",
+    "endDate": "4/30/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "18"
+    }
+  },
+  {
+    "id": "50",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "4/26/25",
+    "startHalf": "AM",
+    "endDate": "4/26/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "9.71",
+    "empId": "PiersonH",
+    "name": "Pierson Hipp",
+    "type": "Vacation",
+    "startDate": "4/25/25",
+    "startHalf": "AM",
+    "endDate": "4/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "9.7",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "4/25/25",
+    "startHalf": "AM",
+    "endDate": "4/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "53",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Vacation",
+    "startDate": "4/25/25",
+    "startHalf": "AM",
+    "endDate": "4/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "60",
+    "empId": "WaltN",
+    "name": "Walt Nicholson",
+    "type": "Vacation",
+    "startDate": "4/25/25",
+    "startHalf": "AM",
+    "endDate": "4/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "61",
+    "empId": "AbigaleL",
+    "name": "Abigale Littles",
+    "type": "Vacation",
+    "startDate": "4/25/25",
+    "startHalf": "PM",
+    "endDate": "4/25/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "44",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "4/24/25",
+    "startHalf": "PM",
+    "endDate": "4/24/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "9.69",
+    "empId": "EllieB",
+    "name": "Ellie Barron",
+    "type": "Vacation",
+    "startDate": "4/24/25",
+    "startHalf": "AM",
+    "endDate": "4/25/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "9",
+    "empId": "ZacC",
+    "name": "Zac Crooks",
+    "type": "Vacation",
+    "startDate": "4/22/25",
+    "startHalf": "AM",
+    "endDate": "4/25/25",
+    "endHalf": "PM",
+    "totalDays": 4.0,
+    "department": "Dancor",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "54",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Vacation",
+    "startDate": "4/21/25",
+    "startHalf": "AM",
+    "endDate": "4/21/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "57",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Sick",
+    "startDate": "4/21/25",
+    "startHalf": "AM",
+    "endDate": "4/21/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "17"
+    }
+  },
+  {
+    "id": "36",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Vacation",
+    "startDate": "4/17/25",
+    "startHalf": "AM",
+    "endDate": "4/18/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "16"
+    }
+  },
+  {
+    "id": "49",
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "type": "Vacation",
+    "startDate": "4/16/25",
+    "startHalf": "AM",
+    "endDate": "4/17/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "16"
+    }
+  },
+  {
+    "id": "53.2",
+    "empId": "MarvinF",
+    "name": "Marvin Francisco",
+    "type": "Sick",
+    "startDate": "4/15/25",
+    "startHalf": "AM",
+    "endDate": "4/15/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "16"
+    }
+  },
+  {
+    "id": "53.1",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Sick",
+    "startDate": "4/14/25",
+    "startHalf": "AM",
+    "endDate": "4/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "16"
+    }
+  },
+  {
+    "id": "52",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Sick",
+    "startDate": "4/9/25",
+    "startHalf": "AM",
+    "endDate": "4/9/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "15"
+    }
+  },
+  {
+    "id": "47",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Sick",
+    "startDate": "4/7/25",
+    "startHalf": "AM",
+    "endDate": "4/7/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "15"
+    }
+  },
+  {
+    "id": "53.3",
+    "empId": "WilsonR",
+    "name": "Wilson Ramos",
+    "type": "Sick",
+    "startDate": "4/7/25",
+    "startHalf": "AM",
+    "endDate": "4/8/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "15"
+    }
+  },
+  {
+    "id": "9.68",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Vacation",
+    "startDate": "4/4/25",
+    "startHalf": "PM",
+    "endDate": "4/4/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "14"
+    }
+  },
+  {
+    "id": "9.67",
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "type": "Vacation",
+    "startDate": "4/4/25",
+    "startHalf": "AM",
+    "endDate": "4/4/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "14"
+    }
+  },
+  {
+    "id": "46",
+    "empId": "GerardoV",
+    "name": "Gerardo Velasquez",
+    "type": "Sick",
+    "startDate": "4/4/25",
+    "startHalf": "AM",
+    "endDate": "4/4/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "14"
+    }
+  },
+  {
+    "id": "45",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Sick",
+    "startDate": "4/3/25",
+    "startHalf": "PM",
+    "endDate": "4/3/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "14"
+    }
+  },
+  {
+    "id": "40",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Sick",
+    "startDate": "4/2/25",
+    "startHalf": "AM",
+    "endDate": "4/2/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "14"
+    }
+  },
+  {
+    "id": "9.66",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Sick",
+    "startDate": "4/1/25",
+    "startHalf": "AM",
+    "endDate": "4/1/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "4",
+      "requestYear": "2025",
+      "weekOfYear": "14"
+    }
+  },
+  {
+    "id": "9.65",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Sick",
+    "startDate": "3/31/25",
+    "startHalf": "AM",
+    "endDate": "3/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "14"
+    }
+  },
+  {
+    "id": "9.64",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "3/28/25",
+    "startHalf": "AM",
+    "endDate": "3/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "13"
+    }
+  },
+  {
+    "id": "33",
+    "empId": "AbigaleL",
+    "name": "Abigale Littles",
+    "type": "Vacation",
+    "startDate": "3/28/25",
+    "startHalf": "PM",
+    "endDate": "3/28/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "13"
+    }
+  },
+  {
+    "id": "34",
+    "empId": "ClayG",
+    "name": "Clay Giles",
+    "type": "Sick",
+    "startDate": "3/28/25",
+    "startHalf": "AM",
+    "endDate": "3/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "13"
+    }
+  },
+  {
+    "id": "9.63",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "3/27/25",
+    "startHalf": "PM",
+    "endDate": "3/27/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "13"
+    }
+  },
+  {
+    "id": "9.62",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Vacation",
+    "startDate": "3/24/25",
+    "startHalf": "AM",
+    "endDate": "3/26/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "13"
+    }
+  },
+  {
+    "id": "9.61",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Vacation",
+    "startDate": "3/21/25",
+    "startHalf": "AM",
+    "endDate": "3/21/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "12"
+    }
+  },
+  {
+    "id": "9.6",
+    "empId": "EvanO",
+    "name": "Evan Oliver",
+    "type": "Vacation",
+    "startDate": "3/21/25",
+    "startHalf": "AM",
+    "endDate": "3/21/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "12"
+    }
+  },
+  {
+    "id": "9.59",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Vacation",
+    "startDate": "3/21/25",
+    "startHalf": "PM",
+    "endDate": "3/21/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "12"
+    }
+  },
+  {
+    "id": "9.58",
+    "empId": "WaltN",
+    "name": "Walt Nicholson",
+    "type": "Sick",
+    "startDate": "3/20/25",
+    "startHalf": "AM",
+    "endDate": "3/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "12"
+    }
+  },
+  {
+    "id": "9.57",
+    "empId": "TylerJ",
+    "name": "Tyler Johansen",
+    "type": "Sick",
+    "startDate": "3/17/25",
+    "startHalf": "AM",
+    "endDate": "3/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "12"
+    }
+  },
+  {
+    "id": "9.07",
+    "empId": "DanielH",
+    "name": "Daniel Holland",
+    "type": "Vacation",
+    "startDate": "3/17/25",
+    "startHalf": "AM",
+    "endDate": "3/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "12"
+    }
+  },
+  {
+    "id": "9.56",
+    "empId": "RyanR",
+    "name": "Ryan Reynolds",
+    "type": "Sick",
+    "startDate": "3/14/25",
+    "startHalf": "AM",
+    "endDate": "3/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "11"
+    }
+  },
+  {
+    "id": "9.55",
+    "empId": "JeremiahB",
+    "name": "Jeremiah Bruce",
+    "type": "Sick",
+    "startDate": "3/14/25",
+    "startHalf": "PM",
+    "endDate": "3/14/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "In-House Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "11"
+    }
+  },
+  {
+    "id": "9.06",
+    "empId": "DanielH",
+    "name": "Daniel Holland",
+    "type": "Vacation",
+    "startDate": "3/13/25",
+    "startHalf": "AM",
+    "endDate": "3/14/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "11"
+    }
+  },
+  {
+    "id": "9.53",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Vacation",
+    "startDate": "3/12/25",
+    "startHalf": "AM",
+    "endDate": "3/14/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "11"
+    }
+  },
+  {
+    "id": "9.52",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Vacation",
+    "startDate": "3/12/25",
+    "startHalf": "AM",
+    "endDate": "3/14/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "11"
+    }
+  },
+  {
+    "id": "9.51",
+    "empId": "ReidK",
+    "name": "Reid Kemp",
+    "type": "Vacation",
+    "startDate": "3/10/25",
+    "startHalf": "AM",
+    "endDate": "3/11/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "11"
+    }
+  },
+  {
+    "id": "9.05",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Vacation",
+    "startDate": "3/10/25",
+    "startHalf": "AM",
+    "endDate": "3/11/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "11"
+    }
+  },
+  {
+    "id": "9.5",
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "type": "Vacation",
+    "startDate": "3/7/25",
+    "startHalf": "AM",
+    "endDate": "3/7/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "10"
+    }
+  },
+  {
+    "id": "9.49",
+    "empId": "PaulaR",
+    "name": "Paula Ramirez",
+    "type": "Sick",
+    "startDate": "3/6/25",
+    "startHalf": "AM",
+    "endDate": "3/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "10"
+    }
+  },
+  {
+    "id": "9.48",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Sick",
+    "startDate": "3/5/25",
+    "startHalf": "AM",
+    "endDate": "3/7/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "10"
+    }
+  },
+  {
+    "id": "9.47",
+    "empId": "ZacC",
+    "name": "Zac Crooks",
+    "type": "Sick",
+    "startDate": "3/4/25",
+    "startHalf": "PM",
+    "endDate": "3/4/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Dancor",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "10"
+    }
+  },
+  {
+    "id": "9.46",
+    "empId": "ArturoR",
+    "name": "Arturo Ramos",
+    "type": "Sick",
+    "startDate": "3/3/25",
+    "startHalf": "AM",
+    "endDate": "3/5/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "10"
+    }
+  },
+  {
+    "id": "9.45",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Sick",
+    "startDate": "3/3/25",
+    "startHalf": "AM",
+    "endDate": "3/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "3",
+      "requestYear": "2025",
+      "weekOfYear": "10"
+    }
+  },
+  {
+    "id": "9.44",
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "type": "Vacation",
+    "startDate": "2/28/25",
+    "startHalf": "PM",
+    "endDate": "2/28/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.43",
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "type": "Sick",
+    "startDate": "2/28/25",
+    "startHalf": "AM",
+    "endDate": "2/28/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.42",
+    "empId": "AbigaleL",
+    "name": "Abigale Littles",
+    "type": "Sick",
+    "startDate": "2/27/25",
+    "startHalf": "AM",
+    "endDate": "2/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.41",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Sick",
+    "startDate": "2/27/25",
+    "startHalf": "AM",
+    "endDate": "2/27/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.4",
+    "empId": "ChrisS",
+    "name": "Chris Seals",
+    "type": "Sick",
+    "startDate": "2/25/25",
+    "startHalf": "AM",
+    "endDate": "2/25/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Owner",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.39",
+    "empId": "LaineyC",
+    "name": "Lainey Clowdus",
+    "type": "Vacation",
+    "startDate": "2/24/25",
+    "startHalf": "PM",
+    "endDate": "2/26/25",
+    "endHalf": "PM",
+    "totalDays": 2.5,
+    "department": "Furnish",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.38",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Vacation",
+    "startDate": "2/24/25",
+    "startHalf": "AM",
+    "endDate": "2/24/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.37",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Sick",
+    "startDate": "2/24/25",
+    "startHalf": "AM",
+    "endDate": "2/24/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "9"
+    }
+  },
+  {
+    "id": "9.36",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "2/20/25",
+    "startHalf": "AM",
+    "endDate": "2/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "8"
+    }
+  },
+  {
+    "id": "9.2",
+    "empId": "JulieB",
+    "name": "Julie Brittle",
+    "type": "Vacation",
+    "startDate": "2/20/25",
+    "startHalf": "AM",
+    "endDate": "2/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "8"
+    }
+  },
+  {
+    "id": "9.1",
+    "empId": "AnsleyP",
+    "name": "Ansley Prutsman",
+    "type": "Sick",
+    "startDate": "2/19/25",
+    "startHalf": "AM",
+    "endDate": "2/21/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "8"
+    }
+  },
+  {
+    "id": "9.35",
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "type": "Sick",
+    "startDate": "2/18/25",
+    "startHalf": "AM",
+    "endDate": "2/18/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "8"
+    }
+  },
+  {
+    "id": "9.34",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Vacation",
+    "startDate": "2/17/25",
+    "startHalf": "AM",
+    "endDate": "2/21/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "8"
+    }
+  },
+  {
+    "id": "9.33",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Vacation",
+    "startDate": "2/17/25",
+    "startHalf": "AM",
+    "endDate": "2/21/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "8"
+    }
+  },
+  {
+    "id": "9.32",
+    "empId": "EricaW",
+    "name": "Erica Williams",
+    "type": "Sick",
+    "startDate": "2/17/25",
+    "startHalf": "PM",
+    "endDate": "2/17/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "8"
+    }
+  },
+  {
+    "id": "9.31",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Vacation",
+    "startDate": "2/14/25",
+    "startHalf": "AM",
+    "endDate": "2/14/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "7"
+    }
+  },
+  {
+    "id": "9.3",
+    "empId": "JoshuaB",
+    "name": "Joshua Burnham",
+    "type": "Sick",
+    "startDate": "2/12/25",
+    "startHalf": "AM",
+    "endDate": "2/12/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "7"
+    }
+  },
+  {
+    "id": "9.29",
+    "empId": "WilsonR",
+    "name": "Wilson Ramos",
+    "type": "Sick",
+    "startDate": "2/12/25",
+    "startHalf": "AM",
+    "endDate": "2/12/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "7"
+    }
+  },
+  {
+    "id": "9.28",
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "type": "Sick",
+    "startDate": "2/10/25",
+    "startHalf": "AM",
+    "endDate": "2/14/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "7"
+    }
+  },
+  {
+    "id": "9.27",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Sick",
+    "startDate": "2/10/25",
+    "startHalf": "AM",
+    "endDate": "2/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "7"
+    }
+  },
+  {
+    "id": "9.26",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Unpaiid",
+    "startDate": "2/10/25",
+    "startHalf": "AM",
+    "endDate": "2/14/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "7"
+    }
+  },
+  {
+    "id": "9.09",
+    "empId": "AllisonR",
+    "name": "Allison Roosa",
+    "type": "Sick",
+    "startDate": "2/10/25",
+    "startHalf": "AM",
+    "endDate": "2/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Sales",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "7"
+    }
+  },
+  {
+    "id": "9.25",
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "type": "Sick",
+    "startDate": "2/7/25",
+    "startHalf": "PM",
+    "endDate": "2/7/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "6"
+    }
+  },
+  {
+    "id": "9.08",
+    "empId": "AnsleyP",
+    "name": "Ansley Prutsman",
+    "type": "Vacation",
+    "startDate": "2/7/25",
+    "startHalf": "AM",
+    "endDate": "2/7/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "6"
+    }
+  },
+  {
+    "id": "9.24",
+    "empId": "PaulaR",
+    "name": "Paula Ramirez",
+    "type": "Sick",
+    "startDate": "2/6/25",
+    "startHalf": "AM",
+    "endDate": "2/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "6"
+    }
+  },
+  {
+    "id": "9.23",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Sick",
+    "startDate": "2/3/25",
+    "startHalf": "AM",
+    "endDate": "2/7/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "6"
+    }
+  },
+  {
+    "id": "9.22",
+    "empId": "BrandonS",
+    "name": "Brandon Smith",
+    "type": "Sick",
+    "startDate": "2/3/25",
+    "startHalf": "PM",
+    "endDate": "2/7/25",
+    "endHalf": "PM",
+    "totalDays": 4.5,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "6"
+    }
+  },
+  {
+    "id": "9.21",
+    "empId": "AlfredoS",
+    "name": "Alfredo Salazar",
+    "type": "Unpaid",
+    "startDate": "2/3/25",
+    "startHalf": "AM",
+    "endDate": "2/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "6"
+    }
+  },
+  {
+    "id": "9.2",
+    "empId": "GerardoV",
+    "name": "Gerardo Velasquez",
+    "type": "Unpaid",
+    "startDate": "2/3/25",
+    "startHalf": "AM",
+    "endDate": "2/3/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "2",
+      "requestYear": "2025",
+      "weekOfYear": "6"
+    }
+  },
+  {
+    "id": "9.19",
+    "empId": "JeremiahB",
+    "name": "Jeremiah Bruce",
+    "type": "Sick",
+    "startDate": "1/31/25",
+    "startHalf": "AM",
+    "endDate": "1/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.18",
+    "empId": "GrayW",
+    "name": "Gray Walker",
+    "type": "Vacation",
+    "startDate": "1/31/25",
+    "startHalf": "AM",
+    "endDate": "1/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.17",
+    "empId": "PaulaR",
+    "name": "Paula Ramirez",
+    "type": "Sick",
+    "startDate": "1/31/25",
+    "startHalf": "AM",
+    "endDate": "1/31/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.16",
+    "empId": "EllieB",
+    "name": "Ellie Barron",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.15",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.14",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.13",
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Mitchell Beers",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.12",
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "PM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.11",
+    "empId": "GerardoV",
+    "name": "Gerardo Velasquez",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.1",
+    "empId": "PaulaR",
+    "name": "Paula Ramirez",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.09",
+    "empId": "AlexE",
+    "name": "Alex Estrada",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/27/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.08",
+    "empId": "ColbyS",
+    "name": "Colby Swindall",
+    "type": "Sick",
+    "startDate": "1/27/25",
+    "startHalf": "PM",
+    "endDate": "1/31/25",
+    "endHalf": "PM",
+    "totalDays": 4.5,
+    "department": "Pre-Construction",
+    "directReport": "Jason Kilgro",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.07",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Unpaid",
+    "startDate": "1/27/25",
+    "startHalf": "AM",
+    "endDate": "1/31/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "5"
+    }
+  },
+  {
+    "id": "9.05",
+    "empId": "ClayG",
+    "name": "Clay Giles",
+    "type": "Sick",
+    "startDate": "1/23/25",
+    "startHalf": "PM",
+    "endDate": "1/24/25",
+    "endHalf": "PM",
+    "totalDays": 1.5,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "9.04",
+    "empId": "CarlitoG",
+    "name": "Carlito Godinez",
+    "type": "Sick",
+    "startDate": "1/23/25",
+    "startHalf": "AM",
+    "endDate": "1/23/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "9.03",
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "type": "Vacation",
+    "startDate": "1/23/25",
+    "startHalf": "AM",
+    "endDate": "1/24/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Finance",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "9.02",
+    "empId": "ZacC",
+    "name": "Zac Crooks",
+    "type": "Vacation",
+    "startDate": "1/20/25",
+    "startHalf": "AM",
+    "endDate": "1/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Dancor",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "9.01",
+    "empId": "CarlitoG",
+    "name": "Carlito Godinez",
+    "type": "Sick",
+    "startDate": "1/20/25",
+    "startHalf": "AM",
+    "endDate": "1/21/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "9",
+    "empId": "KaylaP",
+    "name": "Kayla Purohit",
+    "type": "Vacation",
+    "startDate": "1/20/25",
+    "startHalf": "AM",
+    "endDate": "1/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "8.99",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Unpaid",
+    "startDate": "1/20/25",
+    "startHalf": "AM",
+    "endDate": "1/24/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "9.5",
+    "empId": "HopeN",
+    "name": "Hope Nichols",
+    "type": "Sick",
+    "startDate": "1/20/25",
+    "startHalf": "AM",
+    "endDate": "1/20/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "4"
+    }
+  },
+  {
+    "id": "8.98",
+    "empId": "LaineyC",
+    "name": "Lainey Clowdus",
+    "type": "Sick",
+    "startDate": "1/17/25",
+    "startHalf": "AM",
+    "endDate": "1/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Furnish",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "3"
+    }
+  },
+  {
+    "id": "8.97",
+    "empId": "ZacC",
+    "name": "Zac Crooks",
+    "type": "Vacation",
+    "startDate": "1/17/25",
+    "startHalf": "AM",
+    "endDate": "1/17/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Dancor",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "3"
+    }
+  },
+  {
+    "id": "8.96",
+    "empId": "PaulaR",
+    "name": "Paula Ramirez",
+    "type": "Sick",
+    "startDate": "1/15/25",
+    "startHalf": "AM",
+    "endDate": "1/15/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "RR",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "3"
+    }
+  },
+  {
+    "id": "8.95",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Unpaid",
+    "startDate": "1/13/25",
+    "startHalf": "AM",
+    "endDate": "1/17/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "3"
+    }
+  },
+  {
+    "id": "8.94",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Unpaid",
+    "startDate": "1/13/25",
+    "startHalf": "AM",
+    "endDate": "1/17/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "3"
+    }
+  },
+  {
+    "id": "8.93",
+    "empId": "BrandonS",
+    "name": "Brandon Smith",
+    "type": "Sick",
+    "startDate": "1/10/25",
+    "startHalf": "AM",
+    "endDate": "1/10/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "In-House Production",
+    "directReport": "Jeremiah Bruce",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.92",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Unpaid",
+    "startDate": "1/8/25",
+    "startHalf": "AM",
+    "endDate": "1/10/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "9.4",
+    "empId": "StephanieL",
+    "name": "Stephanie Lavoy",
+    "type": "Sick",
+    "startDate": "1/8/25",
+    "startHalf": "AM",
+    "endDate": "1/8/25",
+    "endHalf": "AM",
+    "totalDays": 0.5,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.91",
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "type": "Vacation",
+    "startDate": "1/6/25",
+    "startHalf": "AM",
+    "endDate": "1/7/25",
+    "endHalf": "PM",
+    "totalDays": 2.0,
+    "department": "Community Development",
+    "directReport": "Hunter Finklea",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.9",
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "type": "Sick",
+    "startDate": "1/6/25",
+    "startHalf": "PM",
+    "endDate": "1/6/25",
+    "endHalf": "PM",
+    "totalDays": 0.5,
+    "department": "Marketing",
+    "directReport": "Lana McCurdy",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.89",
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "type": "Sick",
+    "startDate": "1/6/25",
+    "startHalf": "AM",
+    "endDate": "1/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Production",
+    "directReport": "Chris Seals",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.88",
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "type": "Sick",
+    "startDate": "1/6/25",
+    "startHalf": "AM",
+    "endDate": "1/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Pre-Construction",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.87",
+    "empId": "JoshV",
+    "name": "Josh Vaughn",
+    "type": "Vacation",
+    "startDate": "1/6/25",
+    "startHalf": "AM",
+    "endDate": "1/8/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "Finance",
+    "directReport": "Richard Messer",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.86",
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "type": "Unpaid",
+    "startDate": "1/6/25",
+    "startHalf": "AM",
+    "endDate": "1/10/25",
+    "endHalf": "PM",
+    "totalDays": 5.0,
+    "department": "Sales",
+    "directReport": "Aaron Tackett",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "8.85",
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "type": "Unpaid",
+    "startDate": "1/6/25",
+    "startHalf": "AM",
+    "endDate": "1/6/25",
+    "endHalf": "PM",
+    "totalDays": 1.0,
+    "department": "Marketing",
+    "directReport": "Daniel Holland",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  },
+  {
+    "id": "",
+    "empId": "MatthewV",
+    "name": "Matthew Vaughn",
+    "type": "Sick",
+    "startDate": "1/6/25",
+    "startHalf": "AM",
+    "endDate": "1/8/25",
+    "endHalf": "PM",
+    "totalDays": 3.0,
+    "department": "People",
+    "directReport": "Timothy Kelly",
+    "calendar": {
+      "requestMonth": "1",
+      "requestYear": "2025",
+      "weekOfYear": "2"
+    }
+  }
+]
