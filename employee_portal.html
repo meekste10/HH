@@ -1,577 +1,673 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Holland Homes — Employee Portal</title>
+  <meta charset="UTF-8" />
+  <title>Holland Homes • Employee Portal Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --accent: #0a7b83;
+      --accent-soft: #e2f4f5;
+      --accent-dark: #06545a;
+      --text-main: #222222;
+      --text-muted: #666666;
+      --border: #dddddd;
+      --danger: #b00020;
+      --radius: 12px;
+    }
 
-<!-- Papa Parse for CSV loading -->
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
 
-<style>
-  :root{
-    --brand:#184A30;
-    --brand-soft:#e4f3eb;
-    --ink:#111827;
-    --muted:#6b7280;
-    --bg:#f3f4f6;
-    --card:#ffffff;
-    --line:#e5e7eb;
-    --danger:#b91c1c;
-  }
-  *{ box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
-  body{
-    margin:0;
-    background:radial-gradient(circle at top,#eef2ff,#f3f4f6,#e4f3eb);
-    color:var(--ink);
-  }
-  header{
-    background:var(--brand);
-    color:#fff;
-  }
-  .bar{
-    max-width:1100px;
-    margin:0 auto;
-    padding:14px 16px;
-    display:flex;
-    gap:12px;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:wrap;
-  }
-  .brand{
-    margin:0;
-    font-size:18px;
-    letter-spacing:.02em;
-  }
-  .tagline{
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.18em;
-    opacity:.85;
-  }
-  .wrap{
-    max-width:1100px;
-    margin:0 auto;
-    padding:18px 14px 32px;
-  }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: radial-gradient(circle at top left, #e2f4f5 0, #f5f5f7 45%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
 
-  .layout{
-    display:grid;
-    grid-template-columns:minmax(0,1.3fr) minmax(0,1.1fr);
-    gap:18px;
-  }
-  @media (max-width:900px){
-    .layout{ grid-template-columns:1fr; }
-  }
+    .app-shell {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-  .card{
-    background:var(--card);
-    border-radius:18px;
-    border:1px solid var(--line);
-    box-shadow:0 10px 30px rgba(15,23,42,0.07);
-    padding:18px;
-  }
-  h2{
-    margin:0 0 4px;
-    font-size:18px;
-  }
-  .muted{ font-size:13px; color:var(--muted); }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 4px;
+    }
 
-  /* Login card */
-  .field-group{
-    margin-top:12px;
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    font-size:13px;
-  }
-  label{
-    font-weight:600;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.14em;
-    color:var(--muted);
-  }
-  input[type="text"],
-  input[type="password"]{
-    border-radius:999px;
-    border:1px solid var(--line);
-    padding:8px 12px;
-    font-size:14px;
-    outline:none;
-    background:#f9fafb;
-  }
-  input:focus{
-    border-color:var(--brand);
-    box-shadow:0 0 0 1px rgba(24,74,48,0.12);
-    background:#fff;
-  }
-  .hint{ font-size:11px; color:var(--muted); margin-top:2px; }
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-  .btn{
-    border-radius:999px;
-    border:1px solid var(--brand);
-    background:var(--brand);
-    color:#fff;
-    padding:8px 16px;
-    font-size:14px;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    margin-top:14px;
-  }
-  .btn.secondary{
-    background:#fff;
-    color:var(--brand);
-  }
-  .btn[disabled]{
-    opacity:.6;
-    cursor:not-allowed;
-  }
+    .brand-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
 
-  .error{
-    margin-top:10px;
-    font-size:13px;
-    color:var(--danger);
-  }
-  .pill-ethos{
-    display:inline-flex;
-    align-items:center;
-    gap:4px;
-    padding:4px 10px;
-    border-radius:999px;
-    background:var(--brand-soft);
-    color:var(--brand);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.15em;
-    margin-top:10px;
-  }
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
 
-  /* Suggestions list for name search */
-  .suggestions{
-    margin-top:4px;
-    border-radius:12px;
-    border:1px solid var(--line);
-    background:#fff;
-    max-height:150px;
-    overflow:auto;
-    box-shadow:0 8px 20px rgba(15,23,42,0.15);
-  }
-  .suggestion{
-    padding:6px 10px;
-    font-size:13px;
-    cursor:pointer;
-  }
-  .suggestion:hover{
-    background:#f3f4f6;
-  }
+    .tag-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
 
-  /* Employee dashboard */
-  .emp-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:12px;
-  }
-  .emp-name{
-    font-size:20px;
-    font-weight:700;
-  }
-  .emp-meta{
-    font-size:13px;
-    color:var(--muted);
-  }
-  .badge{
-    display:inline-flex;
-    padding:3px 9px;
-    border-radius:999px;
-    background:#e5e7eb;
-    font-size:11px;
-    margin-right:4px;
-  }
-  .chunks{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:12px;
-  }
-  @media (max-width:700px){
-    .chunks{ grid-template-columns:1fr; }
-  }
-  .chunk{
-    border-radius:14px;
-    border:1px solid var(--line);
-    background:#f9fafb;
-    padding:12px;
-    font-size:13px;
-  }
-  .chunk h3{
-    margin:0 0 6px;
-    font-size:14px;
-  }
-  .kv{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:4px;
-  }
-  .kv span:last-child{
-    font-weight:600;
-  }
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+      gap: 16px;
+      align-items: stretch;
+    }
 
-  .links-list{
-    list-style:none;
-    padding-left:0;
-    margin:4px 0 0;
-    font-size:13px;
-  }
-  .links-list li{
-    margin:2px 0;
-  }
-  .links-list a{
-    color:#1d4ed8;
-    text-decoration:none;
-  }
-  .links-list a:hover{
-    text-decoration:underline;
-  }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
 
-  .small-note{
-    margin-top:10px;
-    font-size:11px;
-    color:var(--muted);
-  }
-</style>
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-header h2 {
+      margin: 0 0 4px;
+      font-size: 1.1rem;
+    }
+
+    .card-header p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    select,
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      background: #fbfbfb;
+    }
+
+    select:focus,
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+      background: #ffffff;
+    }
+
+    .field-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .field-inline {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .field-inline .field {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .btn-accent:hover {
+      opacity: 0.92;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .error {
+      font-size: 0.8rem;
+      color: var(--danger);
+      margin-top: 4px;
+    }
+
+    .login-footer-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    /* Dashboard layout */
+    .dashboard {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dashboard.visible {
+      display: flex;
+    }
+
+    .user-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .user-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .user-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: #f0f0f0;
+      color: #444;
+      margin-right: 4px;
+      margin-top: 2px;
+    }
+
+    .badge-role {
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+    }
+
+    .block-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .tile {
+      border-radius: 10px;
+      border: 1px solid #ededed;
+      padding: 10px 12px;
+      background: #fafafa;
+    }
+
+    .tile h3 {
+      margin: 0 0 4px;
+      font-size: 0.9rem;
+    }
+
+    .tile p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .tile-strong {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 8px 0 4px;
+    }
+
+    .list {
+      list-style: none;
+      padding-left: 0;
+      margin: 2px 0 0;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .list li {
+      padding: 3px 0;
+    }
+
+    .role-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 840px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <div>
-      <h1 class="brand">Holland Homes — Employee Portal</h1>
-      <div class="tagline">Purpose &gt; People &gt; Process &gt; Product</div>
-    </div>
-    <div style="font-size:12px; text-align:right;">
-      <div>Internal prototype · CSV-driven</div>
-      <div style="opacity:.8;">Best for non-sensitive data on public hosting.</div>
-    </div>
+  <div class="app-shell">
+    <header>
+      <div class="brand">
+        <div class="brand-title">Holland Homes</div>
+        <div class="brand-subtitle">Internal Portal • Prototype View</div>
+      </div>
+      <div class="tag-pill">Demo only • Not real data</div>
+    </header>
+
+    <main>
+      <!-- LEFT: Login / Switch User -->
+      <section class="card" id="loginCard">
+        <div class="card-header">
+          <div>
+            <h2>1. Choose a Demo Login</h2>
+            <p>
+              Pick a persona to see how the employee portal could feel for
+              different roles.
+            </p>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="userSelect">Demo user</label>
+            <select id="userSelect">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+
+          <div class="field-inline">
+            <div class="field">
+              <label for="accessPhrase">Access phrase (for vibes only)</label>
+              <input
+                type="password"
+                id="accessPhrase"
+                placeholder="e.g. purpose>people"
+              />
+              <div class="hint">
+                This doesn't secure anything. It's just part of the experience.
+              </div>
+            </div>
+          </div>
+
+          <div class="field-inline">
+            <button class="btn btn-accent" id="enterPortalBtn" type="button">
+              ➜ Enter Portal
+            </button>
+            <button class="btn btn-ghost" id="fakeResetBtn" type="button">
+              Reset to defaults
+            </button>
+          </div>
+
+          <div class="error" id="loginError" style="display: none"></div>
+
+          <div class="login-footer-note">
+            This prototype runs entirely in your browser. No real logins, no
+            server, no private info. Think of it as Holland Homes' <em>portal
+            mood board</em>.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Dashboard Preview -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2>2. Dashboard Preview</h2>
+            <p>
+              View changes based on which demo user is "logged in".
+            </p>
+          </div>
+        </div>
+
+        <div id="dashboard" class="dashboard">
+          <div class="user-summary">
+            <div class="user-main">
+              <div class="user-name" id="dbUserName">—</div>
+              <div class="user-meta" id="dbUserMeta"></div>
+              <div id="dbBadges"></div>
+            </div>
+            <div>
+              <button class="btn btn-ghost" id="switchUserBtn" type="button">
+                ⇄ Switch user
+              </button>
+            </div>
+          </div>
+
+          <div class="block-grid" id="coreTiles"></div>
+
+          <div class="section-title">Role-Specific Panels</div>
+          <div class="block-grid" id="roleTiles"></div>
+        </div>
+
+        <div id="dashboardPlaceholder" class="hint" style="margin-top: 12px;">
+          Choose a demo user on the left to see their portal view.
+        </div>
+      </section>
+    </main>
   </div>
-</header>
 
-<main class="wrap">
-  <div class="layout">
-    <!-- LOGIN PANEL -->
-    <section class="card" id="loginCard">
-      <h2>Log in to your snapshot</h2>
-      <p class="muted">
-        Start typing your name, pick it from the list, and enter your PIN.
-        This matches your row in the employee reference sheet.
-      </p>
+  <script>
+    // -----------------------------
+    // Demo employee data (fake, in-browser)
+    // -----------------------------
+    const DEMO_USERS = [
+      {
+        id: "austin",
+        name: "Austin Meek",
+        role: "People & Systems",
+        department: "People / HR",
+        location: "Auburn, AL",
+        accessPhraseHint: "purpose>people",
+        type: "hr",
+        badges: ["Admin", "Sees all teams"],
+        coreTiles: [
+          {
+            title: "Today’s Focus",
+            strong: "APAC wrap-up • 401k rollout",
+            note: "3 open items for leadership, 2 pending signatures."
+          },
+          {
+            title: "People Snapshot",
+            strong: "42 active employees",
+            note: "3 new hires in the last 30 days, 0 offboarding in progress."
+          }
+        ],
+        roleTiles: [
+          {
+            title: "HR Tools",
+            lines: [
+              "• View all employee profiles",
+              "• APAC dashboards & PDF links",
+              "• Benefits & 401k reference hub"
+            ]
+          },
+          {
+            title: "Signals",
+            lines: [
+              "• Watch burnout radar for Production",
+              "• Confirm device rollout list with Cloudable"
+            ]
+          }
+        ]
+      },
+      {
+        id: "lauren",
+        name: "Lauren Meek",
+        role: "Sales Advisor",
+        department: "Sales",
+        location: "Auburn, AL",
+        accessPhraseHint: "warm-welcome",
+        type: "sales",
+        badges: ["Commission-based", "Client-facing"],
+        coreTiles: [
+          {
+            title: "This Week",
+            strong: "3 active prospects",
+            note: "2 second-showings, 1 new lead from online."
+          },
+          {
+            title: "Commission Pace",
+            strong: "On track",
+            note: "You’re pacing at 92% of monthly goal."
+          }
+        ],
+        roleTiles: [
+          {
+            title: "Sales Toolkit",
+            lines: [
+              "• Quick links to spec sheets & pricing",
+              "• Contract templates & option sheets",
+              "• CRM notes for this week’s buyers"
+            ]
+          },
+          {
+            title: "Support",
+            lines: [
+              "• Message People/HR about PTO or benefits",
+              "• IT help for tablet/CRM questions"
+            ]
+          }
+        ]
+      },
+      {
+        id: "max",
+        name: "Max Daily",
+        role: "Project Leader",
+        department: "Production",
+        location: "Field / Auburn-Opelika",
+        accessPhraseHint: "boots-on-ground",
+        type: "pl",
+        badges: ["Field", "Schedule-critical"],
+        coreTiles: [
+          {
+            title: "Jobsite Snapshot",
+            strong: "4 active jobs",
+            note: "2 ahead of schedule, 1 tight on framing inspection."
+          },
+          {
+            title: "Today’s Checklist",
+            strong: "Framing, punch, client walk",
+            note: "3 key milestones, 5 subs lined up."
+          }
+        ],
+        roleTiles: [
+          {
+            title: "Production Toolkit",
+            lines: [
+              "• Job schedule & selections in one place",
+              "• Warranty notes & red flags",
+              "• Photo upload hub for job progress"
+            ]
+          },
+          {
+            title: "Support & Admin",
+            lines: [
+              "• Request devices/equipment",
+              "• Submit time-off requests",
+              "• Quick channel to division manager"
+            ]
+          }
+        ]
+      }
+    ];
 
-      <div class="field-group">
-        <label for="nameInput">Your name</label>
-        <input id="nameInput" type="text" autocomplete="off"
-               placeholder="Begin typing your name…" />
-        <div id="nameHint" class="hint">Employee names are loaded from <code>employee_reference.csv</code>.</div>
-        <div id="suggestions" class="suggestions" style="display:none;"></div>
-      </div>
+    const LOCAL_KEY = "meek_demo_portal_selected_user_v1";
 
-      <div class="field-group">
-        <label for="pinInput">PIN</label>
-        <input id="pinInput" type="password" inputmode="numeric" maxlength="10"
-               placeholder="4–6 digit PIN" />
-        <div class="hint">
-          For security, use a random PIN field in the CSV, not the last four of SSN if
-          this is public-facing.
-        </div>
-      </div>
+    // DOM refs
+    const userSelect = document.getElementById("userSelect");
+    const accessPhraseInput = document.getElementById("accessPhrase");
+    const enterPortalBtn = document.getElementById("enterPortalBtn");
+    const fakeResetBtn = document.getElementById("fakeResetBtn");
+    const loginErrorEl = document.getElementById("loginError");
 
-      <button id="loginBtn" class="btn" disabled>
-        <span>Log in</span>
-      </button>
+    const dashboard = document.getElementById("dashboard");
+    const dbUserName = document.getElementById("dbUserName");
+    const dbUserMeta = document.getElementById("dbUserMeta");
+    const dbBadges = document.getElementById("dbBadges");
+    const coreTiles = document.getElementById("coreTiles");
+    const roleTiles = document.getElementById("roleTiles");
+    const dashboardPlaceholder = document.getElementById("dashboardPlaceholder");
+    const switchUserBtn = document.getElementById("switchUserBtn");
 
-      <div id="loginError" class="error" style="display:none;"></div>
-
-      <div class="pill-ethos">
-        <span>People · Clarity · Self-service</span>
-      </div>
-
-      <p class="small-note">
-        Admins can inspect the full CSV directly or extend this page later with a
-        dedicated admin view. This screen is focused on an individual’s snapshot.
-      </p>
-    </section>
-
-    <!-- DASHBOARD PANEL -->
-    <section class="card" id="dashCard" style="display:none;">
-      <div class="emp-header">
-        <div>
-          <div class="emp-name" id="empName"></div>
-          <div class="emp-meta" id="empMeta"></div>
-        </div>
-        <div>
-          <div id="empBadges"></div>
-          <button class="btn secondary" id="logoutBtn" style="margin-top:8px;">Log out</button>
-        </div>
-      </div>
-
-      <div class="chunks">
-        <div class="chunk">
-          <h3>PTO Snapshot</h3>
-          <div class="kv">
-            <span>Total PTO</span><span id="ptoTotal">–</span>
-          </div>
-          <div class="kv">
-            <span>PTO Used</span><span id="ptoUsed">–</span>
-          </div>
-          <div class="kv">
-            <span>PTO Remaining</span><span id="ptoRemaining">–</span>
-          </div>
-          <p class="small-note">
-            Detailed PTO calendar still lives in the main PTO dashboard.
-          </p>
-        </div>
-
-        <div class="chunk">
-          <h3>Role &amp; Comp (summary)</h3>
-          <div class="kv">
-            <span>Role</span><span id="empRole">–</span>
-          </div>
-          <div class="kv">
-            <span>Department</span><span id="empDept">–</span>
-          </div>
-          <div class="kv">
-            <span>Manager</span><span id="empManager">–</span>
-          </div>
-          <div class="kv">
-            <span>Salary / Band</span><span id="empSalary">–</span>
-          </div>
-          <p class="small-note">
-            Any sensitive salary info should only be exposed if this page is hosted behind secure authentication.
-          </p>
-        </div>
-
-        <div class="chunk">
-          <h3>Contact &amp; Status</h3>
-          <div class="kv">
-            <span>Email</span><span id="empEmail">–</span>
-          </div>
-          <div class="kv">
-            <span>Location</span><span id="empLocation">–</span>
-          </div>
-          <div class="kv">
-            <span>Status</span><span id="empStatus">–</span>
-          </div>
-          <p class="small-note">
-            Need to update something? Reach out to People / HR so the employee reference
-            file stays the single source of truth.
-          </p>
-        </div>
-
-        <div class="chunk">
-          <h3>Quick Links</h3>
-          <ul class="links-list">
-            <li><a href="./index_pto.html" target="_blank">Open full PTO dashboard</a></li>
-            <li><a href="./ppp.html" target="_blank">Open PPP / People Profit Performance</a></li>
-            <li><a href="./index_contacts.html" target="_blank">Open Contacts &amp; Org View</a></li>
-            <li><a href="#" target="_blank">Policies &amp; Procedures (SharePoint)</a></li>
-            <li><a href="#" target="_blank">My documents folder (SharePoint)</a></li>
-          </ul>
-          <p class="small-note">
-            Swap the <code>#</code> links above with your actual SharePoint URLs for policies
-            and personal document folders.
-          </p>
-        </div>
-      </div>
-    </section>
-  </div>
-</main>
-
-<script>
-  const CSV_URL = "./employee_reference.csv";
-
-  let employees = [];
-  let selectedEmployee = null;
-
-  const nameInput = document.getElementById("nameInput");
-  const pinInput = document.getElementById("pinInput");
-  const suggestionsEl = document.getElementById("suggestions");
-  const loginBtn = document.getElementById("loginBtn");
-  const loginError = document.getElementById("loginError");
-  const loginCard = document.getElementById("loginCard");
-  const dashCard = document.getElementById("dashCard");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  // Dashboard fields
-  const empNameEl = document.getElementById("empName");
-  const empMetaEl = document.getElementById("empMeta");
-  const empBadgesEl = document.getElementById("empBadges");
-  const ptoTotalEl = document.getElementById("ptoTotal");
-  const ptoUsedEl = document.getElementById("ptoUsed");
-  const ptoRemainingEl = document.getElementById("ptoRemaining");
-  const empRoleEl = document.getElementById("empRole");
-  const empDeptEl = document.getElementById("empDept");
-  const empManagerEl = document.getElementById("empManager");
-  const empSalaryEl = document.getElementById("empSalary");
-  const empEmailEl = document.getElementById("empEmail");
-  const empLocationEl = document.getElementById("empLocation");
-  const empStatusEl = document.getElementById("empStatus");
-
-  // Load CSV once
-  Papa.parse(CSV_URL, {
-    download: true,
-    header: true,
-    dynamicTyping: false,
-    complete: function(results){
-      employees = results.data.filter(r => r && r.EmployeeName);
-      console.log("Loaded employees:", employees.length);
-    },
-    error: function(err){
-      console.error("Error loading employee_reference.csv", err);
-      document.getElementById("nameHint").textContent =
-        "Error loading employee_reference.csv – check the file path and CORS.";
-    }
-  });
-
-  // Name search / suggestions
-  nameInput.addEventListener("input", function(){
-    const q = nameInput.value.trim().toLowerCase();
-    selectedEmployee = null;
-    loginBtn.disabled = true;
-    hideError();
-    if (!q){
-      suggestionsEl.style.display = "none";
-      suggestionsEl.innerHTML = "";
-      return;
-    }
-    const matches = employees.filter(e =>
-      String(e.EmployeeName).toLowerCase().includes(q) ||
-      String(e.PreferredName || "").toLowerCase().includes(q)
-    ).slice(0, 12);
-
-    if (!matches.length){
-      suggestionsEl.style.display = "none";
-      suggestionsEl.innerHTML = "";
-      return;
-    }
-    suggestionsEl.innerHTML = "";
-    matches.forEach(emp => {
-      const row = document.createElement("div");
-      row.className = "suggestion";
-      const label = emp.PreferredName && emp.PreferredName.trim()
-        ? `${emp.PreferredName} (${emp.EmployeeName})`
-        : emp.EmployeeName;
-      row.textContent = label;
-      row.addEventListener("click", () => {
-        nameInput.value = emp.EmployeeName;
-        selectedEmployee = emp;
-        suggestionsEl.style.display = "none";
-        suggestionsEl.innerHTML = "";
-        updateLoginButtonState();
-        pinInput.focus();
+    function initUserSelect() {
+      DEMO_USERS.forEach((user) => {
+        const opt = document.createElement("option");
+        opt.value = user.id;
+        opt.textContent = `${user.name} — ${user.role}`;
+        userSelect.appendChild(opt);
       });
-      suggestionsEl.appendChild(row);
+
+      const storedId = localStorage.getItem(LOCAL_KEY);
+      if (storedId && DEMO_USERS.find((u) => u.id === storedId)) {
+        userSelect.value = storedId;
+        renderDashboard(storedId);
+      }
+    }
+
+    function renderDashboard(userId) {
+      const user = DEMO_USERS.find((u) => u.id === userId);
+      if (!user) return;
+
+      loginErrorEl.style.display = "none";
+
+      dbUserName.textContent = user.name;
+      dbUserMeta.textContent = `${user.role} • ${user.department} • ${user.location}`;
+
+      dbBadges.innerHTML = "";
+      user.badges.forEach((b) => {
+        const span = document.createElement("span");
+        span.className = "badge badge-role";
+        span.textContent = b;
+        dbBadges.appendChild(span);
+      });
+
+      coreTiles.innerHTML = "";
+      user.coreTiles.forEach((tile) => {
+        const div = document.createElement("div");
+        div.className = "tile";
+        div.innerHTML = `
+          <h3>${tile.title}</h3>
+          <div class="tile-strong">${tile.strong}</div>
+          <p>${tile.note}</p>
+        `;
+        coreTiles.appendChild(div);
+      });
+
+      roleTiles.innerHTML = "";
+      user.roleTiles.forEach((tile) => {
+        const div = document.createElement("div");
+        div.className = "tile";
+        const ulItems = tile.lines
+          .map((line) => `<li>${line}</li>`)
+          .join("");
+        div.innerHTML = `
+          <h3>${tile.title}</h3>
+          <ul class="list">${ulItems}</ul>
+        `;
+        roleTiles.appendChild(div);
+      });
+
+      dashboard.classList.add("visible");
+      dashboardPlaceholder.style.display = "none";
+
+      localStorage.setItem(LOCAL_KEY, user.id);
+    }
+
+    enterPortalBtn.addEventListener("click", () => {
+      const selectedId = userSelect.value;
+      const user = DEMO_USERS.find((u) => u.id === selectedId);
+
+      if (!user) {
+        loginErrorEl.textContent = "Please choose a demo user.";
+        loginErrorEl.style.display = "block";
+        return;
+      }
+
+      // Light UX check: if phrase field is empty, gently nudge but still allow.
+      const phrase = accessPhraseInput.value.trim();
+      if (!phrase) {
+        loginErrorEl.textContent =
+          "Access phrase is optional in this prototype, but try something like: " +
+          user.accessPhraseHint;
+        loginErrorEl.style.display = "block";
+      } else {
+        loginErrorEl.style.display = "none";
+      }
+
+      renderDashboard(selectedId);
     });
-    suggestionsEl.style.display = "block";
-  });
 
-  nameInput.addEventListener("blur", function(){
-    setTimeout(() => { suggestionsEl.style.display = "none"; }, 180);
-  });
+    switchUserBtn.addEventListener("click", () => {
+      // Just focus back on selector to invite switching
+      userSelect.focus();
+    });
 
-  pinInput.addEventListener("input", function(){
-    hideError();
-    updateLoginButtonState();
-  });
+    fakeResetBtn.addEventListener("click", () => {
+      localStorage.removeItem(LOCAL_KEY);
+      accessPhraseInput.value = "";
+      dashboard.classList.remove("visible");
+      dashboardPlaceholder.style.display = "block";
+      loginErrorEl.style.display = "none";
+    });
 
-  function updateLoginButtonState(){
-    loginBtn.disabled = !(selectedEmployee && pinInput.value.trim());
-  }
-
-  loginBtn.addEventListener("click", handleLogin);
-
-  function handleLogin(){
-    hideError();
-    if (!selectedEmployee){
-      showError("Please select your name from the list.");
-      return;
-    }
-    const pin = String(pinInput.value || "").trim();
-    const rowPin = String(selectedEmployee.Pin || "").trim();
-
-    if (!rowPin){
-      showError("No PIN is configured for this employee in the reference file.");
-      return;
-    }
-    if (pin !== rowPin){
-      showError("PIN does not match our records. Double-check and try again.");
-      return;
-    }
-
-    showDashboard(selectedEmployee);
-  }
-
-  function showError(msg){
-    loginError.textContent = msg;
-    loginError.style.display = "block";
-  }
-  function hideError(){
-    loginError.style.display = "none";
-    loginError.textContent = "";
-  }
-
-  function showDashboard(emp){
-    // Populate dashboard fields
-    const displayName = emp.PreferredName && emp.PreferredName.trim()
-      ? emp.PreferredName
-      : emp.EmployeeName;
-
-    empNameEl.textContent = displayName;
-    empMetaEl.textContent = `${emp.Role || "Role N/A"} · ${emp.Department || "Dept N/A"}`;
-
-    empBadgesEl.innerHTML = "";
-    if (emp.Location){
-      const b = document.createElement("span");
-      b.className = "badge";
-      b.textContent = emp.Location;
-      empBadgesEl.appendChild(b);
-    }
-    if (emp.Manager){
-      const b = document.createElement("span");
-      b.className = "badge";
-      b.textContent = "Manager: " + emp.Manager;
-      empBadgesEl.appendChild(b);
-    }
-
-    ptoTotalEl.textContent = emp.PTO_Total || "–";
-    ptoUsedEl.textContent = emp.PTO_Used || "–";
-    ptoRemainingEl.textContent = emp.PTO_Remaining || "–";
-
-    empRoleEl.textContent = emp.Role || "–";
-    empDeptEl.textContent = emp.Department || "–";
-    empManagerEl.textContent = emp.Manager || "–";
-    empSalaryEl.textContent = emp.Salary_Display || "–";
-
-    empEmailEl.textContent = emp.Email || "–";
-    empLocationEl.textContent = emp.Location || "–";
-    empStatusEl.textContent = emp.Status || "–";
-
-    loginCard.style.display = "none";
-    dashCard.style.display = "block";
-    window.scrollTo({top:0, behavior:"smooth"});
-  }
-
-  logoutBtn.addEventListener("click", function(){
-    dashCard.style.display = "none";
-    loginCard.style.display = "block";
-    selectedEmployee = null;
-    nameInput.value = "";
-    pinInput.value = "";
-    loginBtn.disabled = true;
-    hideError();
-  });
-</script>
+    document.addEventListener("DOMContentLoaded", initUserSelect);
+  </script>
 </body>
 </html>
