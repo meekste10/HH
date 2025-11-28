@@ -4,154 +4,334 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Holland Homes Dashboard</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <style>
-  :root { --brand:#184A30; --ink:#1b1b1b; --muted:#6b7280; --bg:#f7f7f7; --card:#fff; --line:#e5e7eb; --dark:#0f172a; }
-  *{ box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+  :root {
+    --brand:#184A30;
+    --ink:#1b1b1b;
+    --muted:#6b7280;
+    --bg:#f7f7f7;
+    --card:#ffffff;
+    --line:#e5e7eb;
+    --dark:#0f172a;
+  }
+  *{
+    box-sizing:border-box;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  }
   html,body{ height:100%; }
-  body{ margin:0; background:var(--bg); color:var(--ink); }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+  }
 
   /* Top bar */
-  header{ background:var(--brand); color:#fff; }
-  .bar{ max-width:1200px; margin:0 auto; padding:14px 16px; display:flex; gap:12px; align-items:center; justify-content:space-between; }
-  .brand{ font-size:18px; letter-spacing:.2px; margin:0; }
-  .tabs{ display:flex; gap:6px; flex-wrap:wrap; }
-  .tab{ appearance:none; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.08); color:#fff; padding:8px 12px; border-radius:999px; font-size:13px; cursor:pointer; }
-  .tab[aria-selected="true"]{ background:#fff; color:var(--brand); border-color:#fff; font-weight:700; }
+  header{
+    background:var(--brand);
+    color:#fff;
+  }
+  .bar{
+    max-width:1200px;
+    margin:0 auto;
+    padding:14px 16px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+  }
+  .brand{
+    font-size:18px;
+    letter-spacing:.2px;
+    margin:0;
+  }
+  .toolbar{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+    font-size:13px;
+  }
+  .toolbar a{
+    color:#e5e7eb;
+    text-decoration:none;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.08);
+  }
+  .toolbar a:hover{
+    background:#fff;
+    color:var(--brand);
+  }
 
-  /* Layout */
-  .wrap{ max-width:1200px; margin:0 auto; padding:14px; }
-  .panel{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; }
-  .grid{ display:grid; gap:12px; }
-  .grid-3{ grid-template-columns:repeat(3,1fr); }
-  @media (max-width:960px){ .grid-3{ grid-template-columns:1fr; } }
+  /* Main layout */
+  .wrap{
+    max-width:1200px;
+    margin:0 auto;
+    padding:18px 14px 28px;
+  }
+  .panel{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 10px 30px rgba(15,23,42,0.05);
+  }
+  .panel-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .panel-header h2{
+    margin:0;
+    font-size:18px;
+  }
+  .panel-header .sub{
+    font-size:13px;
+    color:var(--muted);
+  }
+  .chip{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    padding:4px 10px;
+    border-radius:999px;
+    background:#e5f3ec;
+    color:var(--brand);
+    font-weight:600;
+    white-space:nowrap;
+  }
 
-  /* Leadership cards */
-  .card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px; }
-  .card h3{ margin:0; font-size:16px; }
-  .muted{ color:var(--muted); font-size:13px; }
-  .btn{ border:1px solid #d1d5db; background:#fff; border-radius:10px; padding:8px 12px; cursor:pointer; font-size:14px; }
-  .btn.primary{ background:var(--brand); color:#fff; border-color:var(--brand); }
-  .toolbar{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  /* Tile grid */
+  .tile-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+  }
+  @media (max-width:800px){
+    .tile-grid{ grid-template-columns:1fr; }
+  }
 
-  /* Screens */
-  .screen{ display:none; min-height:calc(100vh - 110px); } /* room for header */
-  .screen.active{ display:block; }
+  .tile{
+    position:relative;
+    border-radius:16px;
+    overflow:hidden;
+    min-height:150px;
+    color:#fff;
+    text-decoration:none;
+    box-shadow:0 10px 25px rgba(15,23,42,0.18);
+    transform:translateY(0);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+  }
+  .tile::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg, rgba(0,0,0,0.68), rgba(0,0,0,0.25));
+  }
+  .tile-inner{
+    position:relative;
+    z-index:1;
+    padding:14px 14px 12px;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .tile-title{
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  .tile-sub{
+    font-size:12px;
+    color:rgba(249,250,251,0.82);
+    margin-top:2px;
+  }
+  .tile-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.13em;
+  }
+  .tile-footer span{
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+  .tile-footer svg{
+    width:13px;
+    height:13px;
+  }
+  .pill{
+    padding:3px 9px;
+    border-radius:999px;
+    background:rgba(15,23,42,0.45);
+    font-size:11px;
+  }
+  .tile:hover{
+    transform:translateY(-2px);
+    box-shadow:0 16px 35px rgba(15,23,42,0.25);
+    filter:brightness(1.04);
+  }
 
-  /* Iframe container (Contacts / PPP) */
-  .frame-wrap{ height: calc(100vh - 120px); border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; }
-  iframe{ width:100%; height:100%; border:0; display:block; }
+  /* Background images – swap these URLs with real branded images when ready */
+  .tile-pto{
+    background-image:
+      linear-gradient(120deg,#145a32,#1b4332),
+      url("img/pto_placeholder.jpg");
+  }
+  .tile-ppp{
+    background-image:
+      linear-gradient(120deg,#1d3557,#264653),
+      url("img/ppp_placeholder.jpg");
+  }
+  .tile-contacts{
+    background-image:
+      linear-gradient(120deg,#78350f,#92400e),
+      url("img/contacts_placeholder.jpg");
+  }
+  .tile-feed{
+    background-image:
+      linear-gradient(120deg,#0f766e,#022c22),
+      url("img/feed_placeholder.jpg");
+  }
 
-  /* Tiny helper notice */
-  .note{ font-size:12px; color:var(--muted); margin-top:6px; }
+  .note{
+    margin-top:10px;
+    font-size:11px;
+    color:var(--muted);
+  }
 </style>
 </head>
 <body>
   <header>
     <div class="bar">
-      <h1 class="brand">Holland Homes — Leadership</h1>
+      <h1 class="brand">Holland Homes — Leadership Dashboard</h1>
       <nav class="toolbar">
-         <a href="./index_contacts.html">Contacts</a>
-         <a href="./ppp.html">PPP</a>
-         <a href="./index_pto.html">PTO</a>
-         <a href="./index_employee.html">Employee</a> <!-- NEW -->
+        <!-- These are optional quick links; tiles below are the “hero” navigation -->
+        <a href="./index_contacts.html">Contacts</a>
+        <a href="./ppp.html">PPP</a>
+        <a href="./index_pto.html">PTO</a>
+        <a href="./hh_feed.html">Home Builder Feed</a> <!-- make sure this file exists -->
       </nav>
     </div>
   </header>
 
   <main class="wrap">
-    <!-- ===== Screen 1: Leadership (starter tiles you can extend) ===== -->
-    <section id="screen-lead" class="screen active panel" role="tabpanel" aria-labelledby="tab-lead">
-      <div class="toolbar" style="justify-content:space-between; margin-bottom:10px;">
-        <div class="toolbar">
-          <button class="btn" id="btnOpenContacts">Open Contacts</button>
-          <button class="btn" id="btnOpenPPP">Open PPP</button>
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>People & Operations Apps</h2>
+          <p class="sub">
+            Tap a tile to open the app in this repo—PTO coverage, PPP, Contacts, or the Home Builder Feed.
+          </p>
         </div>
-        <span class="muted">Tip: these tiles can deep-link into Power BI/Apps later.</span>
+        <div class="chip">Purpose &gt; People &gt; Process &gt; Product</div>
       </div>
 
-      <div class="grid grid-3">
-        <div class="card">
-          <h3>PTO / Coverage</h3>
-          <div class="muted">Open the PTO dashboard (roster, heatmap, Gantt, burnout radar).</div>
-          <div class="toolbar">
-            <a class="btn primary" href="./index_pto.html">Open PTO</a>
-            <a class="btn" href="./PTO Requests.csv" download>⬇️ PTO Requests.csv</a>
+      <!-- 2×2 tile grid -->
+      <div class="tile-grid">
+        <!-- PTO tile -->
+        <a class="tile tile-pto" href="./index_pto.html">
+          <div class="tile-inner">
+            <div>
+              <div class="tile-title">PTO &amp; Coverage</div>
+              <div class="tile-sub">
+                Heatmap, calendar, and burnout radar for every team.
+              </div>
+            </div>
+            <div class="tile-footer">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Open PTO dashboard
+              </span>
+              <span class="pill">People · Coverage</span>
+            </div>
           </div>
-          <div class="note">If you’re hosting PTO elsewhere (SharePoint/Pages), replace the link above.</div>
-        </div>
+        </a>
 
-        <div class="card">
-          <h3>Licenses & Tags</h3>
-          <div class="muted">At-a-glance renewals, costs y/y, countdowns, and risk flags.</div>
-          <div class="toolbar">
-            <button class="btn">View Licenses</button>
-            <button class="btn">View Tags</button>
+        <!-- PPP tile -->
+        <a class="tile tile-ppp" href="./ppp.html">
+          <div class="tile-inner">
+            <div>
+              <div class="tile-title">PPP · People Profit Performance</div>
+              <div class="tile-sub">
+                Pull up per-person profitability, comp context, and scorecards.
+              </div>
+            </div>
+            <div class="tile-footer">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Open PPP view
+              </span>
+              <span class="pill">Finance · Strategy</span>
+            </div>
           </div>
-          <div class="note">Wire these to their own pages or Power BI reports when ready.</div>
-        </div>
+        </a>
 
-        <div class="card">
-          <h3>Devices & Lines</h3>
-          <div class="muted">Active lines, candidates to retire, tablets vs phones, Dialpad rollout.</div>
-          <div class="toolbar">
-            <button class="btn">Device Snapshot</button>
-            <button class="btn">Line Optimization</button>
+        <!-- Contacts tile -->
+        <a class="tile tile-contacts" href="./index_contacts.html">
+          <div class="tile-inner">
+            <div>
+              <div class="tile-title">Contacts &amp; Org View</div>
+              <div class="tile-sub">
+                Fast lookup for phone, email, role, and community.
+              </div>
+            </div>
+            <div class="tile-footer">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Open Contacts
+              </span>
+              <span class="pill">Directory</span>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </a>
 
-    <!-- ===== Screen 2: Contacts (loads your provided page as-is) ===== -->
-    <section id="screen-contacts" class="screen" role="tabpanel" aria-labelledby="tab-contacts">
-      <div class="frame-wrap">
-        <!-- keep contacts.html exactly as you pasted to avoid CSS/JS conflicts -->
-        <iframe src="./contacts.html" title="Contacts Dashboard"></iframe>
+        <!-- Home Builder Feed tile -->
+        <a class="tile tile-feed" href="./hh_feed.html">
+          <!-- if your feed lives in a folder, e.g. ./homebuilder-feed/index.html, update this href -->
+          <div class="tile-inner">
+            <div>
+              <div class="tile-title">Home Builder Feed</div>
+              <div class="tile-sub">
+                NAHB, Construction Dive, podcasts, and leadership content in one stream.
+              </div>
+            </div>
+            <div class="tile-footer">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Open industry feed
+              </span>
+              <span class="pill">News · Audio</span>
+            </div>
+          </div>
+        </a>
       </div>
-      <div class="note">Data source path lives inside <code>contacts.html</code> (update <code>CSV_URL</code> to your SharePoint CSV).</div>
-    </section>
 
-    <!-- ===== Screen 3: PPP (loads your provided page as-is) ===== -->
-    <section id="screen-ppp" class="screen" role="tabpanel" aria-labelledby="tab-ppp">
-      <div class="frame-wrap">
-        <!-- keep ppp.html exactly as you pasted to avoid CSS/JS conflicts -->
-        <iframe src="./ppp.html" title="PPP Dashboard"></iframe>
-      </div>
-      <div class="note">Make sure <code>PPP.csv</code> sits next to <code>ppp.html</code>.</div>
+      <p class="note">
+        Swap the tile background images in the CSS (<code>.tile-pto</code>, <code>.tile-ppp</code>, <code>.tile-contacts</code>, <code>.tile-feed</code>)
+        with brand photography or simple gradients. All four tiles just navigate to other HTML apps in this same repo.
+      </p>
     </section>
   </main>
-
-<script>
-  // Tab wiring
-  const tabs = [
-    {btn: 'tab-lead', panel: 'screen-lead'},
-    {btn: 'tab-contacts', panel: 'screen-contacts'},
-    {btn: 'tab-ppp', panel: 'screen-ppp'}
-  ];
-  function activate(id){
-    tabs.forEach(t=>{
-      const b=document.getElementById(t.btn);
-      const p=document.getElementById(t.panel);
-      const on = (t.panel===id);
-      b.setAttribute('aria-selected', on ? 'true' : 'false');
-      p.classList.toggle('active', on);
-    });
-    // remember selection
-    try{ localStorage.setItem('hh_active_tab', id); }catch(e){}
-  }
-  tabs.forEach(t=>{
-    document.getElementById(t.btn).addEventListener('click', ()=>activate(t.panel));
-  });
-
-  // Deep-link buttons
-  document.getElementById('btnOpenContacts').addEventListener('click', ()=>activate('screen-contacts'));
-  document.getElementById('btnOpenPPP').addEventListener('click', ()=>activate('screen-ppp'));
-
-  // Restore last tab
-  (function init(){
-    const saved = (()=>{ try{ return localStorage.getItem('hh_active_tab'); }catch(e){ return null; } })();
-    if (saved && document.getElementById(saved)) activate(saved);
-  })();
-</script>
 </body>
 </html>
