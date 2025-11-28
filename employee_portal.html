@@ -7,11 +7,16 @@
 
   <style>
     body {
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #f4f4f7;
       margin: 0;
-      padding: 40px;
+      padding: 32px 16px 48px;
       color: #333;
+    }
+
+    .max {
+      max-width: 1080px;
+      margin: 0 auto;
     }
 
     .card {
@@ -19,8 +24,14 @@
       padding: 24px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.07);
-      max-width: 800px;
-      margin: 0 auto 24px auto;
+      margin: 0 0 24px 0;
+    }
+
+    h1 {
+      margin: 0 0 16px 0;
+      font-size: 26px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
     }
 
     h2 {
@@ -35,24 +46,31 @@
       font-weight: 600;
     }
 
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 4px;
+    }
+
     select, input {
       width: 100%;
-      padding: 12px;
-      margin: 8px 0 16px 0;
+      padding: 10px 12px;
+      margin: 4px 0 12px 0;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 15px;
       box-sizing: border-box;
+      background: #fff;
     }
 
     button {
-      width: 100%;
-      padding: 12px;
+      padding: 10px 16px;
       background: #2d5be3;
       color: white;
       border: none;
       border-radius: 6px;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
       font-weight: 600;
     }
@@ -61,23 +79,32 @@
       background: #224bc4;
     }
 
+    button.secondary {
+      background: #eef1ff;
+      color: #2444aa;
+      border: 1px solid #ccd3ff;
+    }
+
+    #loginCard {
+      max-width: 420px;
+      margin: 0 auto 32px auto;
+    }
+
     #dashboard {
       display: none;
-      max-width: 900px;
-      margin: 0 auto;
     }
 
     .welcome {
       font-size: 20px;
-      margin-bottom: 12px;
+      margin-bottom: 4px;
       font-weight: 600;
       color: #222;
     }
 
     .sub {
-      font-size: 15px;
+      font-size: 14px;
       color: #666;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     #loginError, #loadErrorDetails {
@@ -93,6 +120,11 @@
     #loadErrorDetails {
       color: #888;
       display: none;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: #777;
     }
 
     .grid {
@@ -119,12 +151,12 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
+      font-size: 13px;
       margin-top: 8px;
     }
 
     th, td {
-      padding: 8px 6px;
+      padding: 6px 4px;
       border-bottom: 1px solid #eee;
       text-align: left;
     }
@@ -134,14 +166,91 @@
       font-weight: 600;
     }
 
-    .tagline {
-      font-size: 14px;
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #eef1ff;
+      color: #2444aa;
+      margin-left: 4px;
+    }
+
+    .pill.vacation { background:#e8f5e9; color:#1b5e20; }
+    .pill.sick { background:#fff3e0; color:#e65100; }
+    .pill.unpaid { background:#f3e5f5; color:#6a1b9a; }
+
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .tile {
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid #e0e3f0;
+      background: linear-gradient(135deg, #f9fafc, #f1f4ff);
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #222;
+      display: block;
+      transition: transform 0.05s ease, box-shadow 0.05s ease;
+    }
+
+    .tile:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    }
+
+    .tile-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .tile-sub {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .row > .card {
+      flex: 1 1 260px;
+      margin: 0;
+    }
+
+    .small-note {
+      font-size: 11px;
+      color: #999;
+      margin-top: 6px;
+    }
+
+    .muted {
       color: #777;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 24px 12px 40px;
+      }
     }
   </style>
 </head>
 
 <body>
+<div class="max">
 
   <!-- Login Card -->
   <div class="card" id="loginCard">
@@ -155,30 +264,121 @@
     <label for="passcodeInput">Enter your 4-digit passcode</label>
     <input id="passcodeInput" type="password" maxlength="4" placeholder="0000" />
 
-    <button id="loginBtn" type="button">Log In</button>
+    <button id="loginBtn" type="button" style="width:100%; margin-top:8px;">Log In</button>
 
     <p id="loginError"></p>
     <p id="loadErrorDetails"></p>
   </div>
 
-
-  <!-- Dashboard (hidden until login) -->
+  <!-- Dashboard -->
   <div id="dashboard">
+    <!-- Header -->
     <div class="card">
       <div class="welcome" id="welcomeName"></div>
       <div class="sub" id="welcomeDept"></div>
       <p class="tagline">
-        This is your prototype HH employee portal. Data shown here is a snapshot for exploration and planning,
-        not a live HR system.
+        Prototype HH employee portal · Data here is a snapshot for exploration and planning, not a live HR system.
       </p>
     </div>
 
+    <!-- Main grid: PTO + Simulator + Outlook -->
     <div class="grid">
-      <!-- PTO Summary -->
+      <!-- PTO Snapshot -->
       <div class="card" id="ptoCard">
         <h3>Your PTO Snapshot</h3>
         <div id="ptoSummary">
-          <p style="font-size:14px; color:#777;">Loading PTO info...</p>
+          <p class="muted">Loading PTO info...</p>
+        </div>
+      </div>
+
+      <!-- PTO Request Simulator -->
+      <div class="card" id="simCard">
+        <h3>PTO Request Simulator <span class="pill">Demo</span></h3>
+        <form id="simForm">
+          <label for="simType">PTO Type</label>
+          <select id="simType">
+            <option value="vacation">Vacation</option>
+            <option value="sick">Sick</option>
+            <option value="unpaid">Unpaid</option>
+          </select>
+
+          <div class="row" style="gap:8px; margin-bottom:8px;">
+            <div style="flex:1 1 120px;">
+              <label for="simStart">Start date</label>
+              <input type="date" id="simStart" />
+            </div>
+            <div style="flex:1 1 120px;">
+              <label for="simStartHalf">Start</label>
+              <select id="simStartHalf">
+                <option value="AM">Full day (AM–PM)</option>
+                <option value="PM">PM only (half-day)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="gap:8px; margin-bottom:8px;">
+            <div style="flex:1 1 120px;">
+              <label for="simEnd">End date</label>
+              <input type="date" id="simEnd" />
+            </div>
+            <div style="flex:1 1 120px;">
+              <label for="simEndHalf">End</label>
+              <select id="simEndHalf">
+                <option value="PM">Full day (AM–PM)</option>
+                <option value="AM">AM only (half-day)</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="button" id="simPreviewBtn" style="width:100%; margin-top:4px;">
+            Preview PTO impact
+          </button>
+        </form>
+
+        <div id="simResult" style="margin-top:12px; font-size:13px; color:#444;"></div>
+        <p class="small-note">
+          This simulator doesn’t submit real PTO requests. It’s a sandbox to see how a request would impact your balances.
+        </p>
+      </div>
+
+      <!-- Team PTO Outlook -->
+      <div class="card" id="outlookCard">
+        <h3>Team PTO Outlook</h3>
+        <div id="outlookSummary">
+          <p class="muted">Loading team PTO...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second row: Policies + Contacts -->
+    <div class="grid" style="margin-top:16px;">
+      <!-- Policy tiles -->
+      <div class="card">
+        <h3>Policies & Resources</h3>
+        <p class="muted" style="margin-bottom:10px;">
+          Links can point to HTML versions of your existing Word/PDF docs.
+        </p>
+        <div class="tiles">
+          <a class="tile" href="policy_pto.html">
+            <div class="tile-title">PTO & Time Off</div>
+            <div class="tile-sub">How PTO accrues, how to request it, and key guardrails.</div>
+          </a>
+          <a class="tile" href="policy_benefits.html">
+            <div class="tile-title">Health & Benefits</div>
+            <div class="tile-sub">Medical, dental, vision, and 401(k) snapshot.</div>
+          </a>
+          <a class="tile" href="policy_handbook.html">
+            <div class="tile-title">Employee Handbook</div>
+            <div class="tile-sub">Core expectations, values, and general policies.</div>
+          </a>
+          <a class="tile" href="policy_travel.html">
+            <div class="tile-title">Travel & Reimbursement</div>
+            <div class="tile-sub">Per diem, mileage, and what’s reimbursable.</div>
+          </a>
+          <a class="tile" href="policy_holidays.html">
+            <div class="tile-title">Holidays & Office Closures</div>
+            <div class="tile-sub">Observed holidays and standard closure dates.</div>
+          </a>
         </div>
       </div>
 
@@ -186,206 +386,405 @@
       <div class="card" id="contactsCard">
         <h3>Your Team Contacts</h3>
         <div id="contactsSummary">
-          <p style="font-size:14px; color:#777;">Loading team contacts...</p>
+          <p class="muted">Loading team contacts...</p>
         </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    let employees = [];
-    let ptoInfo = [];
-    let contacts = [];
-    let currentUser = null;
+  </div> <!-- /dashboard -->
 
-    async function loadAllData() {
-      const loginError = document.getElementById('loginError');
-      const loadErrorDetails = document.getElementById('loadErrorDetails');
-      const empSelect = document.getElementById('empSelect');
+</div> <!-- /max -->
 
-      try {
-        const [empRes, ptoRes, contactsRes] = await Promise.all([
-          fetch('employees.json'),
-          fetch('pto_employee_info.json'),
-          fetch('contacts.json')
-        ]);
+<script>
+  let employees = [];
+  let ptoInfo = [];
+  let contacts = [];
+  let ptoRequests = [];
+  let currentUser = null;
 
-        if (!empRes.ok) throw new Error('employees.json HTTP ' + empRes.status);
-        if (!ptoRes.ok) throw new Error('pto_employee_info.json HTTP ' + ptoRes.status);
-        if (!contactsRes.ok) throw new Error('contacts.json HTTP ' + contactsRes.status);
+  // ---------- Load JSON data ----------
+  async function loadAllData() {
+    const loginError = document.getElementById('loginError');
+    const loadErrorDetails = document.getElementById('loadErrorDetails');
+    const empSelect = document.getElementById('empSelect');
 
-        employees = await empRes.json();
-        ptoInfo = await ptoRes.json();
+    try {
+      const [empRes, ptoRes, contactsRes, reqRes] = await Promise.all([
+        fetch('employees.json'),
+        fetch('pto_employee_info.json'),
+        fetch('contacts.json'),
+        fetch('pto_requests.json')
+      ]);
+
+      if (!empRes.ok) throw new Error('employees.json HTTP ' + empRes.status);
+      if (!ptoRes.ok) throw new Error('pto_employee_info.json HTTP ' + ptoRes.status);
+
+      employees = await empRes.json();
+      ptoInfo = await ptoRes.json();
+
+      // contacts.json and pto_requests.json are optional, but nice to have
+      if (contactsRes.ok) {
         contacts = await contactsRes.json();
-
-        if (!Array.isArray(employees) || employees.length === 0) {
-          throw new Error('employees.json is empty or not an array');
-        }
-
-        empSelect.innerHTML = '<option value="">Select your name...</option>';
-        employees.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
-        employees.forEach(emp => {
-          const opt = document.createElement('option');
-          opt.value = emp.empId;
-          opt.textContent = emp.name + (emp.department ? ' – ' + emp.department : '');
-          empSelect.appendChild(opt);
-        });
-
-        loginError.style.display = 'none';
-        loginError.textContent = '';
-        loadErrorDetails.style.display = 'none';
-        loadErrorDetails.textContent = '';
-
-      } catch (err) {
-        console.error('Error loading JSON data:', err);
-        empSelect.innerHTML = '<option value="">Could not load employees</option>';
-        loginError.textContent = 'Could not load portal data. Check JSON files and how this page is being served.';
-        loginError.style.display = 'block';
-        loadErrorDetails.textContent = String(err.message || err);
-        loadErrorDetails.style.display = 'block';
+      } else {
+        console.warn('contacts.json not found (optional): HTTP ' + contactsRes.status);
+        contacts = [];
       }
-    }
 
-    function setupLogin() {
-      const loginBtn = document.getElementById('loginBtn');
-      const dropdown = document.getElementById('empSelect');
-      const passcodeInput = document.getElementById('passcodeInput');
-      const loginError = document.getElementById('loginError');
+      if (reqRes.ok) {
+        ptoRequests = await reqRes.json();
+      } else {
+        console.warn('pto_requests.json not found (optional): HTTP ' + reqRes.status);
+        ptoRequests = [];
+      }
 
-      loginBtn.addEventListener('click', () => {
-        loginError.style.display = 'none';
-        loginError.textContent = '';
+      if (!Array.isArray(employees) || employees.length === 0) {
+        throw new Error('employees.json is empty or not an array');
+      }
 
-        const selectedId = dropdown.value;
-        const passcode = passcodeInput.value.trim();
+      // Populate dropdown
+      empSelect.innerHTML = '<option value="">Select your name...</option>';
+      employees.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
-        if (!selectedId || !passcode) {
-          loginError.textContent = 'Please select your name and enter your passcode.';
-          loginError.style.display = 'block';
-          return;
-        }
-
-        const user = employees.find(e => e.empId === selectedId);
-
-        if (!user || (user.passcode && user.passcode !== passcode)) {
-          loginError.textContent = 'Incorrect passcode. Please try again.';
-          loginError.style.display = 'block';
-          return;
-        }
-
-        currentUser = user;
-        showDashboard();
+      employees.forEach(emp => {
+        const opt = document.createElement('option');
+        opt.value = emp.empId;
+        opt.textContent = emp.name + (emp.department ? ' – ' + emp.department : '');
+        empSelect.appendChild(opt);
       });
 
-      passcodeInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          loginBtn.click();
-        }
-      });
+      loginError.style.display = 'none';
+      loginError.textContent = '';
+      loadErrorDetails.style.display = 'none';
+      loadErrorDetails.textContent = '';
+
+    } catch (err) {
+      console.error('Error loading JSON data:', err);
+      empSelect.innerHTML = '<option value="">Could not load employees</option>';
+      loginError.textContent = 'Could not load portal data. Check JSON files and how this page is being served.';
+      loginError.style.display = 'block';
+      loadErrorDetails.textContent = String(err.message || err);
+      loadErrorDetails.style.display = 'block';
     }
+  }
 
-    function findPtoRecord(empId) {
-      if (!Array.isArray(ptoInfo)) return null;
-      return ptoInfo.find(r => r.empId === empId || r.name?.includes(empId));
-    }
+  // ---------- Login ----------
+  function setupLogin() {
+    const loginBtn = document.getElementById('loginBtn');
+    const dropdown = document.getElementById('empSelect');
+    const passcodeInput = document.getElementById('passcodeInput');
+    const loginError = document.getElementById('loginError');
 
-    function renderPtoSummary() {
-      const container = document.getElementById('ptoSummary');
-      const record = findPtoRecord(currentUser.empId);
+    loginBtn.addEventListener('click', () => {
+      loginError.style.display = 'none';
+      loginError.textContent = '';
 
-      if (!record) {
-        container.innerHTML = '<p style="font-size:14px; color:#777;">No PTO data found for your profile.</p>';
+      const selectedId = dropdown.value;
+      const passcode = passcodeInput.value.trim();
+
+      if (!selectedId || !passcode) {
+        loginError.textContent = 'Please select your name and enter your passcode.';
+        loginError.style.display = 'block';
         return;
       }
 
-      const b = record.balances || {};
-      container.innerHTML = `
-        <div class="metric-row">
-          <span class="metric-label">Vacation Available</span>
-          <span class="metric-value">${(b.vacationAvailable ?? 0).toFixed(2)} days</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Sick Available</span>
-          <span class="metric-value">${(b.sickAvailable ?? 0).toFixed(2)} days</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Unpaid Available</span>
-          <span class="metric-value">${(b.unpaidAvailable ?? 0).toFixed(2)} days</span>
-        </div>
-        <hr style="border:none; border-top:1px solid #eee; margin:12px 0;">
-        <p style="font-size:13px; color:#777; margin:0;">
-          Totals shown here are based on the latest snapshot loaded into this demo portal.
+      const user = employees.find(e => e.empId === selectedId);
+
+      if (!user || (user.passcode && user.passcode !== passcode)) {
+        loginError.textContent = 'Incorrect passcode. Please try again.';
+        loginError.style.display = 'block';
+        return;
+      }
+
+      currentUser = user;
+      showDashboard();
+    });
+
+    passcodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+  }
+
+  // ---------- Helpers ----------
+  function findPtoRecord(empId) {
+    if (!Array.isArray(ptoInfo)) return null;
+    return ptoInfo.find(r => r.empId === empId || r.name?.includes(empId));
+  }
+
+  function getBalances() {
+    const record = findPtoRecord(currentUser.empId);
+    if (!record) return {
+      vacationAvailable: 0,
+      sickAvailable: 0,
+      unpaidAvailable: 0
+    };
+    const b = record.balances || {};
+    return {
+      vacationAvailable: Number(b.vacationAvailable ?? 0),
+      sickAvailable: Number(b.sickAvailable ?? 0),
+      unpaidAvailable: Number(b.unpaidAvailable ?? 0)
+    };
+  }
+
+  function parseDate(mdyString) {
+    // Handles "3/2/26" or "3/2/2026"
+    if (!mdyString) return null;
+    const parts = mdyString.split('/');
+    if (parts.length < 3) return null;
+    let [m, d, y] = parts.map(p => p.trim());
+    m = Number(m);
+    d = Number(d);
+    y = Number(y);
+    if (y < 100) y = 2000 + y; // crude but fine for demo
+    const dt = new Date(y, m - 1, d);
+    return isNaN(dt.getTime()) ? null : dt;
+  }
+
+  function diffDaysInclusive(start, end) {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const diff = (end - start) / msPerDay;
+    return diff >= 0 ? diff + 1 : 0;
+  }
+
+  // ---------- PTO Summary ----------
+  function renderPtoSummary() {
+    const container = document.getElementById('ptoSummary');
+    const record = findPtoRecord(currentUser.empId);
+
+    if (!record) {
+      container.innerHTML = '<p class="muted">No PTO data found for your profile.</p>';
+      return;
+    }
+
+    const b = record.balances || {};
+    container.innerHTML = `
+      <div class="metric-row">
+        <span class="metric-label">Vacation Available</span>
+        <span class="metric-value">${(b.vacationAvailable ?? 0).toFixed(2)} days</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Sick Available</span>
+        <span class="metric-value">${(b.sickAvailable ?? 0).toFixed(2)} days</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Unpaid Available</span>
+        <span class="metric-value">${(b.unpaidAvailable ?? 0).toFixed(2)} days</span>
+      </div>
+      <hr style="border:none; border-top:1px solid #eee; margin:12px 0;">
+      <p class="small-note">
+        Totals shown here reflect the last PTO snapshot loaded into this portal.
+      </p>
+    `;
+  }
+
+  // ---------- PTO Simulator ----------
+  function setupSimulator() {
+    const btn = document.getElementById('simPreviewBtn');
+    const result = document.getElementById('simResult');
+
+    btn.addEventListener('click', () => {
+      if (!currentUser) return;
+
+      const type = document.getElementById('simType').value;
+      const startStr = document.getElementById('simStart').value;
+      const endStr = document.getElementById('simEnd').value;
+      const startHalf = document.getElementById('simStartHalf').value;
+      const endHalf = document.getElementById('simEndHalf').value;
+
+      if (!startStr || !endStr) {
+        result.innerHTML = `<span style="color:#c62828;">Select both a start and end date.</span>`;
+        return;
+      }
+
+      const start = new Date(startStr);
+      const end = new Date(endStr);
+      if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) {
+        result.innerHTML = `<span style="color:#c62828;">End date must be the same or after the start date.</span>`;
+        return;
+      }
+
+      let days = diffDaysInclusive(start, end);
+
+      // crude half-day handling for demo: if you choose PM-start or AM-end, shave 0.5
+      if (startHalf === 'PM') days -= 0.5;
+      if (endHalf === 'AM') days -= 0.5;
+      if (days < 0) days = 0;
+
+      const balances = getBalances();
+      let available = 0;
+      let label = '';
+
+      if (type === 'vacation') {
+        available = balances.vacationAvailable;
+        label = 'Vacation';
+      } else if (type === 'sick') {
+        available = balances.sickAvailable;
+        label = 'Sick';
+      } else {
+        available = balances.unpaidAvailable;
+        label = 'Unpaid';
+      }
+
+      const remaining = available - days;
+      const pillClass =
+        type === 'vacation' ? 'vacation' :
+        type === 'sick' ? 'sick' : 'unpaid';
+
+      result.innerHTML = `
+        <p style="margin:0 0 6px 0;">
+          Requesting <strong>${days.toFixed(2)} days</strong> of
+          <strong>${label}</strong> PTO
+          <span class="pill ${pillClass}">${label}</span>
+        </p>
+        <p style="margin:0;">
+          Available now: <strong>${available.toFixed(2)} days</strong><br/>
+          After this request: <strong>${remaining.toFixed(2)} days</strong>
+          ${remaining < 0 ? '<br/><span style="color:#c62828;">(This would exceed your current available balance.)</span>' : ''}
         </p>
       `;
-    }
-
-    function renderContacts() {
-      const container = document.getElementById('contactsSummary');
-      if (!Array.isArray(contacts) || contacts.length === 0) {
-        container.innerHTML = '<p style="font-size:14px; color:#777;">No contacts available.</p>';
-        return;
-      }
-
-      const dept = currentUser.department;
-      const team = contacts.filter(c => c.department === dept);
-
-      if (team.length === 0) {
-        container.innerHTML = '<p style="font-size:14px; color:#777;">No contact records found for your department yet.</p>';
-        return;
-      }
-
-      let rows = team.map(c => `
-        <tr>
-          <td>${c.name || ''}</td>
-          <td>${c.email || ''}</td>
-          <td>${c.workNumber || ''}</td>
-          <td>${c.region || ''}</td>
-        </tr>
-      `).join('');
-
-      container.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Work #</th>
-              <th>Region</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows}
-          </tbody>
-        </table>
-      `;
-    }
-
-    function showDashboard() {
-      const loginCard = document.getElementById('loginCard');
-      const dashboard = document.getElementById('dashboard');
-      const welcomeName = document.getElementById('welcomeName');
-      const welcomeDept = document.getElementById('welcomeDept');
-
-      loginCard.style.display = 'none';
-      dashboard.style.display = 'block';
-
-      welcomeName.textContent = `Welcome, ${currentUser.name}`;
-      const dept = currentUser.department || '';
-      const dr = currentUser.directReport || '';
-      welcomeDept.textContent = dept
-        ? (dr ? `${dept} · Reports to ${dr}` : dept)
-        : '';
-
-      renderPtoSummary();
-      renderContacts();
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadAllData();
-      setupLogin();
     });
-  </script>
+  }
+
+  // ---------- Team PTO Outlook ----------
+  function renderOutlook() {
+    const container = document.getElementById('outlookSummary');
+
+    if (!Array.isArray(ptoRequests) || ptoRequests.length === 0) {
+      container.innerHTML = '<p class="muted">No PTO requests loaded yet.</p>';
+      return;
+    }
+
+    const dept = currentUser.department;
+    const teamReqs = ptoRequests.filter(r => r.department === dept);
+
+    if (teamReqs.length === 0) {
+      container.innerHTML = '<p class="muted">No PTO records found for your department yet.</p>';
+      return;
+    }
+
+    // Sort by start date ascending
+    const enhanced = teamReqs.map(r => {
+      const dt = parseDate(r.startDate || r.start_date || r["PTO Request Start Date"]);
+      return { ...r, _start: dt };
+    }).filter(r => r._start !== null);
+
+    enhanced.sort((a, b) => a._start - b._start);
+
+    const top = enhanced.slice(0, 10); // show first 10 upcoming
+
+    const rows = top.map(r => {
+      const dStr = r.startDate || r["PTO Request Start Date"];
+      const endStr = r.endDate || r["PTO Request End Date"];
+      const who = r.name || r["Employee Name"];
+      const type = r.type || r["PTO Request Type"];
+      const days = Number(r.totalDays ?? r["PTO Request Total Days"] ?? 0);
+      const pillClass =
+        type === 'Vacation' || type === 'vacation' ? 'vacation' :
+        type === 'Sick' || type === 'sick' ? 'sick' : 'unpaid';
+
+      return `
+        <tr>
+          <td>${who || ''}</td>
+          <td>${dStr || ''}${endStr && endStr !== dStr ? '–' + endStr : ''}</td>
+          <td>${days.toFixed(2)}</td>
+          <td><span class="pill ${pillClass}">${type || ''}</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Team member</th>
+            <th>Dates</th>
+            <th>Days</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+      <p class="small-note">
+        Showing PTO requests for your department from the loaded PTO Requests snapshot (max 10 rows).
+      </p>
+    `;
+  }
+
+  // ---------- Contacts ----------
+  function renderContacts() {
+    const container = document.getElementById('contactsSummary');
+
+    if (!Array.isArray(contacts) || contacts.length === 0) {
+      container.innerHTML = '<p class="muted">Team contact directory coming soon.</p>';
+      return;
+    }
+
+    const dept = currentUser.department;
+    const team = contacts.filter(c => c.department === dept);
+
+    if (team.length === 0) {
+      container.innerHTML = '<p class="muted">No contact records found for your department yet.</p>';
+      return;
+    }
+
+    let rows = team.map(c => `
+      <tr>
+        <td>${c.name || ''}</td>
+        <td>${c.email || ''}</td>
+        <td>${c.workNumber || ''}</td>
+        <td>${c.region || ''}</td>
+      </tr>
+    `).join('');
+
+    container.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Work #</th>
+            <th>Region</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    `;
+  }
+
+  // ---------- Show dashboard ----------
+  function showDashboard() {
+    const loginCard = document.getElementById('loginCard');
+    const dashboard = document.getElementById('dashboard');
+    const welcomeName = document.getElementById('welcomeName');
+    const welcomeDept = document.getElementById('welcomeDept');
+
+    loginCard.style.display = 'none';
+    dashboard.style.display = 'block';
+
+    welcomeName.textContent = `Welcome, ${currentUser.name}`;
+    const dept = currentUser.department || '';
+    const dr = currentUser.directReport || '';
+    welcomeDept.textContent = dept
+      ? (dr ? `${dept} · Reports to ${dr}` : dept)
+      : '';
+
+    renderPtoSummary();
+    renderOutlook();
+    renderContacts();
+  }
+
+  // ---------- Boot ----------
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadAllData();
+    setupLogin();
+    setupSimulator();
+  });
+</script>
 
 </body>
 </html>
