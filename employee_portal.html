@@ -13,12 +13,7 @@
       padding: 32px 16px 48px;
       color: #333;
     }
-
-    .max {
-      max-width: 1080px;
-      margin: 0 auto;
-    }
-
+    .max { max-width: 1080px; margin: 0 auto; }
     .card {
       background: white;
       padding: 24px;
@@ -26,25 +21,8 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.07);
       margin: 0 0 24px 0;
     }
-
-    h1 {
-      margin: 0 0 16px 0;
-      font-size: 26px;
-      font-weight: 650;
-      letter-spacing: 0.02em;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 22px;
-      font-weight: 600;
-    }
-
-    h3 {
-      margin-top: 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
+    h2 { margin-top: 0; font-size: 22px; font-weight: 600; }
+    h3 { margin-top: 0; font-size: 18px; font-weight: 600; }
 
     label {
       font-size: 14px;
@@ -52,8 +30,7 @@
       display: block;
       margin-bottom: 4px;
     }
-
-    select, input {
+    select, input, textarea {
       width: 100%;
       padding: 10px 12px;
       margin: 4px 0 12px 0;
@@ -62,8 +39,12 @@
       font-size: 15px;
       box-sizing: border-box;
       background: #fff;
+      font-family: inherit;
     }
-
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
     button {
       padding: 10px 16px;
       background: #2d5be3;
@@ -74,58 +55,18 @@
       cursor: pointer;
       font-weight: 600;
     }
+    button:hover { background: #224bc4; }
 
-    button:hover {
-      background: #224bc4;
-    }
+    #loginCard { max-width: 420px; margin: 0 auto 32px auto; }
+    #dashboard { display: none; }
 
-    button.secondary {
-      background: #eef1ff;
-      color: #2444aa;
-      border: 1px solid #ccd3ff;
-    }
+    .welcome { font-size: 20px; margin-bottom: 4px; font-weight: 600; color: #222; }
+    .sub { font-size: 14px; color: #666; margin-bottom: 12px; }
+    #loginError, #loadErrorDetails { font-size: 13px; margin-top: 6px; }
+    #loginError { color: #c62828; display: none; }
+    #loadErrorDetails { color: #888; display: none; }
 
-    #loginCard {
-      max-width: 420px;
-      margin: 0 auto 32px auto;
-    }
-
-    #dashboard {
-      display: none;
-    }
-
-    .welcome {
-      font-size: 20px;
-      margin-bottom: 4px;
-      font-weight: 600;
-      color: #222;
-    }
-
-    .sub {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 12px;
-    }
-
-    #loginError, #loadErrorDetails {
-      font-size: 13px;
-      margin-top: 6px;
-    }
-
-    #loginError {
-      color: #c62828;
-      display: none;
-    }
-
-    #loadErrorDetails {
-      color: #888;
-      display: none;
-    }
-
-    .tagline {
-      font-size: 13px;
-      color: #777;
-    }
+    .tagline { font-size: 13px; color: #777; }
 
     .grid {
       display: grid;
@@ -139,14 +80,8 @@
       margin-bottom: 6px;
       font-size: 14px;
     }
-
-    .metric-label {
-      color: #555;
-    }
-
-    .metric-value {
-      font-weight: 600;
-    }
+    .metric-label { color: #555; }
+    .metric-value { font-weight: 600; }
 
     table {
       width: 100%;
@@ -154,17 +89,12 @@
       font-size: 13px;
       margin-top: 8px;
     }
-
     th, td {
       padding: 6px 4px;
       border-bottom: 1px solid #eee;
       text-align: left;
     }
-
-    th {
-      background: #fafafa;
-      font-weight: 600;
-    }
+    th { background: #fafafa; font-weight: 600; }
 
     .pill {
       display: inline-block;
@@ -178,7 +108,6 @@
       color: #2444aa;
       margin-left: 4px;
     }
-
     .pill.vacation { background:#e8f5e9; color:#1b5e20; }
     .pill.sick { background:#fff3e0; color:#e65100; }
     .pill.unpaid { background:#f3e5f5; color:#6a1b9a; }
@@ -189,7 +118,6 @@
       gap: 10px;
       margin-top: 8px;
     }
-
     .tile {
       border-radius: 10px;
       padding: 12px 14px;
@@ -202,49 +130,18 @@
       display: block;
       transition: transform 0.05s ease, box-shadow 0.05s ease;
     }
-
     .tile:hover {
       transform: translateY(-1px);
       box-shadow: 0 3px 8px rgba(0,0,0,0.08);
     }
+    .tile-title { font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+    .tile-sub  { font-size: 12px; color: #666; }
 
-    .tile-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-      font-size: 13px;
-    }
-
-    .tile-sub {
-      font-size: 12px;
-      color: #666;
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .row > .card {
-      flex: 1 1 260px;
-      margin: 0;
-    }
-
-    .small-note {
-      font-size: 11px;
-      color: #999;
-      margin-top: 6px;
-    }
-
-    .muted {
-      color: #777;
-      font-size: 13px;
-    }
+    .small-note { font-size: 11px; color: #999; margin-top: 6px; }
+    .muted     { color: #777; font-size: 13px; }
 
     @media (max-width: 640px) {
-      body {
-        padding: 24px 12px 40px;
-      }
+      body { padding: 24px 12px 40px; }
     }
   </style>
 </head>
@@ -302,7 +199,7 @@
             <option value="unpaid">Unpaid</option>
           </select>
 
-          <div class="row" style="gap:8px; margin-bottom:8px;">
+          <div style="display:flex; gap:8px; margin-bottom:8px;">
             <div style="flex:1 1 120px;">
               <label for="simStart">Start date</label>
               <input type="date" id="simStart" />
@@ -316,7 +213,7 @@
             </div>
           </div>
 
-          <div class="row" style="gap:8px; margin-bottom:8px;">
+          <div style="display:flex; gap:8px; margin-bottom:8px;">
             <div style="flex:1 1 120px;">
               <label for="simEnd">End date</label>
               <input type="date" id="simEnd" />
@@ -350,9 +247,8 @@
       </div>
     </div>
 
-    <!-- Second row: Policies + Contacts -->
+    <!-- Policies + Contacts -->
     <div class="grid" style="margin-top:16px;">
-      <!-- Policy tiles -->
       <div class="card">
         <h3>Policies & Resources</h3>
         <p class="muted" style="margin-bottom:10px;">
@@ -360,11 +256,11 @@
         </p>
         <div class="tiles">
           <a class="tile" href="policy_pto.html">
-            <div class="tile-title">PTO & Time Off</div>
+            <div class="tile-title">PTO &amp; Time Off</div>
             <div class="tile-sub">How PTO accrues, how to request it, and key guardrails.</div>
           </a>
           <a class="tile" href="policy_benefits.html">
-            <div class="tile-title">Health & Benefits</div>
+            <div class="tile-title">Health &amp; Benefits</div>
             <div class="tile-sub">Medical, dental, vision, and 401(k) snapshot.</div>
           </a>
           <a class="tile" href="policy_handbook.html">
@@ -372,23 +268,105 @@
             <div class="tile-sub">Core expectations, values, and general policies.</div>
           </a>
           <a class="tile" href="policy_travel.html">
-            <div class="tile-title">Travel & Reimbursement</div>
+            <div class="tile-title">Travel &amp; Reimbursement</div>
             <div class="tile-sub">Per diem, mileage, and what’s reimbursable.</div>
           </a>
           <a class="tile" href="policy_holidays.html">
-            <div class="tile-title">Holidays & Office Closures</div>
+            <div class="tile-title">Holidays &amp; Office Closures</div>
             <div class="tile-sub">Observed holidays and standard closure dates.</div>
           </a>
         </div>
       </div>
 
-      <!-- Team Contacts -->
       <div class="card" id="contactsCard">
         <h3>Your Team Contacts</h3>
         <div id="contactsSummary">
           <p class="muted">Loading team contacts...</p>
         </div>
       </div>
+    </div>
+
+    <!-- TMC Snapshot -->
+    <div class="card" id="tmcCard">
+      <h3>TMC Use Only – PTO Snapshot</h3>
+
+      <div id="tmcBalances" style="margin-bottom:12px;"></div>
+      <div id="tmcDates"></div>
+
+      <p class="small-note">
+        Mirrors the bottom box of the 2025 "Request for Time Off" form:
+        beginning balances, days used YTD, future days approved, remaining balances,
+        and the used / previously approved dates by PTO type and all types combined.
+      </p>
+    </div>
+
+    <!-- PTO Request Form (Demo) -->
+    <div class="card" id="ptoFormCard">
+      <h3>PTO Request Form (Demo)</h3>
+      <p class="muted" style="margin-top:0;">
+        This mirrors the handwritten form. It pulls your current balances
+        from the PTO snapshot and shows how a new request would affect them.
+      </p>
+
+      <div style="display:flex; flex-wrap:wrap; gap:12px;">
+        <div style="flex:1 1 220px;">
+          <label>Employee Name</label>
+          <input type="text" id="formEmpName" readonly />
+        </div>
+        <div style="flex:1 1 180px;">
+          <label>Department</label>
+          <input type="text" id="formDept" readonly />
+        </div>
+        <div style="flex:1 1 220px;">
+          <label>Supervisor</label>
+          <input type="text" id="formSupervisor" readonly />
+        </div>
+      </div>
+
+      <label for="formType">PTO Type</label>
+      <select id="formType">
+        <option value="vacation">Vacation</option>
+        <option value="sick">Sick</option>
+        <option value="unpaid">Unpaid</option>
+      </select>
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <div style="flex:1 1 150px;">
+          <label for="formStart">Start date</label>
+          <input type="date" id="formStart" />
+        </div>
+        <div style="flex:1 1 120px;">
+          <label for="formStartHalf">Start</label>
+          <select id="formStartHalf">
+            <option value="AM">Full day (AM–PM)</option>
+            <option value="PM">PM only (half-day)</option>
+          </select>
+        </div>
+        <div style="flex:1 1 150px;">
+          <label for="formEnd">End date</label>
+          <input type="date" id="formEnd" />
+        </div>
+        <div style="flex:1 1 120px;">
+          <label for="formEndHalf">End</label>
+          <select id="formEndHalf">
+            <option value="PM">Full day (AM–PM)</option>
+            <option value="AM">AM only (half-day)</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="formReason">Reason / Notes (optional)</label>
+      <textarea id="formReason" placeholder="Family trip, appointment, etc."></textarea>
+
+      <button type="button" id="formPreviewBtn" style="margin-top:4px;">
+        Refresh request summary
+      </button>
+
+      <div id="formSummary" style="margin-top:12px; font-size:13px;"></div>
+      <p class="small-note">
+        This is a demo only: it does not submit or store actual PTO requests. It is
+        meant to sit next to the paper form or a future e-signature flow.
+      </p>
     </div>
 
   </div> <!-- /dashboard -->
@@ -420,31 +398,16 @@
       if (!ptoRes.ok) throw new Error('pto_employee_info.json HTTP ' + ptoRes.status);
 
       employees = await empRes.json();
-      ptoInfo = await ptoRes.json();
-
-      // contacts.json and pto_requests.json are optional, but nice to have
-      if (contactsRes.ok) {
-        contacts = await contactsRes.json();
-      } else {
-        console.warn('contacts.json not found (optional): HTTP ' + contactsRes.status);
-        contacts = [];
-      }
-
-      if (reqRes.ok) {
-        ptoRequests = await reqRes.json();
-      } else {
-        console.warn('pto_requests.json not found (optional): HTTP ' + reqRes.status);
-        ptoRequests = [];
-      }
+      ptoInfo   = await ptoRes.json();
+      contacts  = contactsRes.ok ? await contactsRes.json() : [];
+      ptoRequests = reqRes.ok ? await reqRes.json() : [];
 
       if (!Array.isArray(employees) || employees.length === 0) {
         throw new Error('employees.json is empty or not an array');
       }
 
-      // Populate dropdown
       empSelect.innerHTML = '<option value="">Select your name...</option>';
       employees.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
       employees.forEach(emp => {
         const opt = document.createElement('option');
         opt.value = emp.empId;
@@ -488,7 +451,6 @@
       }
 
       const user = employees.find(e => e.empId === selectedId);
-
       if (!user || (user.passcode && user.passcode !== passcode)) {
         loginError.textContent = 'Incorrect passcode. Please try again.';
         loginError.style.display = 'block';
@@ -500,9 +462,7 @@
     });
 
     passcodeInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        loginBtn.click();
-      }
+      if (e.key === 'Enter') loginBtn.click();
     });
   }
 
@@ -517,26 +477,41 @@
     if (!record) return {
       vacationAvailable: 0,
       sickAvailable: 0,
-      unpaidAvailable: 0
+      unpaidAvailable: 0,
+      vacationBeginning: 0,
+      sickBeginning: 0,
+      unpaidBeginning: 0,
+      vacationUsed: 0,
+      sickUsed: 0,
+      unpaidUsed: 0,
+      futureVacationApproved: 0,
+      futureSickDays: 0,
+      futureUnpaidDays: 0
     };
     const b = record.balances || {};
     return {
       vacationAvailable: Number(b.vacationAvailable ?? 0),
       sickAvailable: Number(b.sickAvailable ?? 0),
-      unpaidAvailable: Number(b.unpaidAvailable ?? 0)
+      unpaidAvailable: Number(b.unpaidAvailable ?? 0),
+      vacationBeginning: Number(b.vacationBeginning ?? 0),
+      sickBeginning: Number(b.sickBeginning ?? 0),
+      unpaidBeginning: Number(b.unpaidBeginning ?? 0),
+      vacationUsed: Number(b.vacationUsed ?? 0),
+      sickUsed: Number(b.sickUsed ?? 0),
+      unpaidUsed: Number(b.unpaidUsed ?? 0),
+      futureVacationApproved: Number(b.futureVacationApproved ?? 0),
+      futureSickDays: Number(b.futureSickDays ?? 0),
+      futureUnpaidDays: Number(b.futureUnpaidDays ?? 0)
     };
   }
 
   function parseDate(mdyString) {
-    // Handles "3/2/26" or "3/2/2026"
     if (!mdyString) return null;
     const parts = mdyString.split('/');
     if (parts.length < 3) return null;
     let [m, d, y] = parts.map(p => p.trim());
-    m = Number(m);
-    d = Number(d);
-    y = Number(y);
-    if (y < 100) y = 2000 + y; // crude but fine for demo
+    m = Number(m); d = Number(d); y = Number(y);
+    if (y < 100) y = 2000 + y;
     const dt = new Date(y, m - 1, d);
     return isNaN(dt.getTime()) ? null : dt;
   }
@@ -605,31 +580,20 @@
       }
 
       let days = diffDaysInclusive(start, end);
-
-      // crude half-day handling for demo: if you choose PM-start or AM-end, shave 0.5
       if (startHalf === 'PM') days -= 0.5;
       if (endHalf === 'AM') days -= 0.5;
       if (days < 0) days = 0;
 
-      const balances = getBalances();
+      const b = getBalances();
       let available = 0;
       let label = '';
 
-      if (type === 'vacation') {
-        available = balances.vacationAvailable;
-        label = 'Vacation';
-      } else if (type === 'sick') {
-        available = balances.sickAvailable;
-        label = 'Sick';
-      } else {
-        available = balances.unpaidAvailable;
-        label = 'Unpaid';
-      }
+      if (type === 'vacation') { available = b.vacationAvailable; label = 'Vacation'; }
+      else if (type === 'sick') { available = b.sickAvailable; label = 'Sick'; }
+      else { available = b.unpaidAvailable; label = 'Unpaid'; }
 
       const remaining = available - days;
-      const pillClass =
-        type === 'vacation' ? 'vacation' :
-        type === 'sick' ? 'sick' : 'unpaid';
+      const pillClass = type === 'vacation' ? 'vacation' : type === 'sick' ? 'sick' : 'unpaid';
 
       result.innerHTML = `
         <p style="margin:0 0 6px 0;">
@@ -657,21 +621,18 @@
 
     const dept = currentUser.department;
     const teamReqs = ptoRequests.filter(r => r.department === dept);
-
     if (teamReqs.length === 0) {
       container.innerHTML = '<p class="muted">No PTO records found for your department yet.</p>';
       return;
     }
 
-    // Sort by start date ascending
     const enhanced = teamReqs.map(r => {
-      const dt = parseDate(r.startDate || r.start_date || r["PTO Request Start Date"]);
+      const dt = parseDate(r.startDate || r["PTO Request Start Date"]);
       return { ...r, _start: dt };
     }).filter(r => r._start !== null);
 
     enhanced.sort((a, b) => a._start - b._start);
-
-    const top = enhanced.slice(0, 10); // show first 10 upcoming
+    const top = enhanced.slice(0, 10);
 
     const rows = top.map(r => {
       const dStr = r.startDate || r["PTO Request Start Date"];
@@ -680,8 +641,8 @@
       const type = r.type || r["PTO Request Type"];
       const days = Number(r.totalDays ?? r["PTO Request Total Days"] ?? 0);
       const pillClass =
-        type === 'Vacation' || type === 'vacation' ? 'vacation' :
-        type === 'Sick' || type === 'sick' ? 'sick' : 'unpaid';
+        type.toLowerCase() === 'vacation' ? 'vacation' :
+        type.toLowerCase() === 'sick' ? 'sick' : 'unpaid';
 
       return `
         <tr>
@@ -703,9 +664,7 @@
             <th>Type</th>
           </tr>
         </thead>
-        <tbody>
-          ${rows}
-        </tbody>
+        <tbody>${rows}</tbody>
       </table>
       <p class="small-note">
         Showing PTO requests for your department from the loaded PTO Requests snapshot (max 10 rows).
@@ -730,7 +689,7 @@
       return;
     }
 
-    let rows = team.map(c => `
+    const rows = team.map(c => `
       <tr>
         <td>${c.name || ''}</td>
         <td>${c.email || ''}</td>
@@ -749,33 +708,285 @@
             <th>Region</th>
           </tr>
         </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  // ---------- TMC snapshot helpers ----------
+  function splitRequestsByTiming() {
+    if (!Array.isArray(ptoRequests)) return { past: [], future: [] };
+
+    const now = new Date();
+    const myReqs = ptoRequests.filter(r => {
+      const id = (r.empId || "").toString().toLowerCase();
+      return id === currentUser.empId.toString().toLowerCase();
+    });
+
+    const past = [];
+    const future = [];
+
+    myReqs.forEach(r => {
+      const startStr = r.startDate || r["PTO Request Start Date"];
+      const endStr = r.endDate || r["PTO Request End Date"] || startStr;
+
+      const start = parseDate(startStr);
+      const end = parseDate(endStr) || start;
+      if (!start) return;
+
+      const type = (r.type || r["PTO Request Type"] || "").toLowerCase();
+      const totalDays = Number(r.totalDays ?? r["PTO Request Total Days"] ?? 0);
+      const obj = { type, startStr, endStr, totalDays };
+
+      if (end < now) past.push(obj); else future.push(obj);
+    });
+
+    return { past, future };
+  }
+
+  function formatDateRange(r) {
+    if (!r) return "";
+    if (!r.endStr || r.endStr === r.startStr) return r.startStr || "";
+    return `${r.startStr}–${r.endStr}`;
+  }
+
+  function renderTmcSnapshot() {
+    const balancesDiv = document.getElementById('tmcBalances');
+    const datesDiv = document.getElementById('tmcDates');
+
+    const rec = findPtoRecord(currentUser.empId);
+    if (!rec) {
+      balancesDiv.innerHTML = '<p class="muted">No PTO balance data found for this employee.</p>';
+      datesDiv.innerHTML = '';
+      return;
+    }
+
+    const b = getBalances();
+    const { past, future } = splitRequestsByTiming();
+
+    const pastVacation = past.filter(r => r.type === 'vacation');
+    const pastSick     = past.filter(r => r.type === 'sick');
+    const pastUnpaid   = past.filter(r => r.type === 'unpaid');
+
+    const futureVacation = future.filter(r => r.type === 'vacation');
+    const futureSick     = future.filter(r => r.type === 'sick');
+    const futureUnpaid   = future.filter(r => r.type === 'unpaid');
+
+    const joinRanges = (arr) => arr.map(formatDateRange).filter(Boolean).join(', ');
+
+    const allPast   = [...pastVacation, ...pastSick, ...pastUnpaid];
+    const allFuture = [...futureVacation, ...futureSick, ...futureUnpaid];
+
+    balancesDiv.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Vacation</th>
+            <th>Sick</th>
+            <th>Unpaid</th>
+          </tr>
+        </thead>
         <tbody>
-          ${rows}
+          <tr>
+            <td><strong>2025 Beginning Balances</strong></td>
+            <td>${b.vacationBeginning.toFixed(2)}</td>
+            <td>${b.sickBeginning.toFixed(2)}</td>
+            <td>${b.unpaidBeginning.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Days Used YTD</strong></td>
+            <td>${b.vacationUsed.toFixed(2)}</td>
+            <td>${b.sickUsed.toFixed(2)}</td>
+            <td>${b.unpaidUsed.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Future Days Approved</strong></td>
+            <td>${b.futureVacationApproved.toFixed(2)}</td>
+            <td>${b.futureSickDays.toFixed(2)}</td>
+            <td>${b.futureUnpaidDays.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>2025 Remaining Balances</strong></td>
+            <td>${b.vacationAvailable.toFixed(2)}</td>
+            <td>${b.sickAvailable.toFixed(2)}</td>
+            <td>${b.unpaidAvailable.toFixed(2)}</td>
+          </tr>
         </tbody>
       </table>
+    `;
+
+    datesDiv.innerHTML = `
+      <div style="margin-top:10px; font-size:13px;">
+        <p><strong>Vacation Dates Used:</strong> ${joinRanges(pastVacation) || '<span class="muted">None recorded</span>'}</p>
+        <p><strong>Vacation Dates Previously Approved (Future):</strong> ${joinRanges(futureVacation) || '<span class="muted">None recorded</span>'}</p>
+
+        <p><strong>Sick Dates Used:</strong> ${joinRanges(pastSick) || '<span class="muted">None recorded</span>'}</p>
+        <p><strong>Sick Dates Previously Approved (Future):</strong> ${joinRanges(futureSick) || '<span class="muted">None recorded</span>'}</p>
+
+        <p><strong>Unpaid Dates Used:</strong> ${joinRanges(pastUnpaid) || '<span class="muted">None recorded</span>'}</p>
+        <p><strong>Unpaid Dates Previously Approved (Future):</strong> ${joinRanges(futureUnpaid) || '<span class="muted">None recorded</span>'}</p>
+
+        <hr style="border:none; border-top:1px solid #eee; margin:10px 0;">
+
+        <p><strong>All Dates Used (All Types):</strong> ${joinRanges(allPast) || '<span class="muted">None recorded</span>'}</p>
+        <p><strong>All Dates Previously Approved (All Types):</strong> ${joinRanges(allFuture) || '<span class="muted">None recorded</span>'}</p>
+      </div>
+    `;
+  }
+
+  // ---------- PTO Request Form (demo) ----------
+  function setupPtoForm() {
+    const nameInput = document.getElementById('formEmpName');
+    const deptInput = document.getElementById('formDept');
+    const supInput  = document.getElementById('formSupervisor');
+
+    nameInput.value = currentUser.name || '';
+    deptInput.value = currentUser.department || '';
+    supInput.value  = currentUser.directReport || '';
+
+    // any change triggers a refresh
+    ['formType','formStart','formEnd','formStartHalf','formEndHalf','formReason'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('change', renderPtoFormSummary);
+      el.addEventListener('input', renderPtoFormSummary);
+    });
+
+    document.getElementById('formPreviewBtn')
+      .addEventListener('click', renderPtoFormSummary);
+
+    renderPtoFormSummary(); // initial
+  }
+
+  function renderPtoFormSummary() {
+    const container = document.getElementById('formSummary');
+    const type = document.getElementById('formType').value;
+    const startStr = document.getElementById('formStart').value;
+    const endStr   = document.getElementById('formEnd').value;
+    const startHalf = document.getElementById('formStartHalf').value;
+    const endHalf   = document.getElementById('formEndHalf').value;
+
+    if (!startStr || !endStr) {
+      container.innerHTML = '<span class="muted">Choose a start and end date to see request details.</span>';
+      return;
+    }
+
+    const start = new Date(startStr);
+    const end   = new Date(endStr);
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) {
+      container.innerHTML = '<span style="color:#c62828;">End date must be the same or after the start date.</span>';
+      return;
+    }
+
+    let days = diffDaysInclusive(start, end);
+    if (startHalf === 'PM') days -= 0.5;
+    if (endHalf === 'AM')   days -= 0.5;
+    if (days < 0) days = 0;
+
+    const b = getBalances();
+
+    let label, begin, used, futureApproved, available;
+    if (type === 'vacation') {
+      label = 'Vacation';
+      begin = b.vacationBeginning;
+      used  = b.vacationUsed;
+      futureApproved = b.futureVacationApproved;
+      available = b.vacationAvailable;
+    } else if (type === 'sick') {
+      label = 'Sick';
+      begin = b.sickBeginning;
+      used  = b.sickUsed;
+      futureApproved = b.futureSickDays;
+      available = b.sickAvailable;
+    } else {
+      label = 'Unpaid';
+      begin = b.unpaidBeginning;
+      used  = b.unpaidUsed;
+      futureApproved = b.futureUnpaidDays;
+      available = b.unpaidAvailable;
+    }
+
+    const newUsed = used + days;
+    const newFutureApproved = futureApproved + days;
+    const remainingIfApproved = available - days;
+
+    const warning = remainingIfApproved < 0
+      ? `<p style="color:#c62828; margin:6px 0 0 0;">
+           This request would exceed your current available ${label.toLowerCase()} balance
+           by ${Math.abs(remainingIfApproved).toFixed(2)} days.
+         </p>`
+      : '';
+
+    container.innerHTML = `
+      <p style="margin:0 0 6px 0;">
+        Requesting <strong>${days.toFixed(2)}</strong> day(s) of <strong>${label}</strong> PTO.
+      </p>
+      <p style="margin:0 0 10px 0; font-size:13px;">
+        Dates out: <strong>${startStr}</strong>${endStr && endStr !== startStr ? ' – <strong>' + endStr + '</strong>' : ''}
+        <br/>
+        This would be added to your 2025 ${label.toLowerCase()} usage and "previously approved" totals.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>${label}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>2025 Beginning Balance</strong></td>
+            <td>${begin.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Days Used YTD (before this request)</strong></td>
+            <td>${used.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Days Used YTD (including this request)</strong></td>
+            <td>${newUsed.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Future Days Previously Approved</strong></td>
+            <td>${futureApproved.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Future Days Approved (if this is signed)</strong></td>
+            <td>${newFutureApproved.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Available Balance Today</strong></td>
+            <td>${available.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>Balance If Approved</strong></td>
+            <td>${remainingIfApproved.toFixed(2)}</td>
+          </tr>
+        </tbody>
+      </table>
+      ${warning}
     `;
   }
 
   // ---------- Show dashboard ----------
   function showDashboard() {
-    const loginCard = document.getElementById('loginCard');
-    const dashboard = document.getElementById('dashboard');
+    document.getElementById('loginCard').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
     const welcomeName = document.getElementById('welcomeName');
     const welcomeDept = document.getElementById('welcomeDept');
 
-    loginCard.style.display = 'none';
-    dashboard.style.display = 'block';
-
     welcomeName.textContent = `Welcome, ${currentUser.name}`;
     const dept = currentUser.department || '';
-    const dr = currentUser.directReport || '';
-    welcomeDept.textContent = dept
-      ? (dr ? `${dept} · Reports to ${dr}` : dept)
-      : '';
+    const dr   = currentUser.directReport || '';
+    welcomeDept.textContent = dept ? (dr ? `${dept} · Reports to ${dr}` : dept) : '';
 
     renderPtoSummary();
     renderOutlook();
     renderContacts();
+    renderTmcSnapshot();
+    setupPtoForm();
   }
 
   // ---------- Boot ----------
