@@ -470,7 +470,7 @@
   let contacts = [];
   let ptoRequests = [];
   let currentUser = null;
-
+  let selectedOutlook = null; // { scope, dateStr } for the last clicked bubble
   // US holidays 2025 & 2026 (ISO date -> name)
   const usHolidays = {
     "2025-01-01": "New Year's Day",
@@ -947,7 +947,106 @@
       </div>
     `;
   }
+  // Build a full text snapshot of PTO (same logic as the table + dates)
+function buildFullPtoSnapshotText() {
+  const rec = findPtoRecord(currentUser.empId);
+  if (!rec) return '';
 
+  const b = getBalances();
+  const { past, future } = splitRequestsByTiming();
+
+  const pastVacation = past.filter(r => r.type === 'vacation');
+  const pastSick     = past.filter(r => r.type === 'sick');
+  const pastUnpaid   = past.filter(r => r.type === 'unpaid');
+
+  const futureVacation = future.filter(r => r.type === 'vacation');
+  const futureSick     = future.filter(r => r.type === 'sick');
+  const futureUnpaid   = future.filter(r => r.type === 'unpaid');
+
+  const joinRanges = (arr) => arr.map(formatDateRange).filter(Boolean).join(', ') || 'None recorded';
+
+  const allPast   = [...pastVacation, ...pastSick, ...pastUnpaid];
+  const allFuture = [...futureVacation, ...futureSick, ...futureUnpaid];
+
+  // Last / next vacation day
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const today = new Date();
+
+  let lastVacDate = null;
+  pastVacation.forEach(r => {
+    const d = parseMDY(r.endStr) || parseMDY(r.startStr) || new Date(r.endStr || r.startStr);
+    if (d && !isNaN(d.getTime())) {
+      if (!lastVacDate || d > lastVacDate) lastVacDate = d;
+    }
+  });
+
+  let nextVacDate = null;
+  futureVacation.forEach(r => {
+    const d = parseMDY(r.startStr) || new Date(r.startStr);
+    if (d && !isNaN(d.getTime())) {
+      if (!nextVacDate || d < nextVacDate) nextVacDate = d;
+    }
+  });
+
+  let lastLine = 'No prior vacation days recorded.';
+  if (lastVacDate) {
+    const daysAgo = Math.round((today - lastVacDate) / msPerDay);
+    lastLine = `${lastVacDate.toLocaleDateString()} (${daysAgo >= 0 ? daysAgo : 0} days ago)`;
+  }
+
+  let nextLine = 'No upcoming vacation days scheduled.';
+  if (nextVacDate) {
+    const daysUntil = Math.round((nextVacDate - today) / msPerDay);
+    nextLine = `${nextVacDate.toLocaleDateString()} (${daysUntil >= 0 ? daysUntil : 0} days from now)`;
+  }
+
+  const lines = [];
+
+  lines.push('Last vacation day taken');
+  lines.push(lastLine);
+  lines.push('Next vacation day scheduled');
+  lines.push(nextLine);
+  lines.push('');
+
+  lines.push('Vacation   Sick   Unpaid');
+  lines.push('2025 Beginning Balances');
+  lines.push(
+    `${b.vacationBeginning.toFixed(2)}   ` +
+    `${b.sickBeginning.toFixed(2)}   ` +
+    `${b.unpaidBeginning.toFixed(2)}`
+  );
+  lines.push('Days Used YTD');
+  lines.push(
+    `${b.vacationUsed.toFixed(2)}   ` +
+    `${b.sickUsed.toFixed(2)}   ` +
+    `${b.unpaidUsed.toFixed(2)}`
+  );
+  lines.push('Future Days Approved');
+  lines.push(
+    `${b.futureVacationApproved.toFixed(2)}   ` +
+    `${b.futureSickDays.toFixed(2)}   ` +
+    `${b.futureUnpaidDays.toFixed(2)}`
+  );
+  lines.push('2025 Remaining Balances');
+  lines.push(
+    `${b.vacationAvailable.toFixed(2)}   ` +
+    `${b.sickAvailable.toFixed(2)}   ` +
+    `${b.unpaidAvailable.toFixed(2)}`
+  );
+  lines.push('');
+
+  lines.push(`Vacation Dates Used: ${joinRanges(pastVacation)}`);
+  lines.push(`Vacation Dates Previously Approved (Future): ${joinRanges(futureVacation)}`);
+  lines.push(`Sick Dates Used: ${joinRanges(pastSick)}`);
+  lines.push(`Sick Dates Previously Approved (Future): ${joinRanges(futureSick)}`);
+  lines.push(`Unpaid Dates Used: ${joinRanges(pastUnpaid)}`);
+  lines.push(`Unpaid Dates Previously Approved (Future): ${joinRanges(futureUnpaid)}`);
+  lines.push('');
+  lines.push(`All Dates Used (All Types): ${joinRanges(allPast)}`);
+  lines.push(`All Dates Previously Approved (All Types): ${joinRanges(allFuture)}`);
+
+  return lines.join('\n');
+}
   // ---------- Team PTO Outlook + clickable bubbles + personal outlook ----------
   function renderOutlook() {
     const container = document.getElementById('outlookSummary');
@@ -1228,6 +1327,9 @@
         const scope = b.getAttribute('data-scope');   // 'dept' or 'company'
         const dateStr = b.getAttribute('data-date');
         const key = scope + '|' + dateStr;
+
+        selectedOutlook = { scope, dateStr };  // <— NEW
+
         const list = outlookDetailMap[key] || [];
         if (!list.length) {
           detailsBox.style.display = 'block';
@@ -1389,89 +1491,116 @@
   }
 
   function buildPtoEmailBody() {
-    const name = currentUser.name || '';
-    const dept = currentUser.department || '';
-    const sup  = currentUser.directReport || '';
+  const name = currentUser.name || '';
+  const dept = currentUser.department || '';
+  const sup  = currentUser.directReport || '';
 
-    const type = document.getElementById('formType').value;
-    const startStr = document.getElementById('formStart').value;
-    const endStr   = document.getElementById('formEnd').value;
-    const startHalf = document.getElementById('formStartHalf').value;
-    const endHalf   = document.getElementById('formEndHalf').value;
-    const reason    = document.getElementById('formReason').value.trim();
+  const type = document.getElementById('formType').value;
+  const startStr = document.getElementById('formStart').value;
+  const endStr   = document.getElementById('formEnd').value;
+  const startHalf = document.getElementById('formStartHalf').value;
+  const endHalf   = document.getElementById('formEndHalf').value;
+  const reason    = document.getElementById('formReason').value.trim();
 
-    if (!startStr || !endStr) {
-      return null;
-    }
-    const start = new Date(startStr);
-    const end   = new Date(endStr);
-    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) {
-      return null;
-    }
+  if (!startStr || !endStr) return null;
 
-    let days = diffDaysInclusive(start, end);
-    if (startHalf === 'PM') days -= 0.5;
-    if (endHalf === 'AM')   days -= 0.5;
-    if (days < 0) days = 0;
+  const start = new Date(startStr);
+  const end   = new Date(endStr);
+  if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) return null;
 
-    const b = getBalances();
+  let days = diffDaysInclusive(start, end);
+  if (startHalf === 'PM') days -= 0.5;
+  if (endHalf === 'AM')   days -= 0.5;
+  if (days < 0) days = 0;
 
-    let label, begin, used, futureApproved, available;
-    if (type === 'vacation') {
-      label = 'Vacation';
-      begin = b.vacationBeginning;
-      used  = b.vacationUsed;
-      futureApproved = b.futureVacationApproved;
-      available = b.vacationAvailable;
-    } else if (type === 'sick') {
-      label = 'Sick';
-      begin = b.sickBeginning;
-      used  = b.sickUsed;
-      futureApproved = b.futureSickDays;
-      available = b.sickAvailable;
-    } else {
-      label = 'Unpaid';
-      begin = b.unpaidBeginning;
-      used  = b.unpaidUsed;
-      futureApproved = b.futureUnpaidDays;
-      available = b.unpaidAvailable;
-    }
+  const b = getBalances();
 
-    const newUsed = used + days;
-    const newFutureApproved = futureApproved + days;
-    const remainingIfApproved = available - days;
-
-    const lines = [
-      `PTO Request – ${name}`,
-      '',
-      `Employee: ${name}`,
-      `Department: ${dept}`,
-      `Supervisor: ${sup}`,
-      '',
-      `PTO Type: ${label}`,
-      `Dates: ${startStr}${endStr && endStr !== startStr ? ' – ' + endStr : ''}`,
-      `Start: ${startHalf}`,
-      `End: ${endHalf}`,
-      `Total Days Requested: ${days.toFixed(2)}`,
-      reason ? `Reason / Notes: ${reason}` : '',
-      '',
-      `Snapshot for ${label}:`,
-      `  2025 Beginning Balance: ${begin.toFixed(2)}`,
-      `  Days Used YTD (before): ${used.toFixed(2)}`,
-      `  Days Used YTD (after):  ${newUsed.toFixed(2)}`,
-      `  Future Days Previously Approved: ${futureApproved.toFixed(2)}`,
-      `  Future Days Approved (if signed): ${newFutureApproved.toFixed(2)}`,
-      `  Available Today: ${available.toFixed(2)}`,
-      `  Balance If Approved: ${remainingIfApproved.toFixed(2)}`,
-      remainingIfApproved < 0
-        ? `  WARNING: This request exceeds current available ${label.toLowerCase()} by ${Math.abs(remainingIfApproved).toFixed(2)} day(s).`
-        : '',
-      '',
-      'This email was generated from the HH PTO portal prototype.'
-    ].filter(Boolean);
-
-    return lines.join('\n');
+  let label, begin, used, futureApproved, available;
+  if (type === 'vacation') {
+    label = 'Vacation';
+    begin = b.vacationBeginning;
+    used  = b.vacationUsed;
+    futureApproved = b.futureVacationApproved;
+    available = b.vacationAvailable;
+  } else if (type === 'sick') {
+    label = 'Sick';
+    begin = b.sickBeginning;
+    used  = b.sickUsed;
+    futureApproved = b.futureSickDays;
+    available = b.sickAvailable;
+  } else {
+    label = 'Unpaid';
+    begin = b.unpaidBeginning;
+    used  = b.unpaidUsed;
+    futureApproved = b.futureUnpaidDays;
+    available = b.unpaidAvailable;
   }
+
+  const newUsed = used + days;
+  const newFutureApproved = futureApproved + days;
+  const remainingIfApproved = available - days;
+
+  const lines = [
+    `PTO Request – ${name}`,
+    '',
+    `Employee: ${name}`,
+    `Department: ${dept}`,
+    `Supervisor: ${sup}`,
+    '',
+    `PTO Type: ${label}`,
+    `Dates: ${startStr}${endStr && endStr !== startStr ? ' – ' + endStr : ''}`,
+    `Start: ${startHalf}`,
+    `End: ${endHalf}`,
+    `Total Days Requested: ${days.toFixed(2)}`,
+    reason ? `Reason / Notes: ${reason}` : '',
+    '',
+    `Snapshot for ${label}:`,
+    `  2025 Beginning Balance: ${begin.toFixed(2)}`,
+    `  Days Used YTD (before): ${used.toFixed(2)}`,
+    `  Days Used YTD (after):  ${newUsed.toFixed(2)}`,
+    `  Future Days Previously Approved: ${futureApproved.toFixed(2)}`,
+    `  Future Days Approved (if signed): ${newFutureApproved.toFixed(2)}`,
+    `  Available Today: ${available.toFixed(2)}`,
+    `  Balance If Approved: ${remainingIfApproved.toFixed(2)}`,
+    remainingIfApproved < 0
+      ? `  WARNING: This request exceeds current available ${label.toLowerCase()} by ${Math.abs(remainingIfApproved).toFixed(2)} day(s).`
+      : '',
+    ''
+  ].filter(Boolean);
+
+  // === NEW: full multi-type PTO snapshot (your big block) ===
+  const fullSnapshotText = buildFullPtoSnapshotText();
+  if (fullSnapshotText) {
+    lines.push('Full PTO Snapshot');
+    lines.push('-----------------');
+    lines.push(fullSnapshotText);
+    lines.push('');
+  }
+
+  // === NEW (optional): include last clicked Team PTO Outlook details ===
+  if (selectedOutlook && outlookDetailMap) {
+    const key = selectedOutlook.scope + '|' + selectedOutlook.dateStr;
+    const list = outlookDetailMap[key] || [];
+    if (list.length) {
+      const scopeLabel = selectedOutlook.scope === 'dept' ? 'Dept' : 'Company';
+      lines.push(
+        `${formatISOForDisplay(selectedOutlook.dateStr)} – ${scopeLabel} details`
+      );
+      list.forEach(e => {
+        const line = `  • ${e.name || '(Name missing)'}`
+          + (e.department ? ` · ${e.department}` : '')
+          + (e.type ? ` · ${e.type}` : '')
+          + (e.range ? ` · ${e.range}` : '');
+        lines.push(line);
+      });
+      lines.push('');
+    }
+  }
+
+  lines.push('This email was generated from the HH PTO portal prototype.');
+
+  return lines.join('\n');
+}
 
   function openPtoEmailDraft() {
     const body = buildPtoEmailBody();
