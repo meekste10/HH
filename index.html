@@ -109,11 +109,8 @@
   /* Tile grid */
   .tile-grid{
     display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
     gap:14px;
-  }
-  @media (max-width:800px){
-    .tile-grid{ grid-template-columns:1fr; }
   }
 
   .tile{
@@ -184,7 +181,7 @@
     filter:brightness(1.04);
   }
 
-  /* Background images – swap these URLs with real branded images when ready */
+  /* Background images – swap these with real assets when ready */
   .tile-pto{
     background-image:
       linear-gradient(120deg,#145a32,#1b4332),
@@ -205,6 +202,11 @@
       linear-gradient(120deg,#0f766e,#022c22),
       url("img/feed_placeholder.jpg");
   }
+  .tile-employee{
+    background-image:
+      linear-gradient(120deg,#312e81,#1e293b),
+      url("img/employee_portal_placeholder.jpg");
+  }
 
   .note{
     margin-top:10px;
@@ -218,11 +220,11 @@
     <div class="bar">
       <h1 class="brand">Holland Homes — Leadership Dashboard</h1>
       <nav class="toolbar">
-        <!-- These are optional quick links; tiles below are the “hero” navigation -->
         <a href="./index_contacts.html">Contacts</a>
         <a href="./ppp.html">PPP</a>
         <a href="./index_pto.html">PTO</a>
-        <a href="./hh_feed.html">Home Builder Feed</a> <!-- make sure this file exists -->
+        <a href="./hh_feed.html">Home Builder Feed</a>
+        <a href="./employee_portal.html">Employee Portal</a>
       </nav>
     </div>
   </header>
@@ -231,15 +233,15 @@
     <section class="panel">
       <div class="panel-header">
         <div>
-          <h2>People & Operations Apps</h2>
+          <h2>People &amp; Operations Apps</h2>
           <p class="sub">
-            Tap a tile to open the app in this repo—PTO coverage, PPP, Contacts, or the Home Builder Feed.
+            Tap a tile to open the app in this repo—PTO coverage, PPP, Contacts, the Home Builder Feed, or the Employee Portal.
           </p>
         </div>
         <div class="chip">Purpose &gt; People &gt; Process &gt; Product</div>
       </div>
 
-      <!-- 2×2 tile grid -->
+      <!-- Tile grid with 5 tiles -->
       <div class="tile-grid">
         <!-- PTO tile -->
         <a class="tile tile-pto" href="./index_pto.html">
@@ -253,7 +255,9 @@
             <div class="tile-footer">
               <span>
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 12h14M13 6l6 6-6 6"
+                        stroke="white" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 Open PTO dashboard
               </span>
@@ -274,7 +278,9 @@
             <div class="tile-footer">
               <span>
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 12h14M13 6l6 6-6 6"
+                        stroke="white" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 Open PPP view
               </span>
@@ -295,9 +301,11 @@
             <div class="tile-footer">
               <span>
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 12h14M13 6l6 6-6 6"
+                        stroke="white" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Open Contacts
+                Open contacts
               </span>
               <span class="pill">Directory</span>
             </div>
@@ -306,7 +314,7 @@
 
         <!-- Home Builder Feed tile -->
         <a class="tile tile-feed" href="./hh_feed.html">
-          <!-- if your feed lives in a folder, e.g. ./homebuilder-feed/index.html, update this href -->
+          <!-- update href if your feed file lives at a different path -->
           <div class="tile-inner">
             <div>
               <div class="tile-title">Home Builder Feed</div>
@@ -317,7 +325,9 @@
             <div class="tile-footer">
               <span>
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M5 12h14M13 6l6 6-6 6"
+                        stroke="white" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 Open industry feed
               </span>
@@ -325,11 +335,34 @@
             </div>
           </div>
         </a>
+
+        <!-- Employee Portal tile -->
+        <a class="tile tile-employee" href="./employee_portal.html">
+          <div class="tile-inner">
+            <div>
+              <div class="tile-title">Employee Portal</div>
+              <div class="tile-sub">
+                Personal PTO, role, and quick links with a simple name + PIN login.
+              </div>
+            </div>
+            <div class="tile-footer">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 6l6 6-6 6"
+                        stroke="white" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Open portal
+              </span>
+              <span class="pill">My HH</span>
+            </div>
+          </div>
+        </a>
       </div>
 
       <p class="note">
-        Swap the tile background images in the CSS (<code>.tile-pto</code>, <code>.tile-ppp</code>, <code>.tile-contacts</code>, <code>.tile-feed</code>)
-        with brand photography or simple gradients. All four tiles just navigate to other HTML apps in this same repo.
+        Swap the tile background images in the CSS (<code>.tile-pto</code>, <code>.tile-ppp</code>, <code>.tile-contacts</code>, <code>.tile-feed</code>, <code>.tile-employee</code>)
+        with brand photography or simple gradients. All tiles just navigate to other HTML apps in this same repo.
       </p>
     </section>
   </main>
