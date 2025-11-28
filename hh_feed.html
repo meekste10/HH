@@ -484,34 +484,45 @@
     const RSS_PROXY_BASE = "https://api.rss2json.com/v1/api.json?";
 
     const FEEDS = [
-      // --- ARTICLES: Industry & Building Science ---
-      { id: "constructiondive", label: "Construction Dive – News", url: "https://www.constructiondive.com/feeds/news/", type: "Industry & Market", kind: "article" },
-      { id: "levelset", label: "Levelset – Payment & Lien Insights", url: "https://www.levelset.com/feed/", type: "Payment & Risk", kind: "article" },
-      { id: "probuilder", label: "Pro Builder Magazine", url: "https://www.probuilder.com/rss.xml", type: "Home Building News", kind: "article" },
-      { id: "simpsonstrongtie", label: "Simpson Strong-Tie – Building Strong", url: "https://blog.strongtie.com/feed/", type: "Field / Structural", kind: "article" },
-      { id: "buildermag", label: "Builder Magazine", url: "https://www.builderonline.com/rss", type: "Industry & Market", kind: "article" },
-      { id: "jlc", label: "Journal of Light Construction (JLC)", url: "https://www.jlconline.com/rss", type: "Field / Structural", kind: "article" },
+  // --- ARTICLES: Industry & Building Science ---
+  { id: "constructiondive", label: "Construction Dive – News", url: "https://www.constructiondive.com/feeds/news/", type: "Industry & Market", kind: "article" },
+  { id: "levelset", label: "Levelset – Payment & Lien Insights", url: "https://www.levelset.com/feed/", type: "Payment & Risk", kind: "article" },
 
-      // --- PODCASTS: Homebuilding & Construction ---
-      { id: "homebuildinghero", label: "Home Building Hero Podcast", url: "https://anchor.fm/s/7eefadc/podcast/rss", type: "Leadership / Mindset", kind: "podcast" },
-      { id: "behindyourback", label: "Behind Your Back Podcast", url: "https://behindyourbackpodcast.libsyn.com/rss", type: "Leadership / Mindset", kind: "podcast" },
-      { id: "buildingsustainably", label: "Building Sustainably – Tim O’Brien Homes", url: "https://feeds.buzzsprout.com/1141247.rss", type: "Community / Sustainability", kind: "podcast" },
-      { id: "finehomebuilding", label: "Fine Homebuilding Podcast", url: "https://www.finehomebuilding.com/feed/podcast", type: "Field / Structural", kind: "podcast" },
-      { id: "constructionleaders", label: "Construction Leadership Podcast (CMAA)", url: "https://cmaa.podbean.com/feed.xml", type: "Leadership / Mindset", kind: "podcast" },
-      { id: "buildingcode", label: "The Building Code – Buildertrend", url: "https://feeds.simplecast.com/9r2G7vQF", type: "Industry & Market", kind: "podcast" },
+  // Pro Builder: official RSS feed
+  // If this still throws errors, it’s a ProBuilder / rss2json compatibility thing, not your code.
+  { id: "probuilder", label: "Pro Builder Magazine", url: "https://www.probuilder.com/rss.xml", type: "Home Building News", kind: "article" },
 
-      // --- PODCASTS: Marketing & Sales ---
-      { id: "hbmarketing", label: "Home Builder Digital Marketing Podcast", url: "https://feeds.castos.com/5o2zw", type: "Marketing & Sales", kind: "podcast" },
-      { id: "buildergrowth", label: "Builder Marketing Growth Show", url: "https://www.buildermarketinggrowthshow.com/feed", type: "Marketing & Sales", kind: "podcast" },
+  { id: "simpsonstrongtie", label: "Simpson Strong-Tie – Building Strong", url: "https://blog.strongtie.com/feed/", type: "Field / Structural", kind: "article" },
+  { id: "jlc", label: "Journal of Light Construction (JLC)", url: "https://www.jlconline.com/rss", type: "Field / Structural", kind: "article" },
 
-      // --- PODCASTS: Interior Design ---
-      { id: "interiordesignbiz", label: "Interior Design Business Podcast", url: "https://feed.podbean.com/thestartingdesigner/feed.xml", type: "Interior Design", kind: "podcast" },
-      { id: "interiordesignmag", label: "Interior Design Magazine Podcast", url: "https://rss.art19.com/interior-design-magazine-podcast", type: "Interior Design", kind: "podcast" },
+  // --- PODCASTS: Homebuilding & Construction ---
 
-      // --- PODCASTS: HR & Leadership ---
-      { id: "hbrideacast", label: "HBR IdeaCast", url: "https://feeds.megaphone.fm/hbrideacast", type: "Leadership / Mindset", kind: "podcast" },
-      { id: "dailystoic", label: "The Daily Stoic", url: "https://feeds.megaphone.fm/dailystoic", type: "Leadership / Mindset", kind: "podcast" }
-    ];
+  { id: "homebuildinghero", label: "Home Building Hero Podcast", url: "https://anchor.fm/s/7eefadc/podcast/rss", type: "Leadership / Mindset", kind: "podcast" },
+
+  // The Building Code – use Podbean’s RSS
+  { id: "buildingcode", label: "The Building Code – Buildertrend", url: "https://buildingcode.podbean.com/feed.xml", type: "Industry & Market", kind: "podcast" },
+
+  // Fine Homebuilding – Libsyn RSS
+  { id: "finehomebuilding", label: "Fine Homebuilding Podcast", url: "https://finehomebuilding-podcast.libsyn.com/rss", type: "Field / Structural", kind: "podcast" },
+
+  { id: "buildingsustainably", label: "Building Sustainably – Tim O’Brien Homes", url: "https://feeds.buzzsprout.com/1141247.rss", type: "Community / Sustainability", kind: "podcast" },
+
+  // --- PODCASTS: Marketing & Sales ---
+  { id: "hbmarketing", label: "Home Builder Digital Marketing Podcast", url: "https://feeds.castos.com/5o2zw", type: "Marketing & Sales", kind: "podcast" },
+  { id: "buildergrowth", label: "Builder Marketing Growth Show", url: "https://www.buildermarketinggrowthshow.com/feed", type: "Marketing & Sales", kind: "podcast" },
+
+  // --- PODCASTS: Interior Design ---
+  { id: "interiordesignbiz", label: "Interior Design Business Podcast", url: "https://feed.podbean.com/thestartingdesigner/feed.xml", type: "Interior Design", kind: "podcast" },
+  { id: "interiordesignmag", label: "Interior Design Magazine Podcast", url: "https://rss.art19.com/interior-design", type: "Interior Design", kind: "podcast" },
+
+  // --- PODCASTS: HR & Leadership ---
+
+  // HBR IdeaCast – official Harvard Business RSS
+  { id: "hbrideacast", label: "HBR IdeaCast", url: "https://feeds.harvardbusiness.org/harvardbusiness/ideacast", type: "Leadership / Mindset", kind: "podcast" },
+
+  // Daily Stoic – Art19 RSS
+  { id: "dailystoic", label: "The Daily Stoic", url: "https://rss.art19.com/the-daily-stoic", type: "Leadership / Mindset", kind: "podcast" }
+];
 
     // ------------------------
     // STATE
