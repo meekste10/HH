@@ -1,0 +1,734 @@
+[
+  {
+    "empId": "CandiceB",
+    "name": "Candice Barber",
+    "firstName": "Candice",
+    "lastName": "Barber",
+    "email": "candiceb@hollandhomesllc.com",
+    "workNumber": "13342249876",
+    "personalNumber": "13342249876",
+    "department": "Finance",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "EllieB",
+    "name": "Ellie Barron",
+    "firstName": "Ellie",
+    "lastName": "Barron",
+    "email": "ebarron@hollandhomesllc.com",
+    "workNumber": "13343007434",
+    "personalNumber": "13343007434",
+    "department": "Finance",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "MitchellB",
+    "name": "Mitchell Beers",
+    "firstName": "Mitchell",
+    "lastName": "Beers",
+    "email": "mitchellb@hollandhomesllc.com",
+    "workNumber": "13347073310",
+    "personalNumber": "12057184530",
+    "department": "Production",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "ConnorB",
+    "name": "Connor Borie",
+    "firstName": "Connor",
+    "lastName": "Borie",
+    "email": "connorb@hollandhomesllc.com",
+    "workNumber": "13347406405",
+    "personalNumber": "13347406405",
+    "department": "Production",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  },
+  {
+    "empId": "JulieB",
+    "name": "Julie Brittle",
+    "firstName": "Julie",
+    "lastName": "Brittle",
+    "email": "julieb@hollandhomesllc.com",
+    "workNumber": "13344403780",
+    "personalNumber": "13347076309",
+    "department": "Sales",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": [
+      {
+        "name": "Stonewood Farms and Butterfly Rock (Springville)",
+        "phone": "12053603225"
+      },
+      {
+        "name": "Liberty Park/Chelsea Ridge/Chelsea Highlands (Vestavia & Chelsea)",
+        "phone": "12055338709"
+      }
+    ]
+  },
+  {
+    "empId": "JeremiahB",
+    "name": "Jeremiah Bruce",
+    "firstName": "Jeremiah",
+    "lastName": "Bruce",
+    "email": "jeremiah@hollandhomesllc.com",
+    "workNumber": "13347071124",
+    "personalNumber": "13347030159",
+    "department": "In-House Production",
+    "address": "3627 County Road 27, Opelika, AL",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "JustinC",
+    "name": "Justin Cabral",
+    "firstName": "Justin",
+    "lastName": "Cabral",
+    "email": "Justinc@hollandhomesllc.com",
+    "workNumber": "13347349347",
+    "personalNumber": "17854243025",
+    "department": "Production",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "SpencerC",
+    "name": "Spencer Cothran",
+    "firstName": "Spencer",
+    "lastName": "Cothran",
+    "email": "spencerc@hollandhomesllc.com",
+    "workNumber": "14055090134",
+    "personalNumber": "14055090134",
+    "department": "Community Development",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "MaxD",
+    "name": "Max Dailey",
+    "firstName": "Max",
+    "lastName": "Dailey",
+    "email": "mdailey@hollandhomesllc.com",
+    "workNumber": "13347522945",
+    "personalNumber": "12097152073",
+    "department": "Production",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  },
+  {
+    "empId": "ZacharyD",
+    "name": "Zachary Dauwer",
+    "firstName": "Zachary",
+    "lastName": "Dauwer",
+    "email": "zacharyd@hollandhomesllc.com",
+    "workNumber": "13347404339",
+    "personalNumber": "16017166931",
+    "department": "Production",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "MarkD",
+    "name": "Mark Derzis",
+    "firstName": "Mark",
+    "lastName": "Derzis",
+    "email": "markd@hollandhomesllc.com",
+    "workNumber": "12052090126",
+    "personalNumber": "12052090126",
+    "department": "Community Development",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  },
+  {
+    "empId": "WillD",
+    "name": "Will Dorminy",
+    "firstName": "Will",
+    "lastName": "Dorminy",
+    "email": "willd@hollandhomesllc.com",
+    "workNumber": "13342037242",
+    "personalNumber": "13343336567",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": [
+      {
+        "name": "Camellia Crossing (Valley)",
+        "phone": "13345214218"
+      },
+      {
+        "name": "Everley (Pike Road)",
+        "phone": "13346518967"
+      }
+    ]
+  },
+  {
+    "empId": "StephanieE",
+    "name": "Stephanie Edstrom",
+    "firstName": "Stephanie",
+    "lastName": "Edstrom",
+    "email": "stephanie@hollandhomesllc.com",
+    "workNumber": "14045475007",
+    "personalNumber": "14045475007",
+    "department": "Marketing",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "BrandonE",
+    "name": "Brandon Estes",
+    "firstName": "Brandon",
+    "lastName": "Estes",
+    "email": "Brandone@hollandandseals.com",
+    "workNumber": "13347349756",
+    "personalNumber": "13347108021",
+    "department": "Holland + Seals",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "HunterF",
+    "name": "Hunter Finklea",
+    "firstName": "Hunter",
+    "lastName": "Finklea",
+    "email": "hunterf@hollandhomesllc.com",
+    "workNumber": "13343281104",
+    "personalNumber": "13343281104",
+    "department": "Community Development",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  },
+  {
+    "empId": "EthanF",
+    "name": "Ethan Fisher",
+    "firstName": "Ethan",
+    "lastName": "Fisher",
+    "email": "efisher@hollandhomesllc.com",
+    "workNumber": "14409756787",
+    "personalNumber": "14409756787",
+    "department": "Finance",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "DavidF",
+    "name": "David Fontanez",
+    "firstName": "David",
+    "lastName": "Fontanez",
+    "email": "davidf@hollandhomesllc.com",
+    "workNumber": "13347031579",
+    "personalNumber": "12078411566",
+    "department": "Production",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  },
+  {
+    "empId": "ClayG",
+    "name": "Clay Giles",
+    "firstName": "Clay",
+    "lastName": "Giles",
+    "email": "cgiles@hollandhomesllc.com",
+    "workNumber": "19018969014",
+    "personalNumber": "19018969014",
+    "department": "In-House Production",
+    "address": "3627 County Road 27, Opelika, AL",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "ChelseaH",
+    "name": "Chelsea Hamm",
+    "firstName": "Chelsea",
+    "lastName": "Hamm",
+    "email": "chelseah@hollandhomesllc.com",
+    "workNumber": "13342322442",
+    "personalNumber": "13342373745",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": [
+      {
+        "name": "Hunters Hill (Auburn)",
+        "phone": "13345214593"
+      },
+      {
+        "name": "Liberty Park/Chelsea Ridge/Chelsea Highlands (Vestavia & Chelsea)",
+        "phone": "12055338709"
+      }
+    ]
+  },
+  {
+    "empId": "AdrienH",
+    "name": "Adrien Helms",
+    "firstName": "Adrien",
+    "lastName": "Helms",
+    "email": "adrienh@hollandhomesllc.com",
+    "workNumber": "13342311781",
+    "personalNumber": "13347036905",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": [
+      {
+        "name": "Coastal (Florida)",
+        "phone": "18503121482"
+      }
+    ]
+  },
+  {
+    "empId": "PiersonH",
+    "name": "Pierson Hipp",
+    "firstName": "Pierson",
+    "lastName": "Hipp",
+    "email": "phipp@hollandhomesllc.com",
+    "workNumber": "12038172014",
+    "personalNumber": "12038172014",
+    "department": "Preconstruction",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "MorganH",
+    "name": "Morgan Holland",
+    "firstName": "Morgan",
+    "lastName": "Holland",
+    "email": "morgan@hollandhomesllc.com",
+    "workNumber": "12567778002",
+    "personalNumber": "12567778002",
+    "department": "Marketing",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "DanielH",
+    "name": "Daniel Holland",
+    "firstName": "Daniel",
+    "lastName": "Holland",
+    "email": "daniel@hollandhomesllc.com",
+    "workNumber": "12059669763",
+    "personalNumber": "12059669763",
+    "department": "Owner",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "BradenH",
+    "name": "Braden Hughes",
+    "firstName": "Braden",
+    "lastName": "Hughes",
+    "email": "BHughes@hollandhomesllc.com",
+    "workNumber": "13347408775",
+    "personalNumber": "13347408775",
+    "department": "Production",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "TylerJ",
+    "name": "Tyler Johansen",
+    "firstName": "Tyler",
+    "lastName": "Johansen",
+    "email": "TylerJ@hollandhomesllc.com",
+    "workNumber": "13347349554",
+    "personalNumber": "13347349554",
+    "department": "Production",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "AddisonJ",
+    "name": "Addison Jones",
+    "firstName": "Addison",
+    "lastName": "Jones",
+    "email": "ajones@hollandhomesllc.com",
+    "workNumber": "17705952214",
+    "personalNumber": "17705952214",
+    "department": "Design",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "StephenJ",
+    "name": "Stephen Jones",
+    "firstName": "Stephen",
+    "lastName": "Jones",
+    "email": "stephenj@hollandandseals.com",
+    "workNumber": "13347288605",
+    "personalNumber": "13343134210",
+    "department": "Holland + Seals",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "SawyerJ",
+    "name": "Sawyer Jones",
+    "firstName": "Sawyer",
+    "lastName": "Jones",
+    "email": "sawyerj@hollandhomesllc.com",
+    "workNumber": "13344299751",
+    "personalNumber": "13347074717",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": [
+      {
+        "name": "Fox Run (Opelika)",
+        "phone": "13345214060"
+      }
+    ]
+  },
+  {
+    "empId": "BraedonK",
+    "name": "Braedon Keith",
+    "firstName": "Braedon",
+    "lastName": "Keith",
+    "email": "bkeith@hollandhomesllc.com",
+    "workNumber": "13347521164",
+    "personalNumber": "12052222360",
+    "department": "Production",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  },
+  {
+    "empId": "EvanK",
+    "name": "Evan Kelly",
+    "firstName": "Evan",
+    "lastName": "Kelly",
+    "email": "evank@hollandhomesllc.com",
+    "workNumber": "13347404923",
+    "personalNumber": "13347404923",
+    "department": "People",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "ReidK",
+    "name": "Reid Kemp",
+    "firstName": "Reid",
+    "lastName": "Kemp",
+    "email": "reidk@hollandhomesllc.com",
+    "workNumber": "16786038862",
+    "personalNumber": "16786038862",
+    "department": "Marketing",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "JasonK",
+    "name": "Jason Kilgro",
+    "firstName": "Jason",
+    "lastName": "Kilgro",
+    "email": "jasonk@hollandhomesllc.com",
+    "workNumber": "13347504370",
+    "personalNumber": "12053825083",
+    "department": "People",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  },
+  {
+    "empId": "TaftL",
+    "name": "Taft Ledbetter",
+    "firstName": "Taft",
+    "lastName": "Ledbetter",
+    "email": "taftl@hollandhomesllc.com",
+    "workNumber": "13347408565",
+    "personalNumber": "13342167803",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": [
+      {
+        "name": "Firefly (Opelika)",
+        "phone": "13342192742"
+      }
+    ]
+  },
+  {
+    "empId": "ChrisM",
+    "name": "Chris Maxwell",
+    "firstName": "Chris",
+    "lastName": "Maxwell",
+    "email": "chrism@hollandandseals.com",
+    "workNumber": "13348497860",
+    "personalNumber": "16158157317",
+    "department": "Holland + Seals",
+    "address": "3627 County Road 27, Opelika, AL",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "LanaM",
+    "name": "Lana McCurdy",
+    "firstName": "Lana",
+    "lastName": "McCurdy",
+    "email": "Lanam@hollandhomesllc.com",
+    "workNumber": "12569964179",
+    "personalNumber": "12569964179",
+    "department": "Marketing",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "AustinM",
+    "name": "Austin Meek",
+    "firstName": "Austin",
+    "lastName": "Meek",
+    "email": "Austinm@hollandhomesllc.com",
+    "workNumber": "13344671528",
+    "personalNumber": "13344671528",
+    "department": "People",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "ClayM",
+    "name": "Clay Messer",
+    "firstName": "Clay",
+    "lastName": "Messer",
+    "email": "claym@hollandhomesllc.com",
+    "workNumber": "13347443699",
+    "personalNumber": "13347443699",
+    "department": "Finance",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "PatrickP",
+    "name": "Patrick Pigg",
+    "firstName": "Patrick",
+    "lastName": "Pigg",
+    "email": "patrickp@hollandhomesllc.com",
+    "workNumber": "17063730992",
+    "personalNumber": "17063730992",
+    "department": "Finance",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "TeylerR",
+    "name": "Teyler Rudd",
+    "firstName": "Teyler",
+    "lastName": "Rudd",
+    "email": "TRudd@hollandhomesllc.com",
+    "workNumber": "13347349697",
+    "personalNumber": "13347349697",
+    "department": "Production",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "FaithR",
+    "name": "Faith Rudolph",
+    "firstName": "Faith",
+    "lastName": "Rudolph",
+    "email": "frudolph@hollandhomesllc.com",
+    "workNumber": "13342756254",
+    "personalNumber": "13342756254",
+    "department": "People",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "ChrisS",
+    "name": "Chris Seals",
+    "firstName": "Chris",
+    "lastName": "Seals",
+    "email": "chris@hollandandseals.com",
+    "workNumber": "12056175896",
+    "personalNumber": "12056175896",
+    "department": "Holland + Seals",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "MariaS",
+    "name": "Maria Smith",
+    "firstName": "Maria",
+    "lastName": "Smith",
+    "email": "msmith@hollandhomesllc.com",
+    "workNumber": "19158735454",
+    "personalNumber": "19158735454",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "HollyS",
+    "name": "Holly Smith",
+    "firstName": "Holly",
+    "lastName": "Smith",
+    "email": "hollys@hollandhomesllc.com",
+    "workNumber": "19206552913",
+    "personalNumber": "19206552913",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": [
+      {
+        "name": "Northgate (Auburn)",
+        "phone": "13345214578"
+      },
+      {
+        "name": "Shiloh Creek (Calera)",
+        "phone": "12054154243"
+      }
+    ]
+  },
+  {
+    "empId": "BrandonS",
+    "name": "Brandon Smith",
+    "firstName": "Brandon",
+    "lastName": "Smith",
+    "email": "bsmith@hollandhomesllc.com",
+    "workNumber": "12513633836",
+    "personalNumber": "12513633836",
+    "department": "In-House Production",
+    "address": "3627 County Road 27, Opelika, AL",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "ColbyS",
+    "name": "Colby Swindall",
+    "firstName": "Colby",
+    "lastName": "Swindall",
+    "email": "cswindall@hollandhomesllc.com",
+    "workNumber": "13347409601",
+    "personalNumber": "13347409601",
+    "department": "Preconstruction",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "AaronT",
+    "name": "Aaron Tackett",
+    "firstName": "Aaron",
+    "lastName": "Tackett",
+    "email": "AaronT@hollandhomesllc.com",
+    "workNumber": "18592505501",
+    "personalNumber": "18592505501",
+    "department": "Sales",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "MatthewV",
+    "name": "Matthew Vaughn",
+    "firstName": "Matthew",
+    "lastName": "Vaughn",
+    "email": "matthewv@hollandhomesllc.com",
+    "workNumber": "13347408978",
+    "personalNumber": "13342316071",
+    "department": "People",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "JoshuaV",
+    "name": "Joshua Vaughn",
+    "firstName": "Joshua",
+    "lastName": "Vaughn",
+    "email": "joshuav@hollandhomesllc.com",
+    "workNumber": "13347289464",
+    "personalNumber": "18037955853",
+    "department": "Finance",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "EricaW",
+    "name": "Erica Williams",
+    "firstName": "Erica",
+    "lastName": "Williams",
+    "email": "ericaw@hollandhomesllc.com",
+    "workNumber": "17248169048",
+    "personalNumber": "17248169048",
+    "department": "Design",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "JacobW",
+    "name": "Jacob Williamson",
+    "firstName": "Jacob",
+    "lastName": "Williamson",
+    "email": "jacobw@hollandandseals.com",
+    "workNumber": "13348497900",
+    "personalNumber": "14079072323",
+    "department": "Holland + Seals",
+    "address": "421 Opelika Road, Auburn, AL ",
+    "region": "Auburn",
+    "modelHomes": []
+  },
+  {
+    "empId": "RealtyS",
+    "name": "Realty South",
+    "firstName": "Realty",
+    "lastName": "South",
+    "email": "mdodson@realtysouth.com",
+    "workNumber": "13344403780",
+    "personalNumber": "13344403780",
+    "department": "Sales",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": [
+      {
+        "name": "Preserve (Hoover)",
+        "phone": "13344403780"
+      }
+    ]
+  },
+  {
+    "empId": "BirminghamO",
+    "name": "Birmingham Office",
+    "firstName": "Birmingham",
+    "lastName": "Office",
+    "email": "bhmmainconferenceroom@hollandhomesllc.com",
+    "workNumber": "12056175896",
+    "personalNumber": "12056175896",
+    "department": "Holland + Seals",
+    "address": "2232 Cahaba Valley Road, Birmingham, AL",
+    "region": "Birmingham",
+    "modelHomes": []
+  }
+]
