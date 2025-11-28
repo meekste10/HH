@@ -111,6 +111,8 @@
     .pill.vacation { background:#e8f5e9; color:#1b5e20; }
     .pill.sick { background:#fff3e0; color:#e65100; }
     .pill.unpaid { background:#f3e5f5; color:#6a1b9a; }
+    .pill.hot { background:#ffebee; color:#b71c1c; }
+    .pill.event { background:#e3f2fd; color:#0d47a1; }
 
     .tiles {
       display: grid;
@@ -128,17 +130,85 @@
       text-decoration: none;
       color: #222;
       display: block;
-      transition: transform 0.05s ease, box-shadow 0.05s ease;
+      transition: transform 0.05s ease, box-shadow 0.05s ease, border-color 0.05s ease;
     }
     .tile:hover {
       transform: translateY(-1px);
       box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+      border-color: #c0c7ff;
     }
     .tile-title { font-weight: 600; margin-bottom: 4px; font-size: 13px; }
     .tile-sub  { font-size: 12px; color: #666; }
 
     .small-note { font-size: 11px; color: #999; margin-top: 6px; }
     .muted     { color: #777; font-size: 13px; }
+
+    /* Contacts visual */
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .contact-card {
+      border-radius: 10px;
+      border: 1px solid #e3e5f0;
+      padding: 10px 12px;
+      background: #fafbff;
+    }
+    .contact-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .contact-role {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .contact-meta {
+      font-size: 12px;
+      color: #555;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .contact-meta a {
+      color: #2d5be3;
+      text-decoration: none;
+    }
+    .contact-meta a:hover {
+      text-decoration: underline;
+    }
+    .contacts-footer {
+      margin-top: 10px;
+    }
+    .contacts-link.tile {
+      background: linear-gradient(135deg, #2d5be3, #1c3ea4);
+      border-color: transparent;
+      color: #fff;
+    }
+    .contacts-link .tile-title {
+      color: #fff;
+    }
+    .contacts-link .tile-sub {
+      color: #e0e6ff;
+    }
+
+    /* Outlook heat cells */
+    .heat-cell {
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .heat-cell.dept-low { background:#e8f5e9; color:#1b5e20; }
+    .heat-cell.dept-med { background:#c8e6c9; color:#1b5e20; }
+    .heat-cell.dept-high { background:#a5d6a7; color:#1b5e20; }
+    .heat-cell.co-low { background:#e3f2fd; color:#0d47a1; }
+    .heat-cell.co-med { background:#bbdefb; color:#0d47a1; }
+    .heat-cell.co-high { background:#90caf9; color:#0d47a1; }
 
     @media (max-width: 640px) {
       body { padding: 24px 12px 40px; }
@@ -199,8 +269,8 @@
             <option value="unpaid">Unpaid</option>
           </select>
 
-          <div style="display:flex; gap:8px; margin-bottom:8px;">
-            <div style="flex:1 1 120px;">
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <div style="flex:1 1 150px;">
               <label for="simStart">Start date</label>
               <input type="date" id="simStart" />
             </div>
@@ -213,8 +283,8 @@
             </div>
           </div>
 
-          <div style="display:flex; gap:8px; margin-bottom:8px;">
-            <div style="flex:1 1 120px;">
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <div style="flex:1 1 150px;">
               <label for="simEnd">End date</label>
               <input type="date" id="simEnd" />
             </div>
@@ -240,7 +310,7 @@
 
       <!-- Team PTO Outlook -->
       <div class="card" id="outlookCard">
-        <h3>Team PTO Outlook</h3>
+        <h3>Team PTO Outlook (Next 30 Days)</h3>
         <div id="outlookSummary">
           <p class="muted">Loading team PTO...</p>
         </div>
@@ -282,6 +352,12 @@
         <h3>Your Team Contacts</h3>
         <div id="contactsSummary">
           <p class="muted">Loading team contacts...</p>
+        </div>
+        <div class="contacts-footer">
+          <a class="tile contacts-link" href="contacts_dashboard.html">
+            <div class="tile-title">Open Full Contacts Dashboard</div>
+            <div class="tile-sub">View all departments, regions, and models in one place.</div>
+          </a>
         </div>
       </div>
     </div>
@@ -379,6 +455,13 @@
   let contacts = [];
   let ptoRequests = [];
   let currentUser = null;
+
+  // Key events for hotspots (edit these dates/names for real HH events)
+  const keyEvents = [
+    // { date: '2025-12-15', name: 'Q4 All-Staff Meeting' },
+    // { date: '2026-01-10', name: 'Monthly All-Staff' },
+    // { date: '2026-03-20', name: 'Annual HH Retreat' },
+  ];
 
   // ---------- Load JSON data ----------
   async function loadAllData() {
@@ -516,10 +599,23 @@
     return isNaN(dt.getTime()) ? null : dt;
   }
 
+  function toISODate(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+
   function diffDaysInclusive(start, end) {
     const msPerDay = 24 * 60 * 60 * 1000;
     const diff = (end - start) / msPerDay;
     return diff >= 0 ? diff + 1 : 0;
+  }
+
+  function formatISOForDisplay(dateStr) {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   }
 
   // ---------- PTO Summary ----------
@@ -610,7 +706,7 @@
     });
   }
 
-  // ---------- Team PTO Outlook ----------
+  // ---------- Team PTO Outlook (Next 30 days, dept + company + hotspots) ----------
   function renderOutlook() {
     const container = document.getElementById('outlookSummary');
 
@@ -620,59 +716,228 @@
     }
 
     const dept = currentUser.department;
-    const teamReqs = ptoRequests.filter(r => r.department === dept);
-    if (teamReqs.length === 0) {
-      container.innerHTML = '<p class="muted">No PTO records found for your department yet.</p>';
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const today = new Date();
+    const windowStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const windowDays = 30;
+    const windowEnd = new Date(windowStart.getTime() + (windowDays - 1) * msPerDay);
+
+    const keyEventMap = {};
+    keyEvents.forEach(ev => {
+      if (!ev.date) return;
+      if (!keyEventMap[ev.date]) keyEventMap[ev.date] = [];
+      keyEventMap[ev.date].push(ev.name);
+    });
+
+    // Aggregate by day
+    const bucket = {}; // dateStr -> { deptCount, companyCount, events[] }
+
+    function ensureBucket(dateStr) {
+      if (!bucket[dateStr]) {
+        bucket[dateStr] = { deptCount: 0, companyCount: 0, events: keyEventMap[dateStr] ? [...keyEventMap[dateStr]] : [] };
+      }
+      return bucket[dateStr];
+    }
+
+    const upcomingForUser = [];
+
+    ptoRequests.forEach(r => {
+      const rawStart = r.startDate || r["PTO Request Start Date"];
+      const rawEnd   = r.endDate || r["PTO Request End Date"] || rawStart;
+      if (!rawStart) return;
+
+      // Parse from M/D/YY style first; fall back to Date()
+      let start = parseDate(rawStart);
+      let end   = parseDate(rawEnd);
+      if (!start) start = new Date(rawStart);
+      if (!end)   end   = new Date(rawEnd);
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) return;
+
+      // Normalize order
+      if (end < start) {
+        const tmp = start;
+        start = end;
+        end = tmp;
+      }
+
+      // Skip if outside window
+      if (end < windowStart || start > windowEnd) return;
+
+      const clampedStart = start < windowStart ? windowStart : start;
+      const clampedEnd   = end > windowEnd ? windowEnd : end;
+
+      // Track if this belongs to current user
+      const id = (r.empId || "").toString().toLowerCase();
+      const currentId = currentUser.empId.toString().toLowerCase();
+      if (id === currentId) {
+        upcomingForUser.push({
+          startStr: rawStart,
+          endStr: rawEnd,
+          type: r.type || r["PTO Request Type"] || '',
+          totalDays: Number(r.totalDays ?? r["PTO Request Total Days"] ?? 0)
+        });
+      }
+
+      // Walk each day in the window
+      for (
+        let d = new Date(clampedStart.getTime());
+        d <= clampedEnd;
+        d = new Date(d.getTime() + msPerDay)
+      ) {
+        const dateKey = toISODate(d);
+        const b = ensureBucket(dateKey);
+        b.companyCount += 1;
+        if ((r.department || '').toString() === dept) {
+          b.deptCount += 1;
+        }
+      }
+    });
+
+    const days = Object.keys(bucket)
+      .sort()
+      .map(dateStr => ({ dateStr, ...bucket[dateStr] }));
+
+    if (days.length === 0) {
+      container.innerHTML = `
+        <p class="muted">
+          No PTO scheduled for your department or the company in the next 30 days
+          (based on the loaded PTO Requests snapshot).
+        </p>
+      `;
       return;
     }
 
-    const enhanced = teamReqs.map(r => {
-      const dt = parseDate(r.startDate || r["PTO Request Start Date"]);
-      return { ...r, _start: dt };
-    }).filter(r => r._start !== null);
+    // Determine thresholds for "hot" days
+    const deptCounts = days.map(d => d.deptCount);
+    const companyCounts = days.map(d => d.companyCount);
+    const deptMax = Math.max(...deptCounts);
+    const companyMax = Math.max(...companyCounts);
 
-    enhanced.sort((a, b) => a._start - b._start);
-    const top = enhanced.slice(0, 10);
+    const deptHotThreshold = Math.max(2, Math.ceil(deptMax * 0.5));      // dept "busy"
+    const companyHotThreshold = Math.max(4, Math.ceil(companyMax * 0.4)); // company "busy"
 
-    const rows = top.map(r => {
-      const dStr = r.startDate || r["PTO Request Start Date"];
-      const endStr = r.endDate || r["PTO Request End Date"];
-      const who = r.name || r["Employee Name"];
-      const type = r.type || r["PTO Request Type"];
-      const days = Number(r.totalDays ?? r["PTO Request Total Days"] ?? 0);
-      const pillClass =
-        type.toLowerCase() === 'vacation' ? 'vacation' :
-        type.toLowerCase() === 'sick' ? 'sick' : 'unpaid';
+    function deptHeatClass(count) {
+      if (!count) return '';
+      if (count >= deptHotThreshold) return 'dept-high';
+      if (count >= 2) return 'dept-med';
+      return 'dept-low';
+    }
+
+    function coHeatClass(count) {
+      if (!count) return '';
+      if (count >= companyHotThreshold) return 'co-high';
+      if (count >= 3) return 'co-med';
+      return 'co-low';
+    }
+
+    // Sort days by importance (hotspots first, then chronological)
+    const scoredDays = days.map(d => {
+      const flags = [];
+      if (d.deptCount >= deptHotThreshold) flags.push('Dept hotspot');
+      if (d.companyCount >= companyHotThreshold) flags.push('Company hotspot');
+      if (d.events && d.events.length && d.companyCount > 0) flags.push('Key event + PTO');
+      const score = d.deptCount * 2 + d.companyCount + (flags.length * 2);
+      return { ...d, flags, score };
+    }).sort((a, b) => b.score - a.score || (a.dateStr.localeCompare(b.dateStr)));
+
+    const topImportant = scoredDays.slice(0, 10).sort((a,b) => a.dateStr.localeCompare(b.dateStr));
+
+    const overviewRows = topImportant.map(d => {
+      const deptClass = deptHeatClass(d.deptCount);
+      const coClass   = coHeatClass(d.companyCount);
+      const deptCell = d.deptCount
+        ? `<span class="heat-cell ${deptClass}">${d.deptCount}</span>`
+        : '<span class="muted">0</span>';
+      const coCell = d.companyCount
+        ? `<span class="heat-cell ${coClass}">${d.companyCount}</span>`
+        : '<span class="muted">0</span>';
+
+      const flagsPieces = [];
+      if (d.deptCount >= deptHotThreshold) {
+        flagsPieces.push('<span class="pill hot">Dept hotspot</span>');
+      }
+      if (d.companyCount >= companyHotThreshold) {
+        flagsPieces.push('<span class="pill hot">Company hotspot</span>');
+      }
+      if (d.events && d.events.length) {
+        flagsPieces.push('<span class="pill event">Key event</span>');
+      }
+
+      const flagsHtml = flagsPieces.join(' ');
+
+      const eventNames = (d.events && d.events.length)
+        ? `<div class="small-note">Events: ${d.events.join(', ')}</div>`
+        : '';
 
       return `
         <tr>
-          <td>${who || ''}</td>
-          <td>${dStr || ''}${endStr && endStr !== dStr ? '–' + endStr : ''}</td>
-          <td>${days.toFixed(2)}</td>
-          <td><span class="pill ${pillClass}">${type || ''}</span></td>
+          <td>
+            ${formatISOForDisplay(d.dateStr)}
+            ${eventNames}
+          </td>
+          <td>${deptCell}</td>
+          <td>${coCell}</td>
+          <td>${flagsHtml || '<span class="muted">—</span>'}</td>
         </tr>
       `;
     }).join('');
 
+    // My upcoming PTO list (within the same 30-day window)
+    upcomingForUser.sort((a, b) => {
+      const pa = parseDate(a.startStr) || new Date(a.startStr);
+      const pb = parseDate(b.startStr) || new Date(b.startStr);
+      return pa - pb;
+    });
+    const myRows = upcomingForUser.slice(0, 5).map(r => `
+      <tr>
+        <td>${r.startStr}${(r.endStr && r.endStr !== r.startStr) ? ' – ' + r.endStr : ''}</td>
+        <td>${(r.totalDays || 0).toFixed(2)}</td>
+        <td>${r.type}</td>
+      </tr>
+    `).join('');
+
     container.innerHTML = `
+      <h4 style="margin:0 0 6px 0; font-size:15px;">At a glance – days to watch</h4>
       <table>
         <thead>
           <tr>
-            <th>Team member</th>
-            <th>Dates</th>
-            <th>Days</th>
-            <th>Type</th>
+            <th style="width:36%;">Date</th>
+            <th style="width:18%;">Dept Out</th>
+            <th style="width:18%;">Company Out</th>
+            <th style="width:28%;">Flags</th>
           </tr>
         </thead>
-        <tbody>${rows}</tbody>
+        <tbody>
+          ${overviewRows}
+        </tbody>
       </table>
       <p class="small-note">
-        Showing PTO requests for your department from the loaded PTO Requests snapshot (max 10 rows).
+        Hotspots are based on the next 30 days of PTO requests. Thresholds scale with how busy your department
+        and the company actually are in the loaded data.
       </p>
+
+      <hr style="border:none; border-top:1px solid #eee; margin:10px 0;">
+
+      <h4 style="margin:0 0 6px 0; font-size:15px;">Your upcoming PTO (from snapshot)</h4>
+      ${upcomingForUser.length === 0
+        ? '<p class="muted">No upcoming PTO found for you in this 30-day window.</p>'
+        : `
+            <table>
+              <thead>
+                <tr>
+                  <th>Dates</th>
+                  <th>Days</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>${myRows}</tbody>
+            </table>
+          `
+      }
     `;
   }
 
-  // ---------- Contacts ----------
+  // ---------- Contacts (sleeker visual + dashboard tile) ----------
   function renderContacts() {
     const container = document.getElementById('contactsSummary');
 
@@ -689,27 +954,31 @@
       return;
     }
 
-    const rows = team.map(c => `
-      <tr>
-        <td>${c.name || ''}</td>
-        <td>${c.email || ''}</td>
-        <td>${c.workNumber || ''}</td>
-        <td>${c.region || ''}</td>
-      </tr>
-    `).join('');
+    const cards = team.map(c => {
+      const name = c.name || `${c.firstName || ''} ${c.lastName || ''}`.trim();
+      const region = c.region || '';
+      const deptLabel = c.department || '';
+      const metaLine = [deptLabel, region].filter(Boolean).join(' · ');
+
+      return `
+        <div class="contact-card">
+          <div class="contact-name">${name}</div>
+          <div class="contact-role">${metaLine || '&nbsp;'}</div>
+          <div class="contact-meta">
+            ${c.email ? `<a href="mailto:${c.email}">${c.email}</a>` : ''}
+            ${c.workNumber ? `<span>${c.workNumber}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
 
     container.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Work #</th>
-            <th>Region</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <div class="contacts-grid">
+        ${cards}
+      </div>
+      <p class="small-note">
+        This view is scoped to your department. Use the Contacts Dashboard to explore across the whole company.
+      </p>
     `;
   }
 
@@ -730,9 +999,9 @@
       const startStr = r.startDate || r["PTO Request Start Date"];
       const endStr = r.endDate || r["PTO Request End Date"] || startStr;
 
-      const start = parseDate(startStr);
-      const end = parseDate(endStr) || start;
-      if (!start) return;
+      const start = parseDate(startStr) || new Date(startStr);
+      const end = parseDate(endStr) || new Date(endStr);
+      if (!start || isNaN(start.getTime())) return;
 
       const type = (r.type || r["PTO Request Type"] || "").toLowerCase();
       const totalDays = Number(r.totalDays ?? r["PTO Request Total Days"] ?? 0);
@@ -845,7 +1114,6 @@
     deptInput.value = currentUser.department || '';
     supInput.value  = currentUser.directReport || '';
 
-    // any change triggers a refresh
     ['formType','formStart','formEnd','formStartHalf','formEndHalf','formReason'].forEach(id => {
       const el = document.getElementById(id);
       el.addEventListener('change', renderPtoFormSummary);
@@ -855,7 +1123,7 @@
     document.getElementById('formPreviewBtn')
       .addEventListener('click', renderPtoFormSummary);
 
-    renderPtoFormSummary(); // initial
+    renderPtoFormSummary();
   }
 
   function renderPtoFormSummary() {
