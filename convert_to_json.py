@@ -197,10 +197,22 @@ def build_pto_employee_info(data):
 def build_pto_requests(data):
     out = []
     for row in data:
-        name = row.get("Employee Name", "")
+        name = (
+            row.get("Employee Name")
+            or row.get("Employee")
+            or ""
+        )
+
+        # Make empId consistent with employees.json & pto_employee_info.json
+        emp_id = (
+            row.get("EmpID")
+            or row.get("Employee ID")
+            or normalize_name(name)
+        )
+
         out.append({
             "id": row.get("Response ID"),
-            "empId": normalize_name(name),
+            "empId": emp_id,
             "name": name,
             "type": row.get("PTO Request Type"),
             "startDate": row.get("PTO Request Start Date"),
