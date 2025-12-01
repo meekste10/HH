@@ -130,8 +130,23 @@ def build_employees(data):
 def build_pto_employee_info(data):
     out = []
     for row in data:
-        name = row.get("NAME", "")
-        emp_id = normalize_name(row.get("Employee Name 2") or name)
+        # Try all reasonable name header variants
+        name = (
+            row.get("Employee Name 1")
+            or row.get("Employee Name 2")
+            or row.get("NAME")
+            or row.get("Name")
+            or ""
+        )
+
+        # Make sure empId matches employees.json:
+        # 1) Prefer EmpID if present
+        # 2) Fall back to normalized name
+        emp_id = (
+            row.get("EmpID")
+            or row.get("Employee ID")
+            or normalize_name(name)
+        )
 
         out.append({
             "empId": emp_id,
@@ -160,9 +175,9 @@ def build_pto_employee_info(data):
             },
 
             "meta": {
-                "status": row.get("Employee Status"),
+                "status": row.get("Employee Status") or row.get("Status"),
                 "age": safe_int(row.get("Age", 0)),
-                "hireMonth": safe_int(row.get("Hire Month", 0)),
+                "hireMonth": safe_int(row.get("Hire Month") or row.get("HireMonth") or 0),
                 "compensationCategory": row.get("Compensation Category"),
                 "gender": row.get("Gender"),
                 "tenure": row.get("Tenure (in years)"),
@@ -170,7 +185,7 @@ def build_pto_employee_info(data):
                 "salaryHourly": row.get("Salary/Hourly"),
                 "indirectCosOverhead": row.get("Indirect/COS/Overhead"),
                 "compensation": row.get("Compensation"),
-                "dob": row.get("DOB")
+                "dob": row.get("Date of Birth") or row.get("DOB")
             }
         })
     return out
