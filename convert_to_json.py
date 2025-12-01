@@ -41,16 +41,86 @@ def normalize_name(full):
 # from Employee Reference.csv
 # -----------------------
 def build_employees(data):
+    """
+    Build employees.json from Employee Reference.csv.
+
+    Assumes columns (among others):
+      Name, Employee Name 1, Department, Direct Report, EmpID,
+      Employee Status, Age, Hire Month, Compensation Category, Gender,
+      Tenure (in years), Tenure Category,
+      Health Ins, Health Plan, Dental Ins, Dental Plan, Vision Ins, Vision Plan,
+      401k Enrolled, 401k Eligibility, 401k Elig Date,
+      Alabama Tax, Fed Tax (W4),
+      Plan ID, Tier, Relationship,
+      Health Employee Monthly Cost, Health Employer Monthly Cost,
+      Health Employee Weekly Cost, Health Employer Weekly Cost,
+      Dental Employee Monthly Cost, Dental Employer Monthly Cost,
+      Vision Employee Monthly Cost, Vision Employer Monthly Cost
+    """
+
     out = []
+
     for row in data:
-        out.append({
-            "empId": row.get("EmpID") or normalize_name(row.get("Employee Name 1") or row.get("Name") or ""),
+        emp_id = row.get("EmpID") or normalize_name(
+            row.get("Employee Name 1") or row.get("Name") or ""
+        )
+
+        emp = {
+            # ---- core identity ---
+            "empId": emp_id,
             "name": row.get("Employee Name 1") or row.get("Name"),
             "department": row.get("Department"),
             "directReport": row.get("Direct Report"),
-            "email": row.get("Email 1"),
-            "passcode": row.get("Passcode") or ""  # optional
-        })
+            "email1": row.get("Email 1"),
+            "email2": row.get("Email 2"),
+            "passcode": row.get("Passcode") or "",
+
+            # ---- enrollment + plan names ----
+            "healthIns":  (row.get("Health Ins")  or "").strip(),
+            "healthPlan": (row.get("Health Plan") or "").strip(),
+
+            "dentalIns":  (row.get("Dental Ins")  or "").strip(),
+            "dentalPlan": (row.get("Dental Plan") or "").strip(),
+
+            "visionIns":  (row.get("Vision Ins")  or "").strip(),
+            "visionPlan": (row.get("Vision Plan") or "").strip(),
+
+            # ---- 401k + tax codes ----
+            "k401Enrolled":     (row.get("401k Enrolled")   or "").strip(),
+            "k401Eligibility":  (row.get("401k Eligibility") or "").strip(),
+            "k401EligibleDate": (row.get("401k Elig Date")   or "").strip(),
+
+            "alabamaTaxCode": (row.get("Alabama Tax") or "").strip(),
+            "fedTaxCode":     (row.get("Fed Tax (W4)") or "").strip(),
+
+            # ---- meta / demographics ----
+            "status": row.get("Employee Status"),
+            "age": safe_int(row.get("Age")),
+            "hireMonth": safe_int(row.get("Hire Month")),
+            "compensationCategory": row.get("Compensation Category"),
+            "gender": row.get("Gender"),
+            "tenure": row.get("Tenure (in years)"),
+            "tenureCategory": row.get("Tenure Category"),
+
+            # ---- NEW: per-employee plan cost info (AR+ columns) ----
+            "planId":      (row.get("Plan ID") or "").strip(),
+            "planTier":    (row.get("Tier") or "").strip(),
+            "planRelationship": (row.get("Relationship") or "").strip(),
+
+            "healthEmployeeMonthlyCost":  safe_float(row.get("Health Employee Monthly Cost")),
+            "healthEmployerMonthlyCost":  safe_float(row.get("Health Employer Monthly Cost")),
+            "healthEmployeeWeeklyCost":   safe_float(row.get("Health Employee Weekly Cost")),
+            "healthEmployerWeeklyCost":   safe_float(row.get("Health Employer Weekly Cost")),
+
+            "dentalEmployeeMonthlyCost":  safe_float(row.get("Dental Employee Monthly Cost")),
+            "dentalEmployerMonthlyCost":  safe_float(row.get("Dental Employer Monthly Cost")),
+
+            "visionEmployeeMonthlyCost":  safe_float(row.get("Vision Employee Monthly Cost")),
+            "visionEmployerMonthlyCost":  safe_float(row.get("Vision Employer Monthly Cost")),
+        }
+
+        out.append(emp)
+
     return out
 
 # -----------------------
