@@ -242,6 +242,58 @@
       padding-left: 18px;
     }
 
+    /* Benefits card */
+    .benefits-premium-row { margin-top: 6px; }
+    .benefits-premium-bars {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+    }
+    .benefits-premium-bar-label {
+      width: 110px;
+      font-size: 13px;
+      color: #555;
+    }
+    .benefits-premium-bar-track {
+      flex: 1;
+      height: 20px;
+      border-radius: 999px;
+      background: #f1f3fb;
+      border: 1px solid #e0e3f0;
+      overflow: hidden;
+    }
+    .benefits-premium-bar {
+      height: 100%;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .benefits-premium-bar.uhc {
+      background: linear-gradient(90deg, #f97373, #ef4444);
+      color: #fff;
+    }
+    .benefits-premium-bar.bcbs {
+      background: linear-gradient(90deg, #60a5fa, #2563eb);
+      color: #fff;
+    }
+    .benefits-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .benefits-list {
+      margin: 4px 0 0 16px;
+      padding: 0;
+      font-size: 13px;
+      color: #555;
+    }
+    .benefits-list li { margin-bottom: 3px; }
+
     @media (max-width: 640px) {
       body { padding: 24px 12px 40px; }
     }
@@ -276,7 +328,7 @@
       <div class="welcome" id="welcomeName"></div>
       <div class="sub" id="welcomeDept"></div>
       <p class="tagline">
-        Your Holland Homes PTO & contacts hub.
+        Your Holland Homes PTO, benefits, & contacts hub.
       </p>
     </div>
 
@@ -347,7 +399,7 @@
       </div>
     </div>
 
-    <!-- Policies + Contacts -->
+    <!-- Policies + Contacts + Benefits -->
     <div class="grid" style="margin-top:16px;">
       <div class="card">
         <h3>Policies & Resources</h3>
@@ -387,9 +439,85 @@
           </a>
         </div>
       </div>
+
+      <div class="card" id="benefitsCard">
+        <h3>Your Benefits Snapshot</h3>
+        <p class="muted" id="benefitsLoadingText">Loading benefits...</p>
+
+        <div id="benefitsContent" style="display:none;">
+          <div class="metric-row">
+            <span class="metric-label">Medical Coverage Level</span>
+            <span class="metric-value" id="benefitsCoverageLevel">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Dental</span>
+            <span class="metric-value" id="benefitsDentalStatus">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Vision</span>
+            <span class="metric-value" id="benefitsVisionStatus">—</span>
+          </div>
+
+          <hr style="border:none;border-top:1px solid #eee;margin:10px 0;">
+
+          <div class="benefits-premium-row">
+            <h4 style="margin-bottom:4px;">2026 Health Premiums Comparison</h4>
+            <p class="small-note">
+              Total monthly premium at your coverage level (before employer contributions),
+              comparing UHC 2026 renewal vs BCBS Secure Gold.
+            </p>
+
+            <div class="benefits-premium-bars">
+              <div class="benefits-premium-bar-label">UHC 2026 (total)</div>
+              <div class="benefits-premium-bar-track">
+                <div class="benefits-premium-bar uhc" id="benefitsUhcBar">
+                  <span id="benefitsUhcAmount">$—/mo</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="benefits-premium-bars">
+              <div class="benefits-premium-bar-label">BCBS Secure Gold</div>
+              <div class="benefits-premium-bar-track">
+                <div class="benefits-premium-bar bcbs" id="benefitsBcbsBar">
+                  <span id="benefitsBcbsAmount">$—/mo</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="small-note" id="benefitsSavingsText"></p>
+          </div>
+
+          <hr style="border:none;border-top:1px solid #eee;margin:10px 0;">
+
+          <div class="benefits-mini-grid">
+            <div>
+              <h4>Your Share (Per Month)</h4>
+              <ul class="benefits-list">
+                <li><strong>Health:</strong> <span id="benefitsYourHealth">$0.00</span></li>
+                <li><strong>Dental:</strong> <span id="benefitsYourDental">$0.00</span></li>
+                <li><strong>Vision:</strong> <span id="benefitsYourVision">$0.00</span></li>
+              </ul>
+            </div>
+            <div>
+              <h4>HH Contribution (Per Month)</h4>
+              <ul class="benefits-list">
+                <li><strong>Health:</strong> <span id="benefitsHHHealth">$0.00</span></li>
+                <li><strong>Dental:</strong> <span id="benefitsHHDental">$0.00</span></li>
+                <li><strong>Vision:</strong> <span id="benefitsHHVision">$0.00</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <p class="small-note" style="margin-top:8px;">
+            Numbers shown are based on current enrollment records. For questions or corrections,
+            reach out to the People Team.
+          </p>
+        </div>
+      </div>
     </div>
 
-    <!-- PTO Request Form (Demo + Email Draft) -->
+    <!-- PTO Request Form (demo + email draft) -->
     <div class="card" id="ptoFormCard">
       <h3>PTO Request Form</h3>
 
@@ -470,7 +598,23 @@
   let contacts = [];
   let ptoRequests = [];
   let currentUser = null;
-  let selectedOutlook = null; // { scope, dateStr } for the last clicked bubble
+  let selectedOutlook = null; // last clicked outlook bubble
+
+  // UHC vs BCBS comparison totals (from your 2026 analysis)
+  const HEALTH_PREMIUMS = {
+    "Employee Only":     { uhc: 759.17 },
+    "Employee + Spouse": { uhc: 1568.96 },
+    "Employee + Children": { uhc: 1384.91 },
+    "Employee + Family": { uhc: 2157.89 }
+  };
+
+  const COVERAGE_KEY_MAP = {
+    "Employee": "Employee Only",
+    "Employee + Spouse": "Employee + Spouse",
+    "Employee + Children": "Employee + Children",
+    "Family": "Employee + Family"
+  };
+
   // US holidays 2025 & 2026 (ISO date -> name)
   const usHolidays = {
     "2025-01-01": "New Year's Day",
@@ -497,13 +641,7 @@
     "2026-12-25": "Christmas Day"
   };
 
-  // Optional: key company events (still separate from holidays)
-  const keyEvents = [
-    // { date: "2025-03-15", name: "Q1 All-Staff" },
-    // { date: "2025-06-10", name: "Mid-Year Meeting" },
-  ];
-
-  // For clickable bubbles
+  const keyEvents = []; // optional future events
   let outlookDetailMap = {};
 
   // ---------- Load JSON data ----------
@@ -663,7 +801,7 @@
     return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   }
 
-  // ---------- PTO Summary (top card) ----------
+  // ---------- PTO Summary ----------
   function renderPtoSummary() {
     const container = document.getElementById('ptoSummary');
     const record = findPtoRecord(currentUser.empId);
@@ -782,11 +920,7 @@
       `;
     }).join('');
 
-    container.innerHTML = `
-      <div class="contacts-grid">
-        ${cards}
-      </div>
-    `;
+    container.innerHTML = `<div class="contacts-grid">${cards}</div>`;
   }
 
   // ---------- PTO request split (past / future) ----------
@@ -826,7 +960,7 @@
     return `${r.startStr}–${r.endStr}`;
   }
 
-  // ---------- TMC-style snapshot HTML (now embedded inside Outlook) ----------
+  // ---------- TMC-style snapshot HTML (embedded in outlook) ----------
   function buildTmcSnapshotHtml() {
     const rec = findPtoRecord(currentUser.empId);
     if (!rec) {
@@ -849,7 +983,6 @@
     const allPast   = [...pastVacation, ...pastSick, ...pastUnpaid];
     const allFuture = [...futureVacation, ...futureSick, ...futureUnpaid];
 
-    // Last + next vacation day metrics
     const msPerDay = 24 * 60 * 60 * 1000;
     const today = new Date();
 
@@ -947,107 +1080,107 @@
       </div>
     `;
   }
-  // Build a full text snapshot of PTO (same logic as the table + dates)
-function buildFullPtoSnapshotText() {
-  const rec = findPtoRecord(currentUser.empId);
-  if (!rec) return '';
 
-  const b = getBalances();
-  const { past, future } = splitRequestsByTiming();
+  function buildFullPtoSnapshotText() {
+    const rec = findPtoRecord(currentUser.empId);
+    if (!rec) return '';
 
-  const pastVacation = past.filter(r => r.type === 'vacation');
-  const pastSick     = past.filter(r => r.type === 'sick');
-  const pastUnpaid   = past.filter(r => r.type === 'unpaid');
+    const b = getBalances();
+    const { past, future } = splitRequestsByTiming();
 
-  const futureVacation = future.filter(r => r.type === 'vacation');
-  const futureSick     = future.filter(r => r.type === 'sick');
-  const futureUnpaid   = future.filter(r => r.type === 'unpaid');
+    const pastVacation = past.filter(r => r.type === 'vacation');
+    const pastSick     = past.filter(r => r.type === 'sick');
+    const pastUnpaid   = past.filter(r => r.type === 'unpaid');
 
-  const joinRanges = (arr) => arr.map(formatDateRange).filter(Boolean).join(', ') || 'None recorded';
+    const futureVacation = future.filter(r => r.type === 'vacation');
+    const futureSick     = future.filter(r => r.type === 'sick');
+    const futureUnpaid   = future.filter(r => r.type === 'unpaid');
 
-  const allPast   = [...pastVacation, ...pastSick, ...pastUnpaid];
-  const allFuture = [...futureVacation, ...futureSick, ...futureUnpaid];
+    const joinRanges = (arr) => arr.map(formatDateRange).filter(Boolean).join(', ') || 'None recorded';
 
-  // Last / next vacation day
-  const msPerDay = 24 * 60 * 60 * 1000;
-  const today = new Date();
+    const allPast   = [...pastVacation, ...pastSick, ...pastUnpaid];
+    const allFuture = [...futureVacation, ...futureSick, ...futureUnpaid];
 
-  let lastVacDate = null;
-  pastVacation.forEach(r => {
-    const d = parseMDY(r.endStr) || parseMDY(r.startStr) || new Date(r.endStr || r.startStr);
-    if (d && !isNaN(d.getTime())) {
-      if (!lastVacDate || d > lastVacDate) lastVacDate = d;
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const today = new Date();
+
+    let lastVacDate = null;
+    pastVacation.forEach(r => {
+      const d = parseMDY(r.endStr) || parseMDY(r.startStr) || new Date(r.endStr || r.startStr);
+      if (d && !isNaN(d.getTime())) {
+        if (!lastVacDate || d > lastVacDate) lastVacDate = d;
+      }
+    });
+
+    let nextVacDate = null;
+    futureVacation.forEach(r => {
+      const d = parseMDY(r.startStr) || new Date(r.startStr);
+      if (d && !isNaN(d.getTime())) {
+        if (!nextVacDate || d < nextVacDate) nextVacDate = d;
+      }
+    });
+
+    let lastLine = 'No prior vacation days recorded.';
+    if (lastVacDate) {
+      const daysAgo = Math.round((today - lastVacDate) / msPerDay);
+      lastLine = `${lastVacDate.toLocaleDateString()} (${daysAgo >= 0 ? daysAgo : 0} days ago)`;
     }
-  });
 
-  let nextVacDate = null;
-  futureVacation.forEach(r => {
-    const d = parseMDY(r.startStr) || new Date(r.startStr);
-    if (d && !isNaN(d.getTime())) {
-      if (!nextVacDate || d < nextVacDate) nextVacDate = d;
+    let nextLine = 'No upcoming vacation days scheduled.';
+    if (nextVacDate) {
+      const daysUntil = Math.round((nextVacDate - today) / msPerDay);
+      nextLine = `${nextVacDate.toLocaleDateString()} (${daysUntil >= 0 ? daysUntil : 0} days from now)`;
     }
-  });
 
-  let lastLine = 'No prior vacation days recorded.';
-  if (lastVacDate) {
-    const daysAgo = Math.round((today - lastVacDate) / msPerDay);
-    lastLine = `${lastVacDate.toLocaleDateString()} (${daysAgo >= 0 ? daysAgo : 0} days ago)`;
+    const lines = [];
+
+    lines.push('Last vacation day taken');
+    lines.push(lastLine);
+    lines.push('Next vacation day scheduled');
+    lines.push(nextLine);
+    lines.push('');
+
+    lines.push('Vacation   Sick   Unpaid');
+    lines.push('2025 Beginning Balances');
+    lines.push(
+      `${b.vacationBeginning.toFixed(2)}   ` +
+      `${b.sickBeginning.toFixed(2)}   ` +
+      `${b.unpaidBeginning.toFixed(2)}`
+    );
+    lines.push('Days Used YTD');
+    lines.push(
+      `${b.vacationUsed.toFixed(2)}   ` +
+      `${b.sickUsed.toFixed(2)}   ` +
+      `${b.unpaidUsed.toFixed(2)}`
+    );
+    lines.push('Future Days Approved');
+    lines.push(
+      `${b.futureVacationApproved.toFixed(2)}   ` +
+      `${b.futureSickDays.toFixed(2)}   ` +
+      `${b.futureUnpaidDays.toFixed(2)}`
+    );
+    lines.push('2025 Remaining Balances');
+    lines.push(
+      `${b.vacationAvailable.toFixed(2)}   ` +
+      `${b.sickAvailable.toFixed(2)}   ` +
+      `${b.unpaidAvailable.toFixed(2)}`
+    );
+    lines.push('');
+
+    lines.push(`Vacation Dates Used: ${joinRanges(pastVacation)}`);
+    lines.push(`Vacation Dates Previously Approved (Future): ${joinRanges(futureVacation)}`);
+    lines.push(`Sick Dates Used: ${joinRanges(pastSick)}`);
+    lines.push(`Sick Dates Previously Approved (Future): ${joinRanges(futureSick)}`);
+    lines.push(`Unpaid Dates Used: ${joinRanges(pastUnpaid)}`);
+    lines.push(`Unpaid Dates Previously Approved (Future): ${joinRanges(futureUnpaid)}`);
+    lines.push('');
+    lines.push(`All Dates Used (All Types): ${joinRanges(allPast)}`);
+    lines.push(`All Dates Previously Approved (All Types): ${joinRanges(allFuture)}`);
+
+    return lines.join('\n');
   }
 
-  let nextLine = 'No upcoming vacation days scheduled.';
-  if (nextVacDate) {
-    const daysUntil = Math.round((nextVacDate - today) / msPerDay);
-    nextLine = `${nextVacDate.toLocaleDateString()} (${daysUntil >= 0 ? daysUntil : 0} days from now)`;
-  }
-
-  const lines = [];
-
-  lines.push('Last vacation day taken');
-  lines.push(lastLine);
-  lines.push('Next vacation day scheduled');
-  lines.push(nextLine);
-  lines.push('');
-
-  lines.push('Vacation   Sick   Unpaid');
-  lines.push('2025 Beginning Balances');
-  lines.push(
-    `${b.vacationBeginning.toFixed(2)}   ` +
-    `${b.sickBeginning.toFixed(2)}   ` +
-    `${b.unpaidBeginning.toFixed(2)}`
-  );
-  lines.push('Days Used YTD');
-  lines.push(
-    `${b.vacationUsed.toFixed(2)}   ` +
-    `${b.sickUsed.toFixed(2)}   ` +
-    `${b.unpaidUsed.toFixed(2)}`
-  );
-  lines.push('Future Days Approved');
-  lines.push(
-    `${b.futureVacationApproved.toFixed(2)}   ` +
-    `${b.futureSickDays.toFixed(2)}   ` +
-    `${b.futureUnpaidDays.toFixed(2)}`
-  );
-  lines.push('2025 Remaining Balances');
-  lines.push(
-    `${b.vacationAvailable.toFixed(2)}   ` +
-    `${b.sickAvailable.toFixed(2)}   ` +
-    `${b.unpaidAvailable.toFixed(2)}`
-  );
-  lines.push('');
-
-  lines.push(`Vacation Dates Used: ${joinRanges(pastVacation)}`);
-  lines.push(`Vacation Dates Previously Approved (Future): ${joinRanges(futureVacation)}`);
-  lines.push(`Sick Dates Used: ${joinRanges(pastSick)}`);
-  lines.push(`Sick Dates Previously Approved (Future): ${joinRanges(futureSick)}`);
-  lines.push(`Unpaid Dates Used: ${joinRanges(pastUnpaid)}`);
-  lines.push(`Unpaid Dates Previously Approved (Future): ${joinRanges(futureUnpaid)}`);
-  lines.push('');
-  lines.push(`All Dates Used (All Types): ${joinRanges(allPast)}`);
-  lines.push(`All Dates Previously Approved (All Types): ${joinRanges(allFuture)}`);
-
-  return lines.join('\n');
-}
-  // ---------- Team PTO Outlook + clickable bubbles + personal outlook ----------
+  // ---------- Team PTO Outlook ----------
   function renderOutlook() {
     const container = document.getElementById('outlookSummary');
     const detailsBox = document.getElementById('outlookDetails');
@@ -1067,7 +1200,6 @@ function buildFullPtoSnapshotText() {
     const windowDays = 30;
     const windowEnd = new Date(windowStart.getTime() + (windowDays - 1) * msPerDay);
 
-    // Build index for employees (for names in details)
     const empIndex = {};
     employees.forEach(e => {
       if (!e.empId) return;
@@ -1081,7 +1213,7 @@ function buildFullPtoSnapshotText() {
       keyEventMap[ev.date].push(ev.name);
     });
 
-    const bucket = {}; // dateStr -> { deptCount, companyCount, events[] }
+    const bucket = {};
 
     function ensureBucket(dateStr) {
       if (!bucket[dateStr]) {
@@ -1102,7 +1234,6 @@ function buildFullPtoSnapshotText() {
 
     const upcomingForUser = [];
 
-    // Walk requests
     ptoRequests.forEach(r => {
       const rawStart = r.startDate || r["PTO Request Start Date"];
       const rawEnd   = r.endDate || r["PTO Request End Date"] || rawStart;
@@ -1118,7 +1249,6 @@ function buildFullPtoSnapshotText() {
         const tmp = start; start = end; end = tmp;
       }
 
-      // Skip outside window
       if (end < windowStart || start > windowEnd) return;
 
       const clampedStart = start < windowStart ? windowStart : start;
@@ -1139,17 +1269,14 @@ function buildFullPtoSnapshotText() {
         });
       }
 
-      for (
-        let d = new Date(clampedStart.getTime());
-        d <= clampedEnd;
-        d = new Date(d.getTime() + msPerDay)
-      ) {
+      for (let d = new Date(clampedStart.getTime());
+           d <= clampedEnd;
+           d = new Date(d.getTime() + msPerDay)) {
         const dateKey = toISODate(d);
         const isHoliday = !!usHolidays[dateKey];
 
         const b = ensureBucket(dateKey);
 
-        // Attach events & holidays
         if (keyEventMap[dateKey]) {
           keyEventMap[dateKey].forEach(evName => {
             if (!b.events.includes(evName)) b.events.push(evName);
@@ -1161,14 +1288,12 @@ function buildFullPtoSnapshotText() {
           if (!b.events.includes(label)) b.events.push(label);
         }
 
-        // Do NOT count PTO on company-wide holidays in the heat numbers
         if (!isHoliday) {
           b.companyCount += 1;
           if (rDept === dept) {
             b.deptCount += 1;
           }
 
-          // store details for clickable bubbles
           const entry = {
             name,
             department: rDept,
@@ -1183,7 +1308,6 @@ function buildFullPtoSnapshotText() {
       }
     });
 
-    // Inject any holidays in window that have no PTO
     Object.keys(usHolidays).forEach(dateStr => {
       const d = new Date(dateStr);
       if (d >= windowStart && d <= windowEnd) {
@@ -1242,9 +1366,6 @@ function buildFullPtoSnapshotText() {
     const overviewRows = topImportant.map(d => {
       const deptClass = deptHeatClass(d.deptCount);
       const coClass   = coHeatClass(d.companyCount);
-
-      const deptKey = 'dept|' + d.dateStr;
-      const coKey   = 'company|' + d.dateStr;
 
       const deptCell = d.deptCount
         ? `<span class="heat-cell ${deptClass} outlook-bubble" data-scope="dept" data-date="${d.dateStr}">
@@ -1320,20 +1441,21 @@ function buildFullPtoSnapshotText() {
       ${tmcHtml}
     `;
 
-    // Attach click handlers for bubbles
     const bubbles = container.querySelectorAll('.outlook-bubble');
+    const detailsBoxEl = document.getElementById('outlookDetails');
+
     bubbles.forEach(b => {
       b.addEventListener('click', () => {
-        const scope = b.getAttribute('data-scope');   // 'dept' or 'company'
+        const scope = b.getAttribute('data-scope');
         const dateStr = b.getAttribute('data-date');
         const key = scope + '|' + dateStr;
 
-        selectedOutlook = { scope, dateStr };  // <— NEW
+        selectedOutlook = { scope, dateStr };
 
         const list = outlookDetailMap[key] || [];
         if (!list.length) {
-          detailsBox.style.display = 'block';
-          detailsBox.innerHTML = `
+          detailsBoxEl.style.display = 'block';
+          detailsBoxEl.innerHTML = `
             <h5>${formatISOForDisplay(dateStr)} – ${scope === 'dept' ? 'Dept' : 'Company'} details</h5>
             <p class="muted" style="margin:0;">No individual PTO records found for this day.</p>
           `;
@@ -1347,8 +1469,8 @@ function buildFullPtoSnapshotText() {
             ${e.range ? ' · ' + e.range : ''}
           </li>
         `).join('');
-        detailsBox.style.display = 'block';
-        detailsBox.innerHTML = `
+        detailsBoxEl.style.display = 'block';
+        detailsBoxEl.innerHTML = `
           <h5>${formatISOForDisplay(dateStr)} – ${scope === 'dept' ? 'Dept' : 'Company'} details</h5>
           <ul>${items}</ul>
         `;
@@ -1491,116 +1613,112 @@ function buildFullPtoSnapshotText() {
   }
 
   function buildPtoEmailBody() {
-  const name = currentUser.name || '';
-  const dept = currentUser.department || '';
-  const sup  = currentUser.directReport || '';
+    const name = currentUser.name || '';
+    const dept = currentUser.department || '';
+    const sup  = currentUser.directReport || '';
 
-  const type = document.getElementById('formType').value;
-  const startStr = document.getElementById('formStart').value;
-  const endStr   = document.getElementById('formEnd').value;
-  const startHalf = document.getElementById('formStartHalf').value;
-  const endHalf   = document.getElementById('formEndHalf').value;
-  const reason    = document.getElementById('formReason').value.trim();
+    const type = document.getElementById('formType').value;
+    const startStr = document.getElementById('formStart').value;
+    const endStr   = document.getElementById('formEnd').value;
+    const startHalf = document.getElementById('formStartHalf').value;
+    const endHalf   = document.getElementById('formEndHalf').value;
+    const reason    = document.getElementById('formReason').value.trim();
 
-  if (!startStr || !endStr) return null;
+    if (!startStr || !endStr) return null;
 
-  const start = new Date(startStr);
-  const end   = new Date(endStr);
-  if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) return null;
+    const start = new Date(startStr);
+    const end   = new Date(endStr);
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) return null;
 
-  let days = diffDaysInclusive(start, end);
-  if (startHalf === 'PM') days -= 0.5;
-  if (endHalf === 'AM')   days -= 0.5;
-  if (days < 0) days = 0;
+    let days = diffDaysInclusive(start, end);
+    if (startHalf === 'PM') days -= 0.5;
+    if (endHalf === 'AM')   days -= 0.5;
+    if (days < 0) days = 0;
 
-  const b = getBalances();
+    const b = getBalances();
 
-  let label, begin, used, futureApproved, available;
-  if (type === 'vacation') {
-    label = 'Vacation';
-    begin = b.vacationBeginning;
-    used  = b.vacationUsed;
-    futureApproved = b.futureVacationApproved;
-    available = b.vacationAvailable;
-  } else if (type === 'sick') {
-    label = 'Sick';
-    begin = b.sickBeginning;
-    used  = b.sickUsed;
-    futureApproved = b.futureSickDays;
-    available = b.sickAvailable;
-  } else {
-    label = 'Unpaid';
-    begin = b.unpaidBeginning;
-    used  = b.unpaidUsed;
-    futureApproved = b.futureUnpaidDays;
-    available = b.unpaidAvailable;
-  }
+    let label, begin, used, futureApproved, available;
+    if (type === 'vacation') {
+      label = 'Vacation';
+      begin = b.vacationBeginning;
+      used  = b.vacationUsed;
+      futureApproved = b.futureVacationApproved;
+      available = b.vacationAvailable;
+    } else if (type === 'sick') {
+      label = 'Sick';
+      begin = b.sickBeginning;
+      used  = b.sickUsed;
+      futureApproved = b.futureSickDays;
+      available = b.sickAvailable;
+    } else {
+      label = 'Unpaid';
+      begin = b.unpaidBeginning;
+      used  = b.unpaidUsed;
+      futureApproved = b.futureUnpaidDays;
+      available = b.unpaidAvailable;
+    }
 
-  const newUsed = used + days;
-  const newFutureApproved = futureApproved + days;
-  const remainingIfApproved = available - days;
+    const newUsed = used + days;
+    const newFutureApproved = futureApproved + days;
+    const remainingIfApproved = available - days;
 
-  const lines = [
-    `PTO Request – ${name}`,
-    '',
-    `Employee: ${name}`,
-    `Department: ${dept}`,
-    `Supervisor: ${sup}`,
-    '',
-    `PTO Type: ${label}`,
-    `Dates: ${startStr}${endStr && endStr !== startStr ? ' – ' + endStr : ''}`,
-    `Start: ${startHalf}`,
-    `End: ${endHalf}`,
-    `Total Days Requested: ${days.toFixed(2)}`,
-    reason ? `Reason / Notes: ${reason}` : '',
-    '',
-    `Snapshot for ${label}:`,
-    `  2025 Beginning Balance: ${begin.toFixed(2)}`,
-    `  Days Used YTD (before): ${used.toFixed(2)}`,
-    `  Days Used YTD (after):  ${newUsed.toFixed(2)}`,
-    `  Future Days Previously Approved: ${futureApproved.toFixed(2)}`,
-    `  Future Days Approved (if signed): ${newFutureApproved.toFixed(2)}`,
-    `  Available Today: ${available.toFixed(2)}`,
-    `  Balance If Approved: ${remainingIfApproved.toFixed(2)}`,
-    remainingIfApproved < 0
-      ? `  WARNING: This request exceeds current available ${label.toLowerCase()} by ${Math.abs(remainingIfApproved).toFixed(2)} day(s).`
-      : '',
-    ''
-  ].filter(Boolean);
+    const lines = [
+      `PTO Request – ${name}`,
+      '',
+      `Employee: ${name}`,
+      `Department: ${dept}`,
+      `Supervisor: ${sup}`,
+      '',
+      `PTO Type: ${label}`,
+      `Dates: ${startStr}${endStr && endStr !== startStr ? ' – ' + endStr : ''}`,
+      `Start: ${startHalf}`,
+      `End: ${endHalf}`,
+      `Total Days Requested: ${days.toFixed(2)}`,
+      reason ? `Reason / Notes: ${reason}` : '',
+      '',
+      `Snapshot for ${label}:`,
+      `  2025 Beginning Balance: ${begin.toFixed(2)}`,
+      `  Days Used YTD (before): ${used.toFixed(2)}`,
+      `  Days Used YTD (after):  ${newUsed.toFixed(2)}`,
+      `  Future Days Previously Approved: ${futureApproved.toFixed(2)}`,
+      `  Future Days Approved (if signed): ${newFutureApproved.toFixed(2)}`,
+      `  Available Today: ${available.toFixed(2)}`,
+      `  Balance If Approved: ${remainingIfApproved.toFixed(2)}`,
+      remainingIfApproved < 0
+        ? `  WARNING: This request exceeds current available ${label.toLowerCase()} by ${Math.abs(remainingIfApproved).toFixed(2)} day(s).`
+        : '',
+      ''
+    ].filter(Boolean);
 
-  // === NEW: full multi-type PTO snapshot (your big block) ===
-  const fullSnapshotText = buildFullPtoSnapshotText();
-  if (fullSnapshotText) {
-    lines.push('Full PTO Snapshot');
-    lines.push('-----------------');
-    lines.push(fullSnapshotText);
-    lines.push('');
-  }
-
-  // === NEW (optional): include last clicked Team PTO Outlook details ===
-  if (selectedOutlook && outlookDetailMap) {
-    const key = selectedOutlook.scope + '|' + selectedOutlook.dateStr;
-    const list = outlookDetailMap[key] || [];
-    if (list.length) {
-      const scopeLabel = selectedOutlook.scope === 'dept' ? 'Dept' : 'Company';
-      lines.push(
-        `${formatISOForDisplay(selectedOutlook.dateStr)} – ${scopeLabel} details`
-      );
-      list.forEach(e => {
-        const line = `  • ${e.name || '(Name missing)'}`
-          + (e.department ? ` · ${e.department}` : '')
-          + (e.type ? ` · ${e.type}` : '')
-          + (e.range ? ` · ${e.range}` : '');
-        lines.push(line);
-      });
+    const fullSnapshotText = buildFullPtoSnapshotText();
+    if (fullSnapshotText) {
+      lines.push('Full PTO Snapshot');
+      lines.push('-----------------');
+      lines.push(fullSnapshotText);
       lines.push('');
     }
+
+    if (selectedOutlook && outlookDetailMap) {
+      const key = selectedOutlook.scope + '|' + selectedOutlook.dateStr;
+      const list = outlookDetailMap[key] || [];
+      if (list.length) {
+        const scopeLabel = selectedOutlook.scope === 'dept' ? 'Dept' : 'Company';
+        lines.push(`${formatISOForDisplay(selectedOutlook.dateStr)} – ${scopeLabel} details`);
+        list.forEach(e => {
+          const line = `  • ${e.name || '(Name missing)'}`
+            + (e.department ? ` · ${e.department}` : '')
+            + (e.type ? ` · ${e.type}` : '')
+            + (e.range ? ` · ${e.range}` : '');
+          lines.push(line);
+        });
+        lines.push('');
+      }
+    }
+
+    lines.push('This email was generated from the HH PTO & Benefits portal prototype.');
+
+    return lines.join('\n');
   }
-
-  lines.push('This email was generated from the HH PTO portal prototype.');
-
-  return lines.join('\n');
-}
 
   function openPtoEmailDraft() {
     const body = buildPtoEmailBody();
@@ -1621,6 +1739,91 @@ function buildFullPtoSnapshotText() {
     window.location.href = mailto;
   }
 
+  // ---------- Benefits rendering ----------
+  function renderBenefitsCard() {
+    const loadingEl = document.getElementById('benefitsLoadingText');
+    const contentEl = document.getElementById('benefitsContent');
+    if (!loadingEl || !contentEl) return;
+
+    if (!currentUser) {
+      loadingEl.textContent = 'Log in above to see your benefits.';
+      loadingEl.style.display = 'block';
+      contentEl.style.display = 'none';
+      return;
+    }
+
+    const covLevelEl      = document.getElementById('benefitsCoverageLevel');
+    const dentalStatusEl  = document.getElementById('benefitsDentalStatus');
+    const visionStatusEl  = document.getElementById('benefitsVisionStatus');
+    const uhcBar          = document.getElementById('benefitsUhcBar');
+    const bcbsBar         = document.getElementById('benefitsBcbsBar');
+    const uhcAmountEl     = document.getElementById('benefitsUhcAmount');
+    const bcbsAmountEl    = document.getElementById('benefitsBcbsAmount');
+    const savingsTextEl   = document.getElementById('benefitsSavingsText');
+
+    const yourHealthEl    = document.getElementById('benefitsYourHealth');
+    const yourDentalEl    = document.getElementById('benefitsYourDental');
+    const yourVisionEl    = document.getElementById('benefitsYourVision');
+    const hhHealthEl      = document.getElementById('benefitsHHHealth');
+    const hhDentalEl      = document.getElementById('benefitsHHDental');
+    const hhVisionEl      = document.getElementById('benefitsHHVision');
+
+    loadingEl.style.display = 'none';
+    contentEl.style.display = 'block';
+
+    const healthPlan = (currentUser.healthPlan || '').trim();
+    const dentalEnrolled = (currentUser.dentalIns || '').toLowerCase() === 'yes';
+    const visionEnrolled = (currentUser.visionIns || '').toLowerCase() === 'yes';
+
+    covLevelEl.textContent     = healthPlan || 'Not enrolled';
+    dentalStatusEl.textContent = dentalEnrolled ? (currentUser.dentalPlan || 'Enrolled') : 'Not enrolled';
+    visionStatusEl.textContent = visionEnrolled ? (currentUser.visionPlan || 'Enrolled') : 'Not enrolled';
+
+    const hEmp = Number(currentUser.healthEmployeeMonthlyCost || 0);
+    const hEr  = Number(currentUser.healthEmployerMonthlyCost || 0);
+    const dEmp = Number(currentUser.dentalEmployeeMonthlyCost || 0);
+    const dEr  = Number(currentUser.dentalEmployerMonthlyCost || 0);
+    const vEmp = Number(currentUser.visionEmployeeMonthlyCost || 0);
+    const vEr  = Number(currentUser.visionEmployerMonthlyCost || 0);
+
+    yourHealthEl.textContent = `$${hEmp.toFixed(2)}`;
+    yourDentalEl.textContent = `$${dEmp.toFixed(2)}`;
+    yourVisionEl.textContent = `$${vEmp.toFixed(2)}`;
+
+    hhHealthEl.textContent = `$${hEr.toFixed(2)}`;
+    hhDentalEl.textContent = `$${dEr.toFixed(2)}`;
+    hhVisionEl.textContent = `$${vEr.toFixed(2)}`;
+
+    const bcbsTotal = hEmp + hEr;
+
+    const coverageKey = COVERAGE_KEY_MAP[healthPlan] || 'Employee Only';
+    const uhcPrem = HEALTH_PREMIUMS[coverageKey];
+
+    if (!uhcPrem || !bcbsTotal) {
+      uhcAmountEl.textContent = uhcPrem ? `$${uhcPrem.uhc.toFixed(2)}/mo` : '$—/mo';
+      bcbsAmountEl.textContent = bcbsTotal ? `$${bcbsTotal.toFixed(2)}/mo` : '$—/mo';
+      uhcBar.style.width = '50%';
+      bcbsBar.style.width = '50%';
+      savingsTextEl.textContent = 'Premium comparison not available for this coverage level.';
+      return;
+    }
+
+    uhcAmountEl.textContent  = `$${uhcPrem.uhc.toFixed(2)}/mo`;
+    bcbsAmountEl.textContent = `$${bcbsTotal.toFixed(2)}/mo`;
+
+    const max = Math.max(uhcPrem.uhc, bcbsTotal);
+    const uhcPct  = Math.max(20, (uhcPrem.uhc / max) * 100);
+    const bcbsPct = Math.max(20, (bcbsTotal / max) * 100);
+    uhcBar.style.width = uhcPct + '%';
+    bcbsBar.style.width = bcbsPct + '%';
+
+    const savings = uhcPrem.uhc - bcbsTotal;
+    const pct     = (savings / uhcPrem.uhc) * 100;
+    savingsTextEl.textContent =
+      `Total BCBS premium at your coverage level is about $${bcbsTotal.toFixed(2)}/month. ` +
+      `That’s saving roughly $${savings.toFixed(2)}/month (${pct.toFixed(1)}% lower) vs the 2026 UHC renewal.`;
+  }
+
   // ---------- Show dashboard ----------
   function showDashboard() {
     document.getElementById('loginCard').style.display = 'none';
@@ -1638,6 +1841,7 @@ function buildFullPtoSnapshotText() {
     renderOutlook();
     renderContacts();
     setupPtoForm();
+    renderBenefitsCard();
   }
 
   // ---------- Boot ----------
