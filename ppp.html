@@ -174,7 +174,7 @@
 
   // ---------- LOAD CSV ----------
   async function loadPPP(){
-    const text = await fetch('./PPP.csv').then(r=>r.text());
+    const text = await fetch('./PPP.csv?cb=' + Date.now()).then(r=>r.text());
     const lines = text.split(/\r?\n/).filter(x=>x.trim().length);
     const headers = lines[0].split(',').map(h=>h.trim());
     const rows = lines.slice(1).map(line=>{
