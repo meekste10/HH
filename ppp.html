@@ -162,7 +162,7 @@
       <label class="chk"><input type="checkbox" id="togNI" checked> Net Income</label>
       <label class="chk"><input type="checkbox" id="togGR" checked> Gross Revenue</label>
       <label class="chk"><input type="checkbox" id="togNIPE"> NI / Employee</label>
-      <label class="chk"><input type="checkbox" id="togGRPE"> GR / Employee</label>
+      <label class="chk"><input type="checkbox" id="togGRPE" checked> GR / Employee</label>
 
       <label class="chk" style="margin-left:8px">Years:
         <input id="yrStart" type="number" style="width:92px">
@@ -174,8 +174,12 @@
       <button id="btn3">Last 3</button>
     </div>
     <div class="toolbar">
+      <button id="uploadCsv">Upload CSV</button>
       <button id="downloadCsv">Download filtered CSV</button>
-      <span class="footer">Source: PPP.csv • <span id="asOf"></span></span>
+      <input id="fileInput" type="file" accept=".csv,text/csv" style="display:none">
+      <span class="footer">
+        Source: <span id="srcName">PPP.csv</span> • <span id="asOf"></span>
+      </span>
     </div>
   </div>
 
@@ -221,7 +225,7 @@
             <option value="NetIncome">Net Income</option>
             <option value="GrossRevenue">Gross Revenue</option>
             <option value="NIperEmp">NI / Employee</option>
-            <option value="GRperEmp">GR / Employee</option>
+            <option value="GRperEmp" selected>GR / Employee</option>
           </select>
         </label>
       </div>
@@ -306,33 +310,21 @@
     errorBox.textContent = msg;
     errorBox.style.display = 'block';
   }
+  function clearError(){
+    errorBox.textContent = '';
+    errorBox.style.display = 'none';
+  }
 
-  // ---------- AS OF ----------
+  // ---------- AS OF / SOURCE ----------
   const asOf = document.getElementById('asOf');
+  const srcName = document.getElementById('srcName');
   asOf.textContent = new Date().toLocaleString();
 
-  // ---------- LOAD CSV (LOCAL, GITHUB-FRIENDLY) ----------
-  async function loadPPP() {
-    // PPP.csv must be in the same folder as this HTML file
-    const url = './PPP.csv?cb=' + Date.now();
-
-    let resp;
-    try {
-      resp = await fetch(url);
-    } catch (e) {
-      showError('Error fetching PPP.csv: ' + e);
-      return [];
-    }
-
-    if (!resp.ok) {
-      showError('Could not load PPP.csv (status ' + resp.status + '). Make sure PPP.csv is next to this HTML file.');
-      return [];
-    }
-
-    const text = await resp.text();
+  // ---------- CSV PARSER (shared) ----------
+  function parsePPP(text){
     const lines = text.split(/\r?\n/).filter(x => x.trim().length);
     if (!lines.length) {
-      showError('PPP.csv appears to be empty.');
+      showError('CSV appears to be empty.');
       return [];
     }
 
@@ -364,6 +356,30 @@
 
     out.sort((a, b) => a.Year - b.Year);
     return out;
+  }
+
+  // ---------- LOAD CSV (default from repo) ----------
+  async function loadPPP() {
+    const url = './PPP.csv?cb=' + Date.now();
+    let resp;
+    try {
+      resp = await fetch(url);
+    } catch (e) {
+      showError('Error fetching PPP.csv: ' + e);
+      return [];
+    }
+
+    if (!resp.ok) {
+      showError('Could not load PPP.csv (status ' + resp.status + '). Make sure PPP.csv is next to this HTML file.');
+      return [];
+    }
+
+    const text = await resp.text();
+    const data = parsePPP(text);
+    if (!data.length) return [];
+    clearError();
+    srcName.textContent = 'PPP.csv';
+    return data;
   }
 
   // ---------- STATE ----------
@@ -406,6 +422,10 @@
   const statRangeNote = document.getElementById('statRangeNote');
 
   const tblBody = document.querySelector('#tbl tbody');
+
+  // Upload elements
+  const uploadBtn = document.getElementById('uploadCsv');
+  const fileInput = document.getElementById('fileInput');
 
   function yearsFiltered() {
     const a = +yrStart.value || -Infinity;
@@ -458,12 +478,11 @@
     }
   }
 
-  // ---- Trend chart ----
+  // ---- Trend chart (fixed axis behaviour) ----
   function renderTrend(rows) {
     const labels = rows.map(r => r.Year);
     const ds = [];
 
-    // Distinct colors
     if (togNI.checked) {
       ds.push({
         label: 'Net Income',
@@ -511,6 +530,9 @@
       });
     }
 
+    const hasTotals   = ds.some(d => d.yAxisID === 'y');
+    const hasPerEmp   = ds.some(d => d.yAxisID === 'y1');
+
     if (trendChart) trendChart.destroy();
     trendChart = new Chart(document.getElementById('trend'), {
       type: 'line',
@@ -520,18 +542,24 @@
         interaction: { mode: 'nearest', intersect: false },
         plugins: { legend: { position: 'bottom' } },
         scales: {
+          // Left axis: show only when totals are visible
           y: {
             type: 'linear',
             position: 'left',
-            ticks: {
+            display: hasTotals,
+            ticks: hasTotals ? {
               callback: value => fmtMoney(value)
-            }
+            } : {}
           },
+          // Right axis: per-employee
           y1: {
             type: 'linear',
             position: 'right',
             grid: { drawOnChartArea: false },
-            ticks: { display: false },
+            display: hasPerEmp,
+            ticks: hasTotals
+              ? { display:false }                       // hide when totals also visible
+              : { display:true, callback: v => fmtMoney(v) }, // show when only per-employee
             title: { display: false }
           }
         }
@@ -692,6 +720,26 @@
     URL.revokeObjectURL(a.href);
   });
 
+  // Upload new CSV (client-side only)
+  uploadBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = evt => {
+      const text = evt.target.result;
+      const data = parsePPP(text);
+      if (!data.length) return;
+      clearError();
+      DATA = data;
+      yrStart.value = DATA[0].Year;
+      yrEnd.value   = DATA[DATA.length - 1].Year;
+      srcName.textContent = file.name + ' (uploaded)';
+      refresh();
+    };
+    reader.readAsText(file);
+  });
+
   // Reactivity
   [togNI, togGR, togNIPE, togGRPE].forEach(el => {
     el.addEventListener('change', refresh);
@@ -731,7 +779,7 @@
     if (DATA.length) {
       yrStart.value = DATA[0].Year;
       yrEnd.value   = DATA[DATA.length - 1].Year;
-      statMetric.value = 'NetIncome';
+      statMetric.value = 'GRperEmp'; // default to GR / Employee like your screenshot
       refresh();
     }
   })();
