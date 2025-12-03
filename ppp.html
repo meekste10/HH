@@ -7,34 +7,144 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <style>
-  :root{--brand:#184A30;--ink:#1b1b1b;--muted:#6b7280;--bg:#f7f7f7;--card:#fff;--line:#e5e7eb;}
-  *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-  body{margin:0;background:var(--bg);color:var(--ink)}
-  header{background:var(--brand);color:#fff;padding:14px 18px}
-  header h1{margin:0;font-size:18px;letter-spacing:.2px}
-  .wrap{max-width:1100px;margin:0 auto;padding:14px}
-  .row{display:grid;gap:12px}
-  .grid-4{grid-template-columns:repeat(4,1fr)}
-  .grid-3{grid-template-columns:repeat(3,1fr)}
-  .grid-2{grid-template-columns:repeat(2,1fr)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
-  .kpi{display:flex;flex-direction:column;gap:4px}
-  .kpi .big{font-size:24px;font-weight:800}
-  .kpi .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.25px}
-  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .toolbar input,.toolbar select,.toolbar button{font-size:14px;border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;background:#fff}
-  .toolbar button{cursor:pointer}
-  label.chk{display:inline-flex;gap:6px;align-items:center;border:1px solid #d1d5db;border-radius:999px;padding:6px 10px;background:#fff}
-  canvas{width:100%;height:240px}
-  .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:460px}
-  table{width:100%;border-collapse:collapse;min-width:760px;font-size:14px}
-  th,td{padding:10px 8px;border-bottom:1px solid #eee;text-align:left}
-  th{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:#fff;z-index:1}
-  .mini{height:8px;background:#eef7f1;border-radius:6px;overflow:hidden}
-  .mini > i{display:block;height:100%;background:#10b981}
-  .muted{color:var(--muted)}
-  .footer{color:var(--muted);font-size:12px;margin-top:6px}
-  @media (max-width:980px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+  :root{
+    --brand:#184A30;
+    --ink:#1b1b1b;
+    --muted:#6b7280;
+    --bg:#f7f7f7;
+    --card:#fff;
+    --line:#e5e7eb;
+  }
+  *{
+    box-sizing:border-box;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  header{
+    background:var(--brand);
+    color:#fff;
+    padding:14px 18px;
+  }
+  header h1{
+    margin:0;
+    font-size:18px;
+    letter-spacing:.2px;
+  }
+  .wrap{
+    max-width:1100px;
+    margin:0 auto;
+    padding:14px;
+  }
+  .row{
+    display:grid;
+    gap:12px;
+  }
+  .grid-4{grid-template-columns:repeat(4,1fr);}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px;
+  }
+  .kpi{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .kpi .big{
+    font-size:24px;
+    font-weight:800;
+  }
+  .kpi .label{
+    font-size:11px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.25px;
+  }
+  .toolbar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .toolbar input,
+  .toolbar select,
+  .toolbar button{
+    font-size:14px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    padding:8px 10px;
+    background:#fff;
+  }
+  .toolbar button{
+    cursor:pointer;
+  }
+  label.chk{
+    display:inline-flex;
+    gap:6px;
+    align-items:center;
+    border:1px solid #d1d5db;
+    border-radius:999px;
+    padding:6px 10px;
+    background:#fff;
+  }
+  canvas{
+    width:100%;
+    height:240px;
+  }
+  .table-wrap{
+    overflow:auto;
+    border:1px solid var(--line);
+    border-radius:12px;
+    max-height:460px;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:760px;
+    font-size:14px;
+  }
+  th,td{
+    padding:10px 8px;
+    border-bottom:1px solid #eee;
+    text-align:left;
+  }
+  th{
+    font-size:12px;
+    color:#6b7280;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    position:sticky;
+    top:0;
+    background:#fff;
+    z-index:1;
+  }
+  .mini{
+    height:8px;
+    background:#eef7f1;
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .mini > i{
+    display:block;
+    height:100%;
+    background:#10b981;
+  }
+  .muted{color:var(--muted);}
+  .footer{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:6px;
+  }
+  @media (max-width:980px){
+    .grid-4,.grid-3,.grid-2{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 <body>
@@ -65,12 +175,24 @@
     </div>
   </div>
 
-  <!-- KPIs (labels will update to "YTD <year>") -->
+  <!-- KPIs -->
   <div class="row grid-4">
-    <div class="card kpi"><div class="label" id="kpiNILabel">Net Income (YTD —)</div><div class="big" id="kpiNI">$0</div></div>
-    <div class="card kpi"><div class="label" id="kpiGRLabel">Gross Revenue (YTD —)</div><div class="big" id="kpiGR">$0</div></div>
-    <div class="card kpi"><div class="label" id="kpiEmpLabel">Avg Employees (YTD —)</div><div class="big" id="kpiEmp">0</div></div>
-    <div class="card kpi"><div class="label" id="kpiEffLabel">Efficiency (YTD —)</div><div class="big" id="kpiEff">0%</div></div>
+    <div class="card kpi">
+      <div class="label" id="kpiNILabel">Net Income (YTD —)</div>
+      <div class="big" id="kpiNI">$0</div>
+    </div>
+    <div class="card kpi">
+      <div class="label" id="kpiGRLabel">Gross Revenue (YTD —)</div>
+      <div class="big" id="kpiGR">$0</div>
+    </div>
+    <div class="card kpi">
+      <div class="label" id="kpiEmpLabel">Avg Employees (YTD —)</div>
+      <div class="big" id="kpiEmp">0</div>
+    </div>
+    <div class="card kpi">
+      <div class="label" id="kpiEffLabel">Efficiency (YTD —)</div>
+      <div class="big" id="kpiEff">0%</div>
+    </div>
   </div>
 
   <!-- Charts + Stats -->
@@ -81,7 +203,7 @@
         <span class="muted" id="trendCaption"></span>
       </div>
       <canvas id="trend"></canvas>
-      <div class="footer">Left axis = totals • Right axis = per-employee.</div>
+      <div class="footer">Left axis = totals (USD) • Right axis = per-employee (USD).</div>
     </div>
 
     <!-- Stats card -->
@@ -102,14 +224,19 @@
         <div class="kpi"><div class="label">Median</div><div class="big" id="statMedian">—</div></div>
         <div class="kpi"><div class="label">Max</div><div class="big" id="statMax">—</div></div>
         <div class="kpi"><div class="label">Min</div><div class="big" id="statMin">—</div></div>
-        <div class="kpi"><div class="label">CAGR <span class="muted" id="statCAGRNote">— compound annual growth rate over the selected years</span></div><div class="big" id="statCAGR">—</div></div>
+        <div class="kpi">
+          <div class="label">
+            CAGR <span class="muted" id="statCAGRNote">— compound annual growth rate over the selected years</span>
+          </div>
+          <div class="big" id="statCAGR">—</div>
+        </div>
         <div class="kpi"><div class="label">Δ vs Prior Year</div><div class="big" id="statDelta">—</div></div>
       </div>
       <div class="footer" id="statRangeNote"></div>
     </div>
   </div>
 
-  <!-- Efficiency line (shorter + fewer ticks) -->
+  <!-- Efficiency line -->
   <div class="card" style="margin-top:12px">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <h3 style="margin:0">Efficiency %</h3>
@@ -163,7 +290,7 @@
 
   const median = arr => {
     if (!arr.length) return null;
-    const a = [...arr].sort((x, y) => x - y);
+    const a = [].concat(arr).sort((x, y) => x - y);
     const m = Math.floor(a.length / 2);
     return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
   };
@@ -172,51 +299,51 @@
   const asOf = document.getElementById('asOf');
   asOf.textContent = new Date().toLocaleString();
 
-// ---------- LOAD CSV ----------
-async function loadPPP() {
-  // Get current folder URL (strip the file name from window.location.href)
-  var base = window.location.href.replace(/[^/]+$/, '');
-  var url = base + 'PPP.csv?cb=' + Date.now();
+  // ---------- LOAD CSV ----------
+  async function loadPPP() {
+    // NOTE: update this if PPP.csv is in a subfolder
+    const csvBaseUrl = 'https://hollandhomes.sharepoint.com/sites/PeopleTeam/Shared%20Documents/PPP.csv';
+    const url = csvBaseUrl + '?cb=' + Date.now();
 
-  const resp = await fetch(url);
-  if (!resp.ok) {
-    console.error('Failed to load PPP.csv', resp.status, resp.statusText);
-    return [];
-  }
-
-  const text = await resp.text();
-  const lines = text.split(/\r?\n/).filter(x => x.trim().length);
-  if (!lines.length) return [];
-
-  const headers = lines[0].split(',').map(h => h.trim());
-  const rows = lines.slice(1).map(line => {
-    const parts = [];
-    let cur = '', inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') { inQ = !inQ; continue; }
-      if (ch === ',' && !inQ) { parts.push(cur); cur = ''; continue; }
-      cur += ch;
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      console.error('Failed to load PPP.csv', resp.status, resp.statusText);
+      return [];
     }
-    parts.push(cur);
-    const obj = {};
-    headers.forEach((h, i) => obj[h] = parts[i]);
-    return obj;
-  });
 
-  const out = rows.map(r => ({
-    Year: +r['Year'],
-    Employees: toNum(r['Average Active Employees']),
-    NetIncome: toNum(r['Net Income']),
-    GrossRevenue: toNum(r['Gross Revenue']),
-    NIperEmp: toNum(r['Net Income Per Employee']),
-    GRperEmp: toNum(r['Gross Revenue Per Employee']),
-    Efficiency: toNum(r['Efficiency'])
-  })).filter(r => !isNaN(r.Year));
+    const text = await resp.text();
+    const lines = text.split(/\r?\n/).filter(x => x.trim().length);
+    if (!lines.length) return [];
 
-  out.sort((a, b) => a.Year - b.Year);
-  return out;
-}
+    const headers = lines[0].split(',').map(h => h.trim());
+    const rows = lines.slice(1).map(line => {
+      const parts = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQ = !inQ; continue; }
+        if (ch === ',' && !inQ) { parts.push(cur); cur = ''; continue; }
+        cur += ch;
+      }
+      parts.push(cur);
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = parts[i]);
+      return obj;
+    });
+
+    const out = rows.map(r => ({
+      Year: +r['Year'],
+      Employees: toNum(r['Average Active Employees']),
+      NetIncome: toNum(r['Net Income']),
+      GrossRevenue: toNum(r['Gross Revenue']),
+      NIperEmp: toNum(r['Net Income Per Employee']),
+      GRperEmp: toNum(r['Gross Revenue Per Employee']),
+      Efficiency: toNum(r['Efficiency'])
+    })).filter(r => !isNaN(r.Year));
+
+    out.sort((a, b) => a.Year - b.Year);
+    return out;
+  }
 
   // ---------- STATE ----------
   let DATA = [];
@@ -235,27 +362,27 @@ async function loadPPP() {
   const btn3    = document.getElementById('btn3');
 
   // KPIs
-  const kpiNI      = document.getElementById('kpiNI');
-  const kpiGR      = document.getElementById('kpiGR');
-  const kpiEmp     = document.getElementById('kpiEmp');
-  const kpiEff     = document.getElementById('kpiEff');
-  const kpiNILabel = document.getElementById('kpiNILabel');
-  const kpiGRLabel = document.getElementById('kpiGRLabel');
-  const kpiEmpLabel= document.getElementById('kpiEmpLabel');
-  const kpiEffLabel= document.getElementById('kpiEffLabel');
+  const kpiNI       = document.getElementById('kpiNI');
+  const kpiGR       = document.getElementById('kpiGR');
+  const kpiEmp      = document.getElementById('kpiEmp');
+  const kpiEff      = document.getElementById('kpiEff');
+  const kpiNILabel  = document.getElementById('kpiNILabel');
+  const kpiGRLabel  = document.getElementById('kpiGRLabel');
+  const kpiEmpLabel = document.getElementById('kpiEmpLabel');
+  const kpiEffLabel = document.getElementById('kpiEffLabel');
 
   const trendCaption = document.getElementById('trendCaption');
   const effCaption   = document.getElementById('effCaption');
 
   // Stats
-  const statMetric   = document.getElementById('statMetric');
-  const statAvg      = document.getElementById('statAvg');
-  const statMedianEl = document.getElementById('statMedian');
-  const statMax      = document.getElementById('statMax');
-  const statMin      = document.getElementById('statMin');
-  const statCAGR     = document.getElementById('statCAGR');
-  const statDelta    = document.getElementById('statDelta');
-  const statRangeNote= document.getElementById('statRangeNote');
+  const statMetric    = document.getElementById('statMetric');
+  const statAvg       = document.getElementById('statAvg');
+  const statMedianEl  = document.getElementById('statMedian');
+  const statMax       = document.getElementById('statMax');
+  const statMin       = document.getElementById('statMin');
+  const statCAGR      = document.getElementById('statCAGR');
+  const statDelta     = document.getElementById('statDelta');
+  const statRangeNote = document.getElementById('statRangeNote');
 
   const tblBody = document.querySelector('#tbl tbody');
 
@@ -276,10 +403,10 @@ async function loadPPP() {
   function updateKPIs(rows) {
     if (!rows.length) {
       updateKpiLabels(null);
-      kpiNI.textContent = '—';
-      kpiGR.textContent = '—';
-      kpiEmp.textContent= '—';
-      kpiEff.textContent= '—';
+      kpiNI.textContent  = '—';
+      kpiGR.textContent  = '—';
+      kpiEmp.textContent = '—';
+      kpiEff.textContent = '—';
       return;
     }
     const latest = rows[rows.length - 1];
@@ -292,33 +419,42 @@ async function loadPPP() {
 
   function renderTable(rows) {
     tblBody.innerHTML = '';
-    rows.forEach(r => {
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
       const tr = document.createElement('tr');
-      const bar = Math.max(0, Math.min(1, r.Efficiency == null ? 0 : r.Efficiency));
-      tr.innerHTML = `
-        <td>${r.Year}</td>
-        <td>${r.Employees == null ? '—' : r.Employees}</td>
-        <td>${fmtMoney1(r.NetIncome)}</td>
-        <td>${fmtMoney1(r.GrossRevenue)}</td>
-        <td>${fmtMoney1(r.NIperEmp)}</td>
-        <td>${fmtMoney1(r.GRperEmp)}</td>
-        <td>${fmtPct(r.Efficiency)}</td>
-        <td><div class="mini"><i style="width:${bar * 100}%"></i></div></td>`;
+      const effVal = r.Efficiency == null ? 0 : r.Efficiency;
+      const bar = Math.max(0, Math.min(1, effVal));
+      tr.innerHTML = ''
+        + '<td>' + r.Year + '</td>'
+        + '<td>' + (r.Employees == null ? '—' : r.Employees) + '</td>'
+        + '<td>' + fmtMoney1(r.NetIncome) + '</td>'
+        + '<td>' + fmtMoney1(r.GrossRevenue) + '</td>'
+        + '<td>' + fmtMoney1(r.NIperEmp) + '</td>'
+        + '<td>' + fmtMoney1(r.GRperEmp) + '</td>'
+        + '<td>' + fmtPct(r.Efficiency) + '</td>'
+        + '<td><div class="mini"><i style="width:' + (bar * 100) + '%"></i></div></td>';
       tblBody.appendChild(tr);
-    });
+    }
   }
 
-  // ---- Trend chart (hide right axis labels) ----
+  // ---- Trend chart (currency axes + colored lines) ----
   function renderTrend(rows) {
     const labels = rows.map(r => r.Year);
 
     const ds = [];
+
+    // Colors chosen for clarity:
+    // Net Income: green, Gross Revenue: blue,
+    // NI / Emp: orange, GR / Emp: purple
     if (togNI.checked) {
       ds.push({
         label: 'Net Income',
         data: rows.map(r => r.NetIncome || 0),
         yAxisID: 'y',
-        tension: 0.2
+        tension: 0.2,
+        borderColor: '#16a34a',
+        backgroundColor: 'rgba(22,163,74,0.15)',
+        fill: false
       });
     }
     if (togGR.checked) {
@@ -326,7 +462,10 @@ async function loadPPP() {
         label: 'Gross Revenue',
         data: rows.map(r => r.GrossRevenue || 0),
         yAxisID: 'y',
-        tension: 0.2
+        tension: 0.2,
+        borderColor: '#2563eb',
+        backgroundColor: 'rgba(37,99,235,0.15)',
+        fill: false
       });
     }
     if (togNIPE.checked) {
@@ -334,7 +473,11 @@ async function loadPPP() {
         label: 'NI / Employee',
         data: rows.map(r => r.NIperEmp || 0),
         yAxisID: 'y1',
-        tension: 0.2
+        tension: 0.2,
+        borderColor: '#ea580c',
+        backgroundColor: 'rgba(234,88,12,0.15)',
+        borderDash: [4,2],
+        fill: false
       });
     }
     if (togGRPE.checked) {
@@ -342,14 +485,18 @@ async function loadPPP() {
         label: 'GR / Employee',
         data: rows.map(r => r.GRperEmp || 0),
         yAxisID: 'y1',
-        tension: 0.2
+        tension: 0.2,
+        borderColor: '#7c3aed',
+        backgroundColor: 'rgba(124,58,237,0.15)',
+        borderDash: [4,2],
+        fill: false
       });
     }
 
     if (trendChart) trendChart.destroy();
     trendChart = new Chart(document.getElementById('trend'), {
       type: 'line',
-      data: { labels, datasets: ds },
+      data: { labels: labels, datasets: ds },
       options: {
         responsive: true,
         interaction: { mode: 'nearest', intersect: false },
@@ -358,18 +505,23 @@ async function loadPPP() {
           y: {
             type: 'linear',
             position: 'left',
-            ticks: { callback: v => fmtMoney(v) }
+            ticks: {
+              callback: function(value) { return fmtMoney(value); }
+            }
           },
           y1: {
             type: 'linear',
             position: 'right',
             grid: { drawOnChartArea: false },
-            ticks: { display: false },
+            ticks: {
+              display: false   // per-employee scale hidden numerically, but lines still draw correctly
+            },
             title: { display: false }
           }
         }
       }
     });
+
     if (labels.length) {
       trendCaption.textContent = labels[0] + '–' + labels[labels.length - 1];
     } else {
@@ -377,17 +529,23 @@ async function loadPPP() {
     }
   }
 
-  // ---- Stats box for selected metric (with year on max/min) ----
+  // ---- Stats box ----
   function updateStats(rows) {
     const key = statMetric.value;
-    const friendly = {
+    const friendlyMap = {
       NetIncome: 'Net Income',
       GrossRevenue: 'Gross Revenue',
       NIperEmp: 'NI / Employee',
       GRperEmp: 'GR / Employee'
-    }[key];
+    };
+    const friendly = friendlyMap[key] || key;
 
-    const vals = rows.map(r => r[key]).filter(v => v != null);
+    const vals = [];
+    for (let i = 0; i < rows.length; i++) {
+      const v = rows[i][key];
+      if (v != null) vals.push(v);
+    }
+
     if (!vals.length) {
       statAvg.textContent      = '—';
       statMedianEl.textContent = '—';
@@ -399,7 +557,9 @@ async function loadPPP() {
       return;
     }
 
-    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+    let sum = 0;
+    for (let i = 0; i < vals.length; i++) sum += vals[i];
+    const avg = sum / vals.length;
     const med = median(vals);
     const max = Math.max.apply(null, vals);
     const min = Math.min.apply(null, vals);
@@ -412,7 +572,7 @@ async function loadPPP() {
     // CAGR (only if first & last are > 0 and at least 2 years)
     let cagr = null;
     if (vals.length >= 2 && vals[0] > 0 && vals[vals.length - 1] > 0) {
-      const yearsDiff = rows.length - 1; // assuming consecutive annual points
+      const yearsDiff = rows.length - 1; // assumes consecutive years
       cagr = Math.pow(vals[vals.length - 1] / vals[0], 1 / yearsDiff) - 1;
     }
 
@@ -422,7 +582,7 @@ async function loadPPP() {
     }
 
     const moneyish = (key === 'NetIncome' || key === 'GrossRevenue' || key === 'NIperEmp' || key === 'GRperEmp');
-    const F = moneyish ? fmtMoney1 : (n => n);
+    const F = moneyish ? fmtMoney1 : function(n){ return n; };
 
     statAvg.textContent      = F(avg);
     statMedianEl.textContent = F(med);
@@ -435,16 +595,31 @@ async function loadPPP() {
     statRangeNote.textContent = friendly + ' • ' + yrs[0] + '–' + yrs[yrs.length - 1];
   }
 
-  // ---- Efficiency line (shorter & fewer ticks) ----
+  // ---- Efficiency line (percentage axis) ----
   function renderEfficiency(rows) {
     const labels = rows.map(r => r.Year);
-    if (effChart) effChart.destroy();
-    const effs = rows.map(r => (r.Efficiency == null ? 0 : r.Efficiency * 100));
+
+    const effs = [];
+    for (let i = 0; i < rows.length; i++) {
+      const e = rows[i].Efficiency;
+      effs.push(e == null ? 0 : e * 100); // convert fraction (0.2) -> 20
+    }
     const maxEff = effs.length ? Math.max.apply(null, effs) : 0;
 
+    if (effChart) effChart.destroy();
     effChart = new Chart(document.getElementById('effChart'), {
       type: 'line',
-      data: { labels, datasets: [{ label: 'Efficiency %', data: effs, tension: 0.2, fill: false }] },
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Efficiency %',
+          data: effs,
+          tension: 0.2,
+          fill: false,
+          borderColor: '#0f766e',
+          backgroundColor: 'rgba(15,118,110,0.15)'
+        }]
+      },
       options: {
         responsive: true,
         plugins: { legend: { display: false } },
@@ -452,7 +627,11 @@ async function loadPPP() {
           y: {
             beginAtZero: true,
             suggestedMax: Math.max(10, Math.ceil((maxEff + 1) / 2) * 2),
-            ticks: { stepSize: 2, maxTicksLimit: 6, callback: v => v + '%' }
+            ticks: {
+              stepSize: 2,
+              maxTicksLimit: 6,
+              callback: function(value){ return value + '%'; }
+            }
           }
         }
       }
@@ -475,20 +654,31 @@ async function loadPPP() {
   }
 
   // Download filtered CSV
-  document.getElementById('downloadCsv').addEventListener('click', () => {
+  document.getElementById('downloadCsv').addEventListener('click', function() {
     const rows = yearsFiltered();
-    const head = ['Year', 'Average Active Employees', 'Net Income', 'Gross Revenue', 'Net Income Per Employee', 'Gross Revenue Per Employee', 'Efficiency'];
-    const lines = rows.map(r => [
-      r.Year,
-      r.Employees == null ? '' : r.Employees,
-      r.NetIncome == null ? '' : r.NetIncome,
-      r.GrossRevenue == null ? '' : r.GrossRevenue,
-      r.NIperEmp == null ? '' : r.NIperEmp,
-      r.GRperEmp == null ? '' : r.GRperEmp,
-      r.Efficiency == null ? '' : r.Efficiency
-    ].join(','));
+    const head = [
+      'Year',
+      'Average Active Employees',
+      'Net Income',
+      'Gross Revenue',
+      'Net Income Per Employee',
+      'Gross Revenue Per Employee',
+      'Efficiency'
+    ];
+    const lines = [];
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      lines.push([
+        r.Year,
+        r.Employees == null ? '' : r.Employees,
+        r.NetIncome == null ? '' : r.NetIncome,
+        r.GrossRevenue == null ? '' : r.GrossRevenue,
+        r.NIperEmp == null ? '' : r.NIperEmp,
+        r.GRperEmp == null ? '' : r.GRperEmp,
+        r.Efficiency == null ? '' : r.Efficiency
+      ].join(','));
+    }
     const toCSV = [head.join(',')].concat(lines).join('\n');
-
     const blob = new Blob([toCSV], { type: 'text/csv' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -498,25 +688,31 @@ async function loadPPP() {
   });
 
   // Reactivity
-  [togNI, togGR, togNIPE, togGRPE].forEach(el => el.addEventListener('change', refresh));
-  [yrStart, yrEnd].forEach(el => el.addEventListener('change', refresh));
-  statMetric.addEventListener('change', () => updateStats(yearsFiltered()));
+  [togNI, togGR, togNIPE, togGRPE].forEach(function(el){
+    el.addEventListener('change', refresh);
+  });
+  [yrStart, yrEnd].forEach(function(el){
+    el.addEventListener('change', refresh);
+  });
+  statMetric.addEventListener('change', function(){
+    updateStats(yearsFiltered());
+  });
 
   // Quick year buttons
-  btnAll.addEventListener('click', () => {
+  btnAll.addEventListener('click', function() {
     if (!DATA.length) return;
     yrStart.value = DATA[0].Year;
     yrEnd.value   = DATA[DATA.length - 1].Year;
     refresh();
   });
-  btn5.addEventListener('click', () => {
+  btn5.addEventListener('click', function() {
     if (!DATA.length) return;
     const startIndex = Math.max(0, DATA.length - 5);
     yrStart.value = DATA[startIndex].Year;
     yrEnd.value   = DATA[DATA.length - 1].Year;
     refresh();
   });
-  btn3.addEventListener('click', () => {
+  btn3.addEventListener('click', function() {
     if (!DATA.length) return;
     const startIndex = Math.max(0, DATA.length - 3);
     yrStart.value = DATA[startIndex].Year;
