@@ -83,9 +83,7 @@
     padding:8px 10px;
     background:#fff;
   }
-  .toolbar button{
-    cursor:pointer;
-  }
+  .toolbar button{ cursor:pointer; }
   label.chk{
     display:inline-flex;
     gap:6px;
@@ -181,7 +179,6 @@
     </div>
   </div>
 
-  <!-- Error message area -->
   <div id="errorBox" class="error" style="display:none"></div>
 
   <!-- KPIs -->
@@ -305,8 +302,7 @@
   };
 
   const errorBox = document.getElementById('errorBox');
-
-  function showError(msg) {
+  function showError(msg){
     errorBox.textContent = msg;
     errorBox.style.display = 'block';
   }
@@ -315,42 +311,25 @@
   const asOf = document.getElementById('asOf');
   asOf.textContent = new Date().toLocaleString();
 
-  // ---------- LOAD CSV ----------
+  // ---------- LOAD CSV (LOCAL, GITHUB-FRIENDLY) ----------
   async function loadPPP() {
-    // Derive site URL from SharePoint context if available
-    const siteUrl =
-      (window._spPageContextInfo && _spPageContextInfo.webAbsoluteUrl) ||
-      'https://hollandhomes.sharepoint.com/sites/PeopleTeam';
+    // PPP.csv must be in the same folder as this HTML file
+    const url = './PPP.csv?cb=' + Date.now();
 
-    // Try the two most common internal names for the default library
-    const candidates = [
-      siteUrl + '/Shared%20Documents/PPP.csv',
-      siteUrl + '/Documents/PPP.csv'
-    ];
-
-    let text = null;
-
-    for (let i = 0; i < candidates.length; i++) {
-      const url = candidates[i] + '?cb=' + Date.now();
-      try {
-        const resp = await fetch(url);
-        if (resp.ok) {
-          text = await resp.text();
-          console.log('Loaded PPP.csv from', candidates[i]);
-          break;
-        } else {
-          console.warn('Failed candidate', candidates[i], resp.status);
-        }
-      } catch (e) {
-        console.warn('Error fetching candidate', candidates[i], e);
-      }
-    }
-
-    if (text == null) {
-      showError('Could not load PPP.csv. Make sure PPP.csv is in the root of the "Documents" library on the People Team site and that you have access.');
+    let resp;
+    try {
+      resp = await fetch(url);
+    } catch (e) {
+      showError('Error fetching PPP.csv: ' + e);
       return [];
     }
 
+    if (!resp.ok) {
+      showError('Could not load PPP.csv (status ' + resp.status + '). Make sure PPP.csv is next to this HTML file.');
+      return [];
+    }
+
+    const text = await resp.text();
     const lines = text.split(/\r?\n/).filter(x => x.trim().length);
     if (!lines.length) {
       showError('PPP.csv appears to be empty.');
@@ -466,24 +445,25 @@
       const tr = document.createElement('tr');
       const effVal = r.Efficiency == null ? 0 : r.Efficiency;
       const bar = Math.max(0, Math.min(1, effVal));
-      tr.innerHTML = ''
-        + '<td>' + r.Year + '</td>'
-        + '<td>' + (r.Employees == null ? '—' : r.Employees) + '</td>'
-        + '<td>' + fmtMoney1(r.NetIncome) + '</td>'
-        + '<td>' + fmtMoney1(r.GrossRevenue) + '</td>'
-        + '<td>' + fmtMoney1(r.NIperEmp) + '</td>'
-        + '<td>' + fmtMoney1(r.GRperEmp) + '</td>'
-        + '<td>' + fmtPct(r.Efficiency) + '</td>'
-        + '<td><div class="mini"><i style="width:' + (bar * 100) + '%"></i></div></td>';
+      tr.innerHTML = `
+        <td>${r.Year}</td>
+        <td>${r.Employees == null ? '—' : r.Employees}</td>
+        <td>${fmtMoney1(r.NetIncome)}</td>
+        <td>${fmtMoney1(r.GrossRevenue)}</td>
+        <td>${fmtMoney1(r.NIperEmp)}</td>
+        <td>${fmtMoney1(r.GRperEmp)}</td>
+        <td>${fmtPct(r.Efficiency)}</td>
+        <td><div class="mini"><i style="width:${bar * 100}%"></i></div></td>`;
       tblBody.appendChild(tr);
     }
   }
 
-  // ---- Trend chart (with colors) ----
+  // ---- Trend chart ----
   function renderTrend(rows) {
     const labels = rows.map(r => r.Year);
     const ds = [];
 
+    // Distinct colors
     if (togNI.checked) {
       ds.push({
         label: 'Net Income',
@@ -534,7 +514,7 @@
     if (trendChart) trendChart.destroy();
     trendChart = new Chart(document.getElementById('trend'), {
       type: 'line',
-      data: { labels: labels, datasets: ds },
+      data: { labels, datasets: ds },
       options: {
         responsive: true,
         interaction: { mode: 'nearest', intersect: false },
@@ -544,27 +524,21 @@
             type: 'linear',
             position: 'left',
             ticks: {
-              callback: function(value) { return fmtMoney(value); }
+              callback: value => fmtMoney(value)
             }
           },
           y1: {
             type: 'linear',
             position: 'right',
             grid: { drawOnChartArea: false },
-            ticks: {
-              display: false
-            },
+            ticks: { display: false },
             title: { display: false }
           }
         }
       }
     });
 
-    if (labels.length) {
-      trendCaption.textContent = labels[0] + '–' + labels[labels.length - 1];
-    } else {
-      trendCaption.textContent = '';
-    }
+    trendCaption.textContent = labels.length ? (labels[0] + '–' + labels[labels.length - 1]) : '';
   }
 
   // ---- Stats box ----
@@ -619,7 +593,7 @@
     }
 
     const moneyish = (key === 'NetIncome' || key === 'GrossRevenue' || key === 'NIperEmp' || key === 'GRperEmp');
-    const F = moneyish ? fmtMoney1 : function(n){ return n; };
+    const F = moneyish ? fmtMoney1 : n => n;
 
     statAvg.textContent      = F(avg);
     statMedianEl.textContent = F(med);
@@ -647,7 +621,7 @@
     effChart = new Chart(document.getElementById('effChart'), {
       type: 'line',
       data: {
-        labels: labels,
+        labels,
         datasets: [{
           label: 'Efficiency %',
           data: effs,
@@ -667,18 +641,16 @@
             ticks: {
               stepSize: 2,
               maxTicksLimit: 6,
-              callback: function(value){ return value + '%'; }
+              callback: value => value + '%'
             }
           }
         }
       }
     });
 
-    if (labels.length) {
-      effCaption.textContent = labels[0] + '–' + labels[labels.length - 1] + ' (Net Income ÷ Revenue)';
-    } else {
-      effCaption.textContent = '';
-    }
+    effCaption.textContent = labels.length
+      ? labels[0] + '–' + labels[labels.length - 1] + ' (Net Income ÷ Revenue)'
+      : '';
   }
 
   function refresh() {
@@ -691,7 +663,7 @@
   }
 
   // Download filtered CSV
-  document.getElementById('downloadCsv').addEventListener('click', function() {
+  document.getElementById('downloadCsv').addEventListener('click', () => {
     const rows = yearsFiltered();
     const head = [
       'Year',
@@ -702,19 +674,15 @@
       'Gross Revenue Per Employee',
       'Efficiency'
     ];
-    const lines = [];
-    for (let i = 0; i < rows.length; i++) {
-      const r = rows[i];
-      lines.push([
-        r.Year,
-        r.Employees == null ? '' : r.Employees,
-        r.NetIncome == null ? '' : r.NetIncome,
-        r.GrossRevenue == null ? '' : r.GrossRevenue,
-        r.NIperEmp == null ? '' : r.NIperEmp,
-        r.GRperEmp == null ? '' : r.GRperEmp,
-        r.Efficiency == null ? '' : r.Efficiency
-      ].join(','));
-    }
+    const lines = rows.map(r => [
+      r.Year,
+      r.Employees == null ? '' : r.Employees,
+      r.NetIncome == null ? '' : r.NetIncome,
+      r.GrossRevenue == null ? '' : r.GrossRevenue,
+      r.NIperEmp == null ? '' : r.NIperEmp,
+      r.GRperEmp == null ? '' : r.GRperEmp,
+      r.Efficiency == null ? '' : r.Efficiency
+    ].join(','));
     const toCSV = [head.join(',')].concat(lines).join('\n');
     const blob = new Blob([toCSV], { type: 'text/csv' });
     const a = document.createElement('a');
@@ -725,31 +693,31 @@
   });
 
   // Reactivity
-  [togNI, togGR, togNIPE, togGRPE].forEach(function(el){
+  [togNI, togGR, togNIPE, togGRPE].forEach(el => {
     el.addEventListener('change', refresh);
   });
-  [yrStart, yrEnd].forEach(function(el){
+  [yrStart, yrEnd].forEach(el => {
     el.addEventListener('change', refresh);
   });
-  statMetric.addEventListener('change', function(){
+  statMetric.addEventListener('change', () => {
     updateStats(yearsFiltered());
   });
 
   // Quick year buttons
-  btnAll.addEventListener('click', function() {
+  btnAll.addEventListener('click', () => {
     if (!DATA.length) return;
     yrStart.value = DATA[0].Year;
     yrEnd.value   = DATA[DATA.length - 1].Year;
     refresh();
   });
-  btn5.addEventListener('click', function() {
+  btn5.addEventListener('click', () => {
     if (!DATA.length) return;
     const startIndex = Math.max(0, DATA.length - 5);
     yrStart.value = DATA[startIndex].Year;
     yrEnd.value   = DATA[DATA.length - 1].Year;
     refresh();
   });
-  btn3.addEventListener('click', function() {
+  btn3.addEventListener('click', () => {
     if (!DATA.length) return;
     const startIndex = Math.max(0, DATA.length - 3);
     yrStart.value = DATA[startIndex].Year;
