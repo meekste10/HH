@@ -172,50 +172,51 @@
   const asOf = document.getElementById('asOf');
   asOf.textContent = new Date().toLocaleString();
 
-  // ---------- LOAD CSV ----------
-  async function loadPPP() {
+// ---------- LOAD CSV ----------
+async function loadPPP() {
   // Get current folder URL (strip the file name from window.location.href)
   var base = window.location.href.replace(/[^/]+$/, '');
   var url = base + 'PPP.csv?cb=' + Date.now();
 
-  const resp = await fetch(url)
-    if (!resp.ok) {
-      console.error('Failed to load PPP.csv', resp.status, resp.statusText);
-      return [];
-    }
-    const text = await resp.text();
-    const lines = text.split(/\r?\n/).filter(x => x.trim().length);
-    if (!lines.length) return [];
-
-    const headers = lines[0].split(',').map(h => h.trim());
-    const rows = lines.slice(1).map(line => {
-      const parts = [];
-      let cur = '', inQ = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (ch === '"') { inQ = !inQ; continue; }
-        if (ch === ',' && !inQ) { parts.push(cur); cur = ''; continue; }
-        cur += ch;
-      }
-      parts.push(cur);
-      const obj = {};
-      headers.forEach((h, i) => obj[h] = parts[i]);
-      return obj;
-    });
-
-    const out = rows.map(r => ({
-      Year: +r['Year'],
-      Employees: toNum(r['Average Active Employees']),
-      NetIncome: toNum(r['Net Income']),
-      GrossRevenue: toNum(r['Gross Revenue']),
-      NIperEmp: toNum(r['Net Income Per Employee']),
-      GRperEmp: toNum(r['Gross Revenue Per Employee']),
-      Efficiency: toNum(r['Efficiency'])
-    })).filter(r => !isNaN(r.Year));
-
-    out.sort((a, b) => a.Year - b.Year);
-    return out;
+  const resp = await fetch(url);
+  if (!resp.ok) {
+    console.error('Failed to load PPP.csv', resp.status, resp.statusText);
+    return [];
   }
+
+  const text = await resp.text();
+  const lines = text.split(/\r?\n/).filter(x => x.trim().length);
+  if (!lines.length) return [];
+
+  const headers = lines[0].split(',').map(h => h.trim());
+  const rows = lines.slice(1).map(line => {
+    const parts = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; continue; }
+      if (ch === ',' && !inQ) { parts.push(cur); cur = ''; continue; }
+      cur += ch;
+    }
+    parts.push(cur);
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = parts[i]);
+    return obj;
+  });
+
+  const out = rows.map(r => ({
+    Year: +r['Year'],
+    Employees: toNum(r['Average Active Employees']),
+    NetIncome: toNum(r['Net Income']),
+    GrossRevenue: toNum(r['Gross Revenue']),
+    NIperEmp: toNum(r['Net Income Per Employee']),
+    GRperEmp: toNum(r['Gross Revenue Per Employee']),
+    Efficiency: toNum(r['Efficiency'])
+  })).filter(r => !isNaN(r.Year));
+
+  out.sort((a, b) => a.Year - b.Year);
+  return out;
+}
 
   // ---------- STATE ----------
   let DATA = [];
