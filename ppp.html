@@ -25,7 +25,6 @@
   .toolbar input,.toolbar select,.toolbar button{font-size:14px;border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;background:#fff}
   .toolbar button{cursor:pointer}
   label.chk{display:inline-flex;gap:6px;align-items:center;border:1px solid #d1d5db;border-radius:999px;padding:6px 10px;background:#fff}
-  /* shorter charts overall */
   canvas{width:100%;height:240px}
   .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;max-height:460px}
   table{width:100%;border-collapse:collapse;min-width:760px;font-size:14px}
@@ -146,51 +145,62 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   // ---------- UTIL ----------
-  const fmtMoney = n => n==null ? '—' :
-    n.toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0});
-  const fmtMoney1 = n => n==null ? '—' :
-    n.toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
-  const fmtPct = n => n==null ? '—' :
-    (n*100).toLocaleString(undefined,{maximumFractionDigits:2})+'%';
+  const fmtMoney = n => n == null ? '—' :
+    n.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const fmtMoney1 = n => n == null ? '—' :
+    n.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
+  const fmtPct = n => n == null ? '—' :
+    (n * 100).toLocaleString(undefined, { maximumFractionDigits: 2 }) + '%';
 
   const toNum = v => {
-    if (v==null) return null;
+    if (v == null) return null;
     if (typeof v === 'number') return v;
-    const s = String(v).replace(/\$/g,'').replace(/,/g,'').replace(/\s/g,'');
-    if (s.endsWith('%')) return parseFloat(s)/100;
+    const s = String(v).replace(/\$/g, '').replace(/,/g, '').replace(/\s/g, '');
+    if (s.endsWith('%')) return parseFloat(s) / 100;
     const n = parseFloat(s);
     return isFinite(n) ? n : null;
   };
 
   const median = arr => {
     if (!arr.length) return null;
-    const a=[...arr].sort((x,y)=>x-y);
-    const m=Math.floor(a.length/2);
-    return a.length%2 ? a[m] : (a[m-1]+a[m])/2;
+    const a = [...arr].sort((x, y) => x - y);
+    const m = Math.floor(a.length / 2);
+    return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
   };
 
+  // ---------- AS OF ----------
   const asOf = document.getElementById('asOf');
   asOf.textContent = new Date().toLocaleString();
 
   // ---------- LOAD CSV ----------
-  async function loadPPP(){
-    const text = await fetch('https://hollandhomes.sharepoint.com/sites/PeopleTeam/Shared%20Documents/PPP.csv?cb=' + Date.now());
-    const lines = text.split(/\r?\n/).filter(x=>x.trim().length);
-    const headers = lines[0].split(',').map(h=>h.trim());
-    const rows = lines.slice(1).map(line=>{
-      const parts = []; let cur='', inQ=false;
-      for (let i=0;i<line.length;i++){
-        const ch=line[i];
-        if (ch==='\"'){ inQ=!inQ; continue; }
-        if (ch===',' && !inQ){ parts.push(cur); cur=''; continue; }
-        cur+=ch;
+  async function loadPPP() {
+    const url = 'https://hollandhomes.sharepoint.com/sites/PeopleTeam/Shared%20Documents/PPP.csv?cb=' + Date.now();
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      console.error('Failed to load PPP.csv', resp.status, resp.statusText);
+      return [];
+    }
+    const text = await resp.text();
+    const lines = text.split(/\r?\n/).filter(x => x.trim().length);
+    if (!lines.length) return [];
+
+    const headers = lines[0].split(',').map(h => h.trim());
+    const rows = lines.slice(1).map(line => {
+      const parts = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQ = !inQ; continue; }
+        if (ch === ',' && !inQ) { parts.push(cur); cur = ''; continue; }
+        cur += ch;
       }
       parts.push(cur);
-      const obj={}; headers.forEach((h,i)=>obj[h]=parts[i]);
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = parts[i]);
       return obj;
     });
 
-    const out = rows.map(r=>({
+    const out = rows.map(r => ({
       Year: +r['Year'],
       Employees: toNum(r['Average Active Employees']),
       NetIncome: toNum(r['Net Income']),
@@ -198,9 +208,9 @@
       NIperEmp: toNum(r['Net Income Per Employee']),
       GRperEmp: toNum(r['Gross Revenue Per Employee']),
       Efficiency: toNum(r['Efficiency'])
-    })).filter(r=>!isNaN(r.Year));
+    })).filter(r => !isNaN(r.Year));
 
-    out.sort((a,b)=>a.Year-b.Year);
+    out.sort((a, b) => a.Year - b.Year);
     return out;
   }
 
@@ -221,171 +231,237 @@
   const btn3    = document.getElementById('btn3');
 
   // KPIs
-  const kpiNI=document.getElementById('kpiNI');
-  const kpiGR=document.getElementById('kpiGR');
-  const kpiEmp=document.getElementById('kpiEmp');
-  const kpiEff=document.getElementById('kpiEff');
-  const kpiNILabel=document.getElementById('kpiNILabel');
-  const kpiGRLabel=document.getElementById('kpiGRLabel');
-  const kpiEmpLabel=document.getElementById('kpiEmpLabel');
-  const kpiEffLabel=document.getElementById('kpiEffLabel');
+  const kpiNI      = document.getElementById('kpiNI');
+  const kpiGR      = document.getElementById('kpiGR');
+  const kpiEmp     = document.getElementById('kpiEmp');
+  const kpiEff     = document.getElementById('kpiEff');
+  const kpiNILabel = document.getElementById('kpiNILabel');
+  const kpiGRLabel = document.getElementById('kpiGRLabel');
+  const kpiEmpLabel= document.getElementById('kpiEmpLabel');
+  const kpiEffLabel= document.getElementById('kpiEffLabel');
 
-  const trendCaption=document.getElementById('trendCaption');
-  const effCaption=document.getElementById('effCaption');
+  const trendCaption = document.getElementById('trendCaption');
+  const effCaption   = document.getElementById('effCaption');
 
   // Stats
-  const statMetric=document.getElementById('statMetric');
-  const statAvg=document.getElementById('statAvg');
-  const statMedian=document.getElementById('statMedian');
-  const statMax=document.getElementById('statMax');
-  const statMin=document.getElementById('statMin');
-  const statCAGR=document.getElementById('statCAGR');
-  const statDelta=document.getElementById('statDelta');
-  const statRangeNote=document.getElementById('statRangeNote');
+  const statMetric   = document.getElementById('statMetric');
+  const statAvg      = document.getElementById('statAvg');
+  const statMedianEl = document.getElementById('statMedian');
+  const statMax      = document.getElementById('statMax');
+  const statMin      = document.getElementById('statMin');
+  const statCAGR     = document.getElementById('statCAGR');
+  const statDelta    = document.getElementById('statDelta');
+  const statRangeNote= document.getElementById('statRangeNote');
 
   const tblBody = document.querySelector('#tbl tbody');
 
-  function yearsFiltered(){
+  function yearsFiltered() {
     const a = +yrStart.value || -Infinity;
     const b = +yrEnd.value   || +Infinity;
-    return DATA.filter(r=>r.Year>=a && r.Year<=b);
+    return DATA.filter(r => r.Year >= a && r.Year <= b);
   }
 
-  function updateKpiLabels(year){
-    const tag = `YTD ${year ?? '—'}`;
-    kpiNILabel.textContent = `Net Income (${tag})`;
-    kpiGRLabel.textContent = `Gross Revenue (${tag})`;
-    kpiEmpLabel.textContent = `Avg Employees (${tag})`;
-    kpiEffLabel.textContent = `Efficiency (${tag})`;
+  function updateKpiLabels(year) {
+    const tag = 'YTD ' + (year == null ? '—' : year);
+    kpiNILabel.textContent  = 'Net Income (' + tag + ')';
+    kpiGRLabel.textContent  = 'Gross Revenue (' + tag + ')';
+    kpiEmpLabel.textContent = 'Avg Employees (' + tag + ')';
+    kpiEffLabel.textContent = 'Efficiency (' + tag + ')';
   }
 
-  function updateKPIs(rows){
+  function updateKPIs(rows) {
     if (!rows.length) {
       updateKpiLabels(null);
-      kpiNI.textContent=kpiGR.textContent=kpiEmp.textContent=kpiEff.textContent='—';
+      kpiNI.textContent = '—';
+      kpiGR.textContent = '—';
+      kpiEmp.textContent= '—';
+      kpiEff.textContent= '—';
       return;
     }
-    const latest = rows[rows.length-1];
+    const latest = rows[rows.length - 1];
     updateKpiLabels(latest.Year);
     kpiNI.textContent  = fmtMoney1(latest.NetIncome);
     kpiGR.textContent  = fmtMoney1(latest.GrossRevenue);
-    kpiEmp.textContent = (latest.Employees??'—').toString();
+    kpiEmp.textContent = (latest.Employees == null ? '—' : String(latest.Employees));
     kpiEff.textContent = fmtPct(latest.Efficiency);
   }
 
-  function renderTable(rows){
-    tblBody.innerHTML='';
-    rows.forEach(r=>{
-      const tr=document.createElement('tr');
-      const bar = Math.max(0, Math.min(1, r.Efficiency ?? 0));
+  function renderTable(rows) {
+    tblBody.innerHTML = '';
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      const bar = Math.max(0, Math.min(1, r.Efficiency == null ? 0 : r.Efficiency));
       tr.innerHTML = `
         <td>${r.Year}</td>
-        <td>${r.Employees??'—'}</td>
+        <td>${r.Employees == null ? '—' : r.Employees}</td>
         <td>${fmtMoney1(r.NetIncome)}</td>
         <td>${fmtMoney1(r.GrossRevenue)}</td>
         <td>${fmtMoney1(r.NIperEmp)}</td>
         <td>${fmtMoney1(r.GRperEmp)}</td>
         <td>${fmtPct(r.Efficiency)}</td>
-        <td><div class="mini"><i style="width:${bar*100}%"></i></div></td>`;
+        <td><div class="mini"><i style="width:${bar * 100}%"></i></div></td>`;
       tblBody.appendChild(tr);
     });
   }
 
   // ---- Trend chart (hide right axis labels) ----
-  function renderTrend(rows){
-    const labels = rows.map(r=>r.Year);
+  function renderTrend(rows) {
+    const labels = rows.map(r => r.Year);
 
     const ds = [];
-    if (togNI.checked)   ds.push({label:'Net Income',            data: rows.map(r=>r.NetIncome??0),      yAxisID:'y',  tension:.2});
-    if (togGR.checked)   ds.push({label:'Gross Revenue',         data: rows.map(r=>r.GrossRevenue??0),   yAxisID:'y',  tension:.2});
-    if (togNIPE.checked) ds.push({label:'NI / Employee',         data: rows.map(r=>r.NIperEmp??0),       yAxisID:'y1', tension:.2});
-    if (togGRPE.checked) ds.push({label:'GR / Employee',         data: rows.map(r=>r.GRperEmp??0),       yAxisID:'y1', tension:.2});
+    if (togNI.checked) {
+      ds.push({
+        label: 'Net Income',
+        data: rows.map(r => r.NetIncome || 0),
+        yAxisID: 'y',
+        tension: 0.2
+      });
+    }
+    if (togGR.checked) {
+      ds.push({
+        label: 'Gross Revenue',
+        data: rows.map(r => r.GrossRevenue || 0),
+        yAxisID: 'y',
+        tension: 0.2
+      });
+    }
+    if (togNIPE.checked) {
+      ds.push({
+        label: 'NI / Employee',
+        data: rows.map(r => r.NIperEmp || 0),
+        yAxisID: 'y1',
+        tension: 0.2
+      });
+    }
+    if (togGRPE.checked) {
+      ds.push({
+        label: 'GR / Employee',
+        data: rows.map(r => r.GRperEmp || 0),
+        yAxisID: 'y1',
+        tension: 0.2
+      });
+    }
 
     if (trendChart) trendChart.destroy();
     trendChart = new Chart(document.getElementById('trend'), {
-      type:'line',
-      data:{ labels, datasets: ds },
-      options:{
-        responsive:true,
-        interaction:{mode:'nearest',intersect:false},
-        plugins:{ legend:{position:'bottom'} },
-        scales:{
-          y:{ type:'linear', position:'left', ticks:{ callback:v=>fmtMoney(v) } },
-          y1:{ type:'linear', position:'right',
-               grid:{drawOnChartArea:false},
-               ticks:{ display:false }, // hide labels
-               title:{ display:false } }
+      type: 'line',
+      data: { labels, datasets: ds },
+      options: {
+        responsive: true,
+        interaction: { mode: 'nearest', intersect: false },
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          y: {
+            type: 'linear',
+            position: 'left',
+            ticks: { callback: v => fmtMoney(v) }
+          },
+          y1: {
+            type: 'linear',
+            position: 'right',
+            grid: { drawOnChartArea: false },
+            ticks: { display: false },
+            title: { display: false }
+          }
         }
       }
     });
-    trendCaption.textContent = `${labels[0]}–${labels[labels.length-1]}`;
+    if (labels.length) {
+      trendCaption.textContent = labels[0] + '–' + labels[labels.length - 1];
+    } else {
+      trendCaption.textContent = '';
+    }
   }
 
   // ---- Stats box for selected metric (with year on max/min) ----
-  function updateStats(rows){
+  function updateStats(rows) {
     const key = statMetric.value;
     const friendly = {
-      NetIncome:'Net Income',
-      GrossRevenue:'Gross Revenue',
-      NIperEmp:'NI / Employee',
-      GRperEmp:'GR / Employee'
+      NetIncome: 'Net Income',
+      GrossRevenue: 'Gross Revenue',
+      NIperEmp: 'NI / Employee',
+      GRperEmp: 'GR / Employee'
     }[key];
 
-    const vals = rows.map(r=>r[key]).filter(v=>v!=null);
-    if (!vals.length){
-      statAvg.textContent=statMedian.textContent=statMax.textContent=statMin.textContent=statCAGR.textContent=statDelta.textContent='—';
-      statRangeNote.textContent = `${friendly}`;
+    const vals = rows.map(r => r[key]).filter(v => v != null);
+    if (!vals.length) {
+      statAvg.textContent      = '—';
+      statMedianEl.textContent = '—';
+      statMax.textContent      = '—';
+      statMin.textContent      = '—';
+      statCAGR.textContent     = '—';
+      statDelta.textContent    = '—';
+      statRangeNote.textContent = friendly;
       return;
     }
-    const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+
+    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
     const med = median(vals);
-    const max = Math.max(...vals);
-    const min = Math.min(...vals);
-    const maxYear = rows[vals.indexOf(max)]?.Year ?? '';
-    const minYear = rows[vals.indexOf(min)]?.Year ?? '';
+    const max = Math.max.apply(null, vals);
+    const min = Math.min.apply(null, vals);
+
+    const maxIndex = vals.indexOf(max);
+    const minIndex = vals.indexOf(min);
+    const maxYear  = rows[maxIndex] ? rows[maxIndex].Year : '';
+    const minYear  = rows[minIndex] ? rows[minIndex].Year : '';
 
     // CAGR (only if first & last are > 0 and at least 2 years)
     let cagr = null;
-    if (vals.length>=2 && vals[0]>0 && vals.at(-1)>0){
-      const years = rows.length-1; // consecutive annual points
-      cagr = Math.pow(vals.at(-1)/vals[0], 1/years)-1;
+    if (vals.length >= 2 && vals[0] > 0 && vals[vals.length - 1] > 0) {
+      const yearsDiff = rows.length - 1; // assuming consecutive annual points
+      cagr = Math.pow(vals[vals.length - 1] / vals[0], 1 / yearsDiff) - 1;
     }
 
     let delta = null;
-    if (vals.length>=2) delta = vals.at(-1) - vals.at(-2);
+    if (vals.length >= 2) {
+      delta = vals[vals.length - 1] - vals[vals.length - 2];
+    }
 
-    const moneyish = (key==='NetIncome'||key==='GrossRevenue'||key==='NIperEmp'||key==='GRperEmp');
-    const F = moneyish ? fmtMoney1 : (n=>n);
-    statAvg.textContent   = F(avg);
-    statMedian.textContent= F(med);
-    statMax.textContent   = `${F(max)} ${maxYear ? '• '+maxYear : ''}`;
-    statMin.textContent   = `${F(min)} ${minYear ? '• '+minYear : ''}`;
-    statCAGR.textContent  = cagr==null ? '—' : (cagr*100).toFixed(2)+'%';
-    statDelta.textContent = delta==null ? '—' : (delta>=0?'+':'') + F(delta);
+    const moneyish = (key === 'NetIncome' || key === 'GrossRevenue' || key === 'NIperEmp' || key === 'GRperEmp');
+    const F = moneyish ? fmtMoney1 : (n => n);
 
-    const yrs = rows.map(r=>r.Year);
-    statRangeNote.textContent = `${friendly} • ${yrs[0]}–${yrs.at(-1)}`;
+    statAvg.textContent      = F(avg);
+    statMedianEl.textContent = F(med);
+    statMax.textContent      = F(max) + (maxYear ? ' • ' + maxYear : '');
+    statMin.textContent      = F(min) + (minYear ? ' • ' + minYear : '');
+    statCAGR.textContent     = (cagr == null ? '—' : (cagr * 100).toFixed(2) + '%');
+    statDelta.textContent    = (delta == null ? '—' : ((delta >= 0 ? '+' : '') + F(delta)));
+
+    const yrs = rows.map(r => r.Year);
+    statRangeNote.textContent = friendly + ' • ' + yrs[0] + '–' + yrs[yrs.length - 1];
   }
 
   // ---- Efficiency line (shorter & fewer ticks) ----
-  function renderEfficiency(rows){
-    const labels = rows.map(r=>r.Year);
+  function renderEfficiency(rows) {
+    const labels = rows.map(r => r.Year);
     if (effChart) effChart.destroy();
-    const effs = rows.map(r=> (r.Efficiency ?? 0)*100);
+    const effs = rows.map(r => (r.Efficiency == null ? 0 : r.Efficiency * 100));
+    const maxEff = effs.length ? Math.max.apply(null, effs) : 0;
+
     effChart = new Chart(document.getElementById('effChart'), {
-      type:'line',
-      data:{ labels, datasets:[{ label:'Efficiency %', data: effs, tension:.2, fill:false }] },
-      options:{ responsive:true, plugins:{ legend:{display:false} },
-        scales:{ y:{
-          beginAtZero:true,
-          suggestedMax: Math.max(10, Math.ceil((Math.max(...effs,0)+1)/2)*2), // keep compact
-          ticks:{ stepSize:2, maxTicksLimit:6, callback:v=> v+'%' }
-        } } }
+      type: 'line',
+      data: { labels, datasets: [{ label: 'Efficiency %', data: effs, tension: 0.2, fill: false }] },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            suggestedMax: Math.max(10, Math.ceil((maxEff + 1) / 2) * 2),
+            ticks: { stepSize: 2, maxTicksLimit: 6, callback: v => v + '%' }
+          }
+        }
+      }
     });
-    effCaption.textContent = `${labels[0]}–${labels[labels.length-1]} (Net Income ÷ Revenue)`;
+
+    if (labels.length) {
+      effCaption.textContent = labels[0] + '–' + labels[labels.length - 1] + ' (Net Income ÷ Revenue)';
+    } else {
+      effCaption.textContent = '';
+    }
   }
 
-  function refresh(){
+  function refresh() {
     const rows = yearsFiltered();
     updateKPIs(rows);
     renderTrend(rows);
@@ -395,19 +471,21 @@
   }
 
   // Download filtered CSV
-  document.getElementById('downloadCsv').addEventListener('click', ()=>{
+  document.getElementById('downloadCsv').addEventListener('click', () => {
     const rows = yearsFiltered();
-    const head = ['Year','Average Active Employees','Net Income','Gross Revenue','Net Income Per Employee','Gross Revenue Per Employee','Efficiency'];
-    const toCSV = [head.join(',')].concat(rows.map(r=>[
+    const head = ['Year', 'Average Active Employees', 'Net Income', 'Gross Revenue', 'Net Income Per Employee', 'Gross Revenue Per Employee', 'Efficiency'];
+    const lines = rows.map(r => [
       r.Year,
-      r.Employees ?? '',
-      r.NetIncome ?? '',
-      r.GrossRevenue ?? '',
-      r.NIperEmp ?? '',
-      r.GRperEmp ?? '',
-      r.Efficiency ?? ''
-    ].join(','))).join('\n');
-    const blob = new Blob([toCSV], {type:'text/csv'});
+      r.Employees == null ? '' : r.Employees,
+      r.NetIncome == null ? '' : r.NetIncome,
+      r.GrossRevenue == null ? '' : r.GrossRevenue,
+      r.NIperEmp == null ? '' : r.NIperEmp,
+      r.GRperEmp == null ? '' : r.GRperEmp,
+      r.Efficiency == null ? '' : r.Efficiency
+    ].join(','));
+    const toCSV = [head.join(',')].concat(lines).join('\n');
+
+    const blob = new Blob([toCSV], { type: 'text/csv' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'PPP_filtered.csv';
@@ -416,36 +494,41 @@
   });
 
   // Reactivity
-  [togNI,togGR,togNIPE,togGRPE].forEach(el=> el.addEventListener('change', refresh));
-  [yrStart,yrEnd].forEach(el=> el.addEventListener('change', refresh));
-  statMetric.addEventListener('change', ()=> updateStats(yearsFiltered()));
+  [togNI, togGR, togNIPE, togGRPE].forEach(el => el.addEventListener('change', refresh));
+  [yrStart, yrEnd].forEach(el => el.addEventListener('change', refresh));
+  statMetric.addEventListener('change', () => updateStats(yearsFiltered()));
 
   // Quick year buttons
-  btnAll.addEventListener('click', ()=>{
-    yrStart.value = DATA[0]?.Year || '';
-    yrEnd.value   = DATA.at(-1)?.Year || '';
+  btnAll.addEventListener('click', () => {
+    if (!DATA.length) return;
+    yrStart.value = DATA[0].Year;
+    yrEnd.value   = DATA[DATA.length - 1].Year;
     refresh();
   });
-  btn5.addEventListener('click', ()=>{
+  btn5.addEventListener('click', () => {
     if (!DATA.length) return;
-    yrStart.value = DATA[Math.max(0, DATA.length-5)].Year;
-    yrEnd.value   = DATA.at(-1).Year;
+    const startIndex = Math.max(0, DATA.length - 5);
+    yrStart.value = DATA[startIndex].Year;
+    yrEnd.value   = DATA[DATA.length - 1].Year;
     refresh();
   });
-  btn3.addEventListener('click', ()=>{
+  btn3.addEventListener('click', () => {
     if (!DATA.length) return;
-    yrStart.value = DATA[Math.max(0, DATA.length-3)].Year;
-    yrEnd.value   = DATA.at(-1).Year;
+    const startIndex = Math.max(0, DATA.length - 3);
+    yrStart.value = DATA[startIndex].Year;
+    yrEnd.value   = DATA[DATA.length - 1].Year;
     refresh();
   });
 
   // ---------- BOOT ----------
-  (async function init(){
+  (async function init() {
     DATA = await loadPPP();
-    yrStart.value = DATA[0]?.Year || '';
-    yrEnd.value = DATA.at(-1)?.Year || '';
-    statMetric.value = 'NetIncome';
-    refresh();
+    if (DATA.length) {
+      yrStart.value = DATA[0].Year;
+      yrEnd.value   = DATA[DATA.length - 1].Year;
+      statMetric.value = 'NetIncome';
+      refresh();
+    }
   })();
 </script>
 </body>
