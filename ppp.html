@@ -174,8 +174,11 @@
 
   // ---------- LOAD CSV ----------
   async function loadPPP() {
-    const url = 'https://hollandhomes.sharepoint.com/sites/PeopleTeam/Shared%20Documents/PPP.csv?cb=' + Date.now();
-    const resp = await fetch(url);
+  // Get current folder URL (strip the file name from window.location.href)
+  var base = window.location.href.replace(/[^/]+$/, '');
+  var url = base + 'PPP.csv?cb=' + Date.now();
+
+  const resp = await fetch(url)
     if (!resp.ok) {
       console.error('Failed to load PPP.csv', resp.status, resp.statusText);
       return [];
